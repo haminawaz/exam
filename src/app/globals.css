@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.primary-btn:hover {
+  background-color: black;
+}
+
+.font-poppins {
+  font-family: "Poppins";
+}
+.font-quicksand {
+  font-family: "Quicksand";
+}
+.font-roboto {
+  font-family: "Roboto";
+}
+.custom-dropdown .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector{
+  background-color: black !important;
+  color: white;
+  border: none !important;
+}
+.custom-dropdown .ant-select-dropdown {
+  background-color: black !important;
+}
+
+.custom-dropdown .ant-select-item {
+  color: white !important;
+}
+
+.custom-dropdown .ant-select-item-option-selected {
+  background-color: rgba(255, 255, 255, 0.2) !important; 
+}
+
+.custom-dropdown .ant-select-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
