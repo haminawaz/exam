@@ -33,10 +33,10 @@ export const Getintouch = () => {
             />
             <div>
               <p className="text-[16px] md:text-[20px] font-quicksand font-bold text-[#FE8840] text-center">
-                GET IN TOUCH
+                Contactez-nous
               </p>
               <h1 className="text-[25px] md:text-[40px] font-poppins  font-bold text-center ml-[-10px]">
-                Needs Help? Let’s Get in Touch
+                Besoin d'aide ? Contactez-nous !
               </h1>
             </div>
           </div>
@@ -91,7 +91,7 @@ export const Getintouch = () => {
                   type="submit"
                   className="primary-btn font-roboto bg-[#FE8840] text-white p-3 rounded-[25px] cursor-pointer transition"
                 >
-                  Get In Touch With Us
+                  Envoyer
                 </button>
               </div>
               <div className="flex justify-end">

@@ -77,6 +77,14 @@ export const TopMenue = ({ setActiveSection }) => {
             Free Simulator
           </button>
         </Link>
+        <Link href="/payment" className="inline-block">
+          <button
+            onClick={() => setActiveSection("products")}
+            className="text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand"
+          >
+            Products
+          </button>
+        </Link>
         <Link href="/choose-avatar" className="inline-block">
           <button
             onClick={() => setActiveSection("choose-avatar")}
@@ -84,14 +92,6 @@ export const TopMenue = ({ setActiveSection }) => {
             className="text-[18px] md:text-[26px]  font-normal text-white cursor-pointer font-quicksand"
           >
             Access Simulator
-          </button>
-        </Link>
-        <Link href="/payment" className="inline-block">
-          <button
-            onClick={() => setActiveSection("products")}
-            className="text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand"
-          >
-            Products
           </button>
         </Link>
         {/* <button

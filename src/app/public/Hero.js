@@ -1,22 +1,21 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { UserAuthContext } from "../contexts/auth-context";
 import { DictionariesContext } from "../contexts/dictionary-context";
 
-
 export const Hero = ({ activeSection }) => {
   const { lng } = UserAuthContext();
   const { dictionaries } = DictionariesContext();
 
-
-
   return (
     <div>
-      <img src="/images/herosection_bgtop.png" alt="Farrukh" className="w-[100%]" />
-      <div
-        className="flex flex-col md:flex-row gap-5 max-w-[75%] mx-auto justify-center mb-[-60px]"
-      >
+      <img
+        src="/images/herosection_bgtop.png"
+        alt="Farrukh"
+        className="w-[100%]"
+      />
+      <div className="flex flex-col md:flex-row gap-5 max-w-[75%] mx-auto justify-center mb-[-60px]">
         {activeSection == "products" ? (
           <>
             <div className="md:w-[70%] flex items-center">
@@ -65,10 +64,11 @@ export const Hero = ({ activeSection }) => {
           <>
             <div className="md:w-[70%] ">
               <h1 className="font-bold font-quicksand text-[30px] md:text-[50px] font-quicksand md:text-left text-center">
-                {dictionaries?.Home_Page_Hero_Section_Title}
+                Le chemin vers le secondaire commence ici !
               </h1>
               <p className="!font-normal font-quicksand text-[18px] md:text-[26px] md:text-left text- text-[#1F1C14]">
-              {dictionaries?.Home_Page_Hero_Section_Description}
+                Avec Acess-Sec, sois prêt à 100% pour réussir tes examens
+                d'accès au secondaire .
               </p>
               <div className="flex flex-row items-center my-5">
                 <p className="text-[14px] font-normal text-[#0D1216] font-quicksand md:text-left text-center">
@@ -79,11 +79,11 @@ export const Hero = ({ activeSection }) => {
                   Based on 2000 reviews
                 </p>
               </div>
-              <div className="flex md:justify-start justify-center">
+              {/* <div className="flex md:justify-start justify-center">
                 <button className="primary-btn bg-[#FE8840] text-white px-[40px] py-3 rounded-[25px] transition cursor-pointer">
                   Get started
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="md:w-[30%]">
               <img src="/images/hero_one.png" alt="Farrukh" className="" />
@@ -91,7 +91,11 @@ export const Hero = ({ activeSection }) => {
           </>
         )}
       </div>
-      <img src="/images/herosection_bgbottom.png" alt="Farrukh" className="w-[100%]" />
+      <img
+        src="/images/herosection_bgbottom.png"
+        alt="Farrukh"
+        className="w-[100%]"
+      />
     </div>
   );
 };
