@@ -25,7 +25,7 @@ export const Promotional = () => {
 
         <video
           ref={videoRef}
-          className="w-full border-[7px] border-[#FE8840] rounded-[20px] z-[1]" // Video in front of the image
+          className="w-full border-[7px] border-[#FE8840] rounded-[20px] z-[1]"
           controls
         >
           <source

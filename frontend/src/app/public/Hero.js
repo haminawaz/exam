@@ -1,13 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { UserAuthContext } from "../contexts/auth-context";
-import { DictionariesContext } from "../contexts/dictionary-context";
+import React from "react";
 
 export const Hero = ({ activeSection }) => {
-  const { lng } = UserAuthContext();
-  const { dictionaries } = DictionariesContext();
-
   return (
     <div>
       <img
@@ -79,11 +74,6 @@ export const Hero = ({ activeSection }) => {
                   Based on 2000 reviews
                 </p>
               </div>
-              {/* <div className="flex md:justify-start justify-center">
-                <button className="primary-btn bg-[#FE8840] text-white px-[40px] py-3 rounded-[25px] transition cursor-pointer">
-                  Get started
-                </button>
-              </div> */}
             </div>
             <div className="md:w-[30%]">
               <img src="/images/hero_one.png" alt="Farrukh" className="" />

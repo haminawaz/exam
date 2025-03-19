@@ -126,6 +126,60 @@ export default function page() {
 
       <section className="bg-[#f9f9f9] py-5">
         <div className="bg-[#fff3e9] md:w-[70%] lg:w-[50%] m-auto ">
+          {/* <h1 className="text-[25px] md:text-[40px] font-poppins  font-bold text-[#000000] text-center py-5">
+            Levels
+          </h1>
+          <div className="flex flex-row gap-1 justify-center">
+            <img src="/images/star_1.png" alt="Acces" />
+            <img src="/images/star_1.png" alt="Acces" />
+            <img src="/images/star_1.png" alt="Acces" />
+            <img src="/images/star_1.png" alt="Acces" />
+            <img src="/images/star_2.png" alt="Acces" />
+          </div>
+          <img
+            src="/images/quiz/stepper.png"
+            alt="Acces"
+            className="max-w-[60%] m-auto my-5"
+          /> */}
+          {/* <p className="text-[18px] md:text-[22px] font-poppins  font-bold text-[#000000] text-center py-5">
+            Current Level : 1
+          </p>
+          <div className="flex flex-row gap-1 justify-center items-center">
+            <div className="border border-[#FE8840] rounded-xl py-2 px-5">
+              <h1 className="text-[18px] md:text-[22px] font-poppins  font-bold text-[#000000]">
+                Choose Your Sections
+              </h1>
+              <div className="flex flex-row gap-2 justify-center mt-2">
+                <button className="primary-btn bg-[#FE8840] text-white text-[16px] font-normal px-3 rounded-lg cursor-pointer transition">
+                  Math
+                </button>
+                <button className="primary-btn text-[#FE8840] px-3 border text-[16px] font-normal border-[#FE8840] rounded-lg cursor-pointer transition">
+                  French
+                </button>
+              </div>
+            </div>
+            <div className="border border-[#FE8840] rounded-xl py-2 px-5">
+              <h1 className="text-[18px] md:text-[22px] font-poppins  font-bold text-[#000000]">
+                Choose Your Sections
+              </h1>
+              <div className="flex flex-row gap-2 justify-center mt-2">
+                <button className="primary-btn bg-[#FE8840] text-white text-[16px] font-normal px-3 rounded-lg cursor-pointer transition">
+                  Math
+                </button>
+                <button className="primary-btn text-[#FE8840] px-3 border text-[16px] font-normal border-[#FE8840] rounded-lg cursor-pointer transition">
+                  French
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center mt-2">
+            <p className="text-[14px] font-quicksand font-normal">
+              Section Chosen : <span className="font-bold font-quicksand">Math</span>
+            </p>
+            <p className="text-[14px] font-quicksand font-normal">
+              Subsection Chosen : <span className="font-bold"> Algebra</span>
+            </p>
+          </div> */}
           <div className="bg-white mx-5 md:mx-[100px] m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px] rounded-lg text-center">
             {quizCompleted ? (
               <div>
