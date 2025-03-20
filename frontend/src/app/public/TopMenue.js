@@ -15,16 +15,16 @@ export const TopMenue = ({ setActiveSection }) => {
       </div>
 
       <div
-        className={`${isOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row gap-5 md:gap-[50px] justify-center items-center md:items-center bg-black`}
+        className={`${
+          isOpen ? "flex" : "hidden"
+        } md:flex flex-col md:flex-row gap-5 md:gap-[50px] justify-center items-center md:items-center bg-black`}
       >
-
         <Link href="/" className="inline-block">
           <button
             onClick={() => setActiveSection("home")}
             className="text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand"
           >
-            Home
+            Accueil
           </button>
         </Link>
         <Link href="/quiz" className="inline-block">
@@ -32,7 +32,7 @@ export const TopMenue = ({ setActiveSection }) => {
             onClick={() => setActiveSection("quiz")}
             className="text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand"
           >
-            Free Simulator
+            Essai gratuit
           </button>
         </Link>
         <Link href="/payment" className="inline-block">
@@ -40,7 +40,7 @@ export const TopMenue = ({ setActiveSection }) => {
             onClick={() => setActiveSection("products")}
             className="text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand"
           >
-            Products
+            Commander un examen
           </button>
         </Link>
         <Link href="/access-simulator" className="inline-block">
@@ -48,12 +48,12 @@ export const TopMenue = ({ setActiveSection }) => {
             onClick={() => setActiveSection("access-simulator")}
             className="text-[18px] md:text-[26px]  font-normal text-white cursor-pointer font-quicksand"
           >
-            Access Simulator
+            Commencer ma préparation
           </button>
         </Link>
 
         <button className="md:hidden text-[18px] md:text-[26px] font-normal text-white cursor-pointer font-quicksand">
-          Login
+          Connexion
         </button>
       </div>
     </div>

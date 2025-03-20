@@ -13,9 +13,6 @@ export const Footer = () => {
               Commander un examen
             </button>
             <button className="text-[18px] md:text-[26px] font-quicksand font-normal text-white ">
-              About Us
-            </button>
-            <button className="text-[18px] md:text-[26px] font-quicksand font-normal text-white ">
               Nous contacter
             </button>
           </div>
