@@ -56,6 +56,7 @@ const verifyUserToken = (req, res, next) => {
           message: "User not found",
           response: null,
           error: "User not found",
+          
         });
       }
       if (!user.emailVerified) {
