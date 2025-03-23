@@ -6,6 +6,7 @@ export const FrequentlyQuestions = () => {
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
   const faqData = [
     {
       question: " Qu'est-ce qu'Acces-sec ?",
