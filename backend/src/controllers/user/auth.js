@@ -1,8 +1,11 @@
-const { configurations } = require("../../config/config");
+const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
+const { configurations } = require("../../config/config");
+const { configs } = require("../../config/email-config.js");
+const { sendMail } = require("../../utils/sendMail.js");
 
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, address } = req.body;
+  const { name, email, address } = req.body;
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
   try {
@@ -16,12 +19,18 @@ const registerUser = async (req, res) => {
     }
 
     await User.create({
-      firstName,
-      lastName,
+      name,
       email,
       address,
       code,
     });
+
+    const dynamicData = {
+      userName: name,
+      loginCode: code,
+      to_email: email,
+    };
+    await sendMail(configs.templates.accesSecUserCreation, dynamicData);
 
     return res.status(201).json({
       message: "User created successfully",
@@ -61,11 +70,12 @@ const loginUser = async (req, res) => {
       expiresIn: "24h",
     });
 
+    const data = {
+      data: token,
+    };
     return res.status(200).json({
       message: "You've successfully logged in",
-      response: {
-        token,
-      },
+      response: data,
       error: null,
     });
   } catch (error) {

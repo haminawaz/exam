@@ -9,7 +9,7 @@ export const PercentofParent = () => {
     },
     {
       testimonial:
-        "Ma fille a adoré l'expérience Acces-Sec ! Elle a pu pratiquer sans pression et voir immédiatement où elle devait s'améliorer. C'est un excellent outil pour tous les parents qui veulent aider leurs enfants à se préparer efficacement",
+        "Ma fille a adoré l'expérience Acces-Sec ! Elle a pu pratiquer sans pression et voir immédiatement où elle devait s'améliorer. C'est un excellent outil pour tous les parents qui veulent aider leurs enfants à se préparer efficacement.",
       author: "François D., père de Léonie",
     },
     {

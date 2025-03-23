@@ -13,13 +13,20 @@ const QuestionSchema = new mongoose.Schema(
     },
     options: {
       type: Array,
+      required: true,
     },
-    answer: {
+    correct: {
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      default: null,
+    },
     simulatorType: {
       type: String,
+      required: true,
+      enum: ['free', 'paid'],
     },
   },
   { timestamps: true }

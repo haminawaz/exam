@@ -1,18 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function page() {
   const [name, setName] = useState("");
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
+  const [errors, setErrors] = useState({});
+  const [testId, setTestId] = useState(null);
+  const [token, setToken] = useState(null);
   const [avatars, setAvatars] = useState([]);
   const [selected, setSelected] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [userResponses, setUserResponses] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
+  const router = useRouter();
 
   useEffect(() => {
     if (quizStarted) {
@@ -26,32 +32,99 @@ export default function page() {
   }, [timer]);
 
   const handleNext = () => {
+    if (!questions[currentQuestion]) return;
+    const response = {
+      question: questions[currentQuestion]?._id,
+      selectedAnswer: selected,
+      isCorrect: selected === questions[currentQuestion]?.correct,
+    };
+    setUserResponses((prevResponses) => [...prevResponses, response]);
     if (selected === questions[currentQuestion].correct) {
       setScore(score + 1);
     }
+    setCurrentQuestion(currentQuestion + 1);
+    if (currentQuestion === questions.length - 1) {
+      setQuizCompleted(true);
+    }
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
       setSelected(null);
       setTimer(60);
-    } else {
-      setQuizCompleted(true);
+    }
+  };
+
+  useEffect(() => {
+    if (quizCompleted) {
+      sendResults(userResponses);
+    }
+  }, [quizCompleted, userResponses]);
+
+  const sendResults = async () => {
+    try {
+      const requestBody = {
+        name,
+        avatar: selectedAvatar?._id,
+        responses: userResponses,
+        testId,
+      };
+      const response = await fetch(`${serverBaseUrl}/user/question/results`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        setTestId(null);
+      } else {
+        console.error("Failed to save results:", responseData.error);
+      }
+    } catch (error) {
+      console.error("Error saving results:", error);
     }
   };
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch(`${serverBaseUrl}/user/question/free`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No authorization token found");
+        return;
+      }
+
+      const requestBody = {
+        name,
+        avatarId: selectedAvatar?._id,
+      };
+
+      const response = await fetch(`${serverBaseUrl}/user/question/paid`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
       const responseData = await response.json();
       if (response.ok) {
-        const questions = responseData?.response?.data || [];
+        const questions = responseData?.response?.data?.questions || [];
+        setUserResponses([]);
+        setTestId(responseData?.response?.data?.testId);
         setQuestions(questions);
+        setTimer(60);
+        setQuizStarted(true);
+      } else if (response.status === 403) {
+        const error = typeof responseData.error;
+        if (error === "object") {
+          setErrors(responseData.error);
+        }
       } else if (response.status === 404) {
         setQuestions([]);
       } else {
-        console.error("Failed to fetch free question");
+        console.error("Failed to fetch question");
       }
     } catch (error) {
-      console.error("Error fetching free question:", error);
+      console.error("Error fetching question:", error);
     }
   };
 
@@ -78,13 +151,34 @@ export default function page() {
   }, []);
 
   const handleStartQuiz = () => {
-    if (!name || !selectedAvatar) {
+    if (!token) {
+      router.push("/access-simulator");
+    }
+    if (!name || !selectedAvatar || !token) {
       return;
     }
     fetchQuestions();
-    setTimer(60);
-    setQuizStarted(true);
   };
+
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.replace("/access-simulator");
+        setToken(null);
+      } else {
+        setToken(token);
+      }
+    };
+
+    document.body.onclick = checkToken;
+    document.body.onscroll = checkToken;
+
+    return () => {
+      document.body.onclick = null;
+      document.body.onscroll = null;
+    };
+  }, []);
 
   return (
     <>
@@ -122,8 +216,18 @@ export default function page() {
                 className="w-full h-12 px-4 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] text-center placeholder:text-center focus:outline-none"
               />
               {!name && (
-                <p className="text-red-500 mt-0 mb-3 text-center">
+                <p className="joi-error-message mt-0 mb-3 text-center">
                   Please Enter your name
+                </p>
+              )}
+              {errors?.name && (
+                <p className="joi-error-message mt-0 mb-3 text-center">
+                  {errors?.name[0]}
+                </p>
+              )}
+              {errors?.avatarId && (
+                <p className="joi-error-message mt-0 mb-3 text-center">
+                  {errors?.avatarId[0]}
                 </p>
               )}
               <div className="flex flex-col md:flex-row items-center gap-2">
@@ -162,7 +266,7 @@ export default function page() {
                       className="m-auto mt-5"
                     />
                     <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
-                      {score >= 7
+                      {(score / questions.length) * 100 >= 70
                         ? "Congratulations, you did well!"
                         : " Tu dois t'exercer encore. Tu es capable!"}
                     </h1>
@@ -221,8 +325,8 @@ export default function page() {
                       <div className="flex items-center justify-center relative gap-[50px]">
                         <button
                           onClick={handleNext}
-                          disabled={!selected}
                           className="bg-black text-white px-4 py-1 rounded-[10px] cursor-pointer"
+                          disabled={!selected}
                         >
                           {currentQuestion === questions.length - 1
                             ? "Finish"

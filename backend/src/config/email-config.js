@@ -8,47 +8,17 @@ const configs = {
     apiKey: process.env.MAILGUN_API_KEY,
   },
   templates: {
-    buyerOrderNotification: {
+    accesSecOrder: {
       from: noreplyEmail,
-      subject: "NBOX - Order Notification",
-      name: "nbox-order-notification-buyer",
+      name: "acces-sec-order",
     },
-    merchantOrderNotification: {
+    accesSecUserCreation: {
       from: noreplyEmail,
-      subject: "NBOX - Order Notification",
-      name: "nbox-order-notification-merchant",
+      name: "acces-sec-user-creation",
     },
-    outForDeliveryNotificationBuyer: {
+    accessSecResult: {
       from: noreplyEmail,
-      name: "nbox-order-out-for-delivery-notification",
-    },
-    orderCompletedNotificationBuyer: {
-      from: noreplyEmail,
-      name: "nbox-order-completion-and-feedback-request",
-    },
-    orderDeliveredNotificationMerchant: {
-      from: noreplyEmail,
-      name: "nbox-order-delivered-merchant-notification",
-    },
-    merchantLowStockNotification: {
-      from: noreplyEmail,
-      name: "nbox-merchant-low-stock-notification",
-    },
-    adminOrderReadyNotification: {
-      from: noreplyEmail,
-      name: "nbox-admin-order-ready-notification",
-    },
-    agentOrderAssignNotification: {
-      from: noreplyEmail,
-      name: "nbox-agent-order-assign-notification",
-    },
-    merchantOrderAssignNotification: {
-      from: noreplyEmail,
-      name: "nbox-merchant-order-assign-notification",
-    },
-    adminOrderRejectByAgentNotification: {
-      from: noreplyEmail,
-      name: "nbox-admin-order-reject-by-agent-notification",
+      name: "access-sec-result",
     },
   },
 };

@@ -8,12 +8,12 @@ const { bodyValidator } = require("../../middlewares/joi.js");
 
 router.post(
   "/register",
-  bodyValidator("buyerRegisterSchema"),
+  bodyValidator("registerSchema"),
   registerUser
 );
 router.post(
   "/login",
-  bodyValidator("merchantRegisterSchema"),
+  bodyValidator("loginSchema"),
   loginUser
 );
 

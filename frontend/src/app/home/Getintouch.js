@@ -20,7 +20,7 @@ export const Getintouch = () => {
 
   return (
     <>
-      <section className="py-[50px]">
+      <section className="py-[50px]" id="contact-us">
         <div
           className="border border-[#FE8840] m-[20px] sm:m-[70px] md:m-[100px] p-5 md:p-[50px]"
           style={{ borderWidth: "3px" }}
@@ -51,7 +51,7 @@ export const Getintouch = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Your Name"
+                  placeholder="Nom"
                   className="sm:w-1/2 p-3 rounded-md shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]  "
                   required
                 />
@@ -60,7 +60,7 @@ export const Getintouch = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Your Email"
+                  placeholder="Courriel"
                   className="sm:w-1/2 p-3 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-md   "
                   required
                 />
@@ -71,7 +71,7 @@ export const Getintouch = () => {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
-                placeholder="Subject"
+                placeholder="Objet"
                 className="w-full p-3 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-md   "
                 required
               />

@@ -1,9 +1,12 @@
-const {
-  buyerRegisterSchema,
-  merchantRegisterSchema
-} = require("./joi/user/auth");
+const { registerSchema, loginSchema } = require("./joi/user/auth");
+
+const { orderParamsSchema } = require("./joi/user/order");
+
+const { accessQuestionSchema } = require("./joi/user/question");
 
 module.exports = {
-  buyerRegisterSchema,
-  merchantRegisterSchema,
+  registerSchema,
+  loginSchema,
+  orderParamsSchema,
+  accessQuestionSchema,
 };

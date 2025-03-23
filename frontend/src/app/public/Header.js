@@ -11,11 +11,9 @@ export const Header = () => {
       </Link>
 
       <div className="flex flex-row h-[60px] md:h-[50px] gap-3 pr-[50px] mb-5 md:mb-0 items-center">
-        <button className="primary-btn bg-[#FE8840] text-white px-[60px] py-3 rounded-[25px] cursor-pointer transition">
+        <Link href="/access-simulator" className="primary-btn bg-[#FE8840] text-white px-[60px] py-3 rounded-[25px] cursor-pointer transition">
           Connexion
-        </button>
-
-        <img src="/images/shopping_basket.png" alt="Acces" />
+        </Link>
       </div>
     </div>
   );

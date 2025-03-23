@@ -10,12 +10,12 @@ export const FrequentlyQuestions = () => {
     {
       question: " Qu'est-ce qu'Acces-sec ?",
       answer:
-        "Acces-Sec est un simulateur d'examen conçu pour aider les élèves à se préparer efficacement aux examens d'admission aux écoles secondaires du Québec. Il propose des tests conformes au programme scolaire avec des retours détaillés pour chaque",
+        "Acces-Sec est un simulateur d'examen conçu pour aider les élèves à se préparer efficacement aux examens d'admission aux écoles secondaires du Québec. Il propose des tests conformes au programme scolaire avec des retours détaillés pour chaque matière.",
     },
     {
       question: "Comment utiliser Acces-Sec ?",
       answer:
-        "Il vous suffit de vous inscrire, de choisir le test correspondant à la matière que vous souhaitez pratiquer (mathématiques ou français) et de commencer à répondre aux questions. Une fois terminé, vous recevrez un rapport détaillé avec votre score et dessuggestions pour améliorer vos résultats.",
+        "Acces-Sec oƯre deux niveaux de simulation d’examens. Il vous suƯit de commander le niveau sur lequel vous souhaitez que votre enfant s’exerce. En général, pour une préparation optimale, nous recommandons de commencer par le niveau 1. Vous recevrez alors un code qui donnera à votre enfant l’accès aux simulations d’examens autant en français et qu’en mathématiques. Une fois les examens terminés, vous bénéficierez d’un rapport détaillé contenant des pistes d’amélioration des résultats.",
     },
     {
       question:
@@ -31,7 +31,7 @@ export const FrequentlyQuestions = () => {
     {
       question: "Comment les résultats sont-ils présentés sur Acces-Sec ?",
       answer:
-        "Après chaque simulation, vous recevrez par courriel un rapport avec le score global par matière ainsi qu'un score par section dans chaque matière. Vous pourrez alors identifier les sections que votre enfant doit réviser davantage.",
+        "Après chaque simulation, vous recevrez par courriel un rapport contenant le score global par matière ainsi qu'un score par section dans chaque matière. Vous pourrez alors identifier les sections que votre enfant doit réviser davantage.",
     },
     {
       question: "Mon enfant peut-il refaire les simulations plusieurs fois ?",
@@ -42,11 +42,11 @@ export const FrequentlyQuestions = () => {
       question:
         "Les parents peuvent-ils suivre les performances de leur enfant sur Acces-Sec ?",
       answer:
-        "Oui, Acces-Sec offre un suivi personnalisé pour les parents, avec des rapports sur les performances de leur enfant, incluant les scores obtenus et les sections à améliorer dans chaque matière",
+        "Oui, Acces-Sec oƯre un suivi personnalisé pour les parents, avec des rapports sur les performances de leur enfant, incluant les scores obtenus et les sections à améliorer dans chaque matière.",
     },
     {
       question: "Est-ce que l'utilisation d'Acces-Sec est payante ?",
-      answer: `Acces-Sec propose la fonctionnalité "simulation gratuite" pour vous offrir un essai. L'accès aux simulations complètes d'examens nécessitent un abonnement pour accéder à des tests supplémentaires et des rapports détaillés.`,
+      answer: `Acces-Sec propose la fonctionnalité "simulation gratuite" pour vous oƯrir un essai. Un paiement est requis pour ouvrir l'accès aux simulations complètes d'examens qui oƯrent des tests plus exhaustifs, vous permettant de recevoir des rapports détaillés.`,
     },
     {
       question: "Les questions sont-elles conformes aux examens réels ?",
