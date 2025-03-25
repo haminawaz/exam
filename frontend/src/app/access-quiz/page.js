@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
+
 export default function page() {
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
