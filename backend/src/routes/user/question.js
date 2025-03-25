@@ -10,10 +10,9 @@ const { bodyValidator } = require("../../middlewares/joi");
 
 router.get("/free", getAllFreeQuestions);
 
-router.post(
+router.get(
   "/paid",
   verifyUserToken,
-  bodyValidator("accessQuestionSchema"),
   getAccessQuestions
 );
 

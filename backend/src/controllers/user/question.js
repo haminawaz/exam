@@ -37,15 +37,16 @@ const getAllFreeQuestions = async (req, res) => {
 const getAccessQuestions = async (req, res) => {
   const user = req.decoded;
   const userId = user._id;
-  const { name, avatarId } = req.body;
 
   try {
     const order = await Order.findOne({ userId }).lean();
     if (!order || order?.expiryDate < new Date()) {
       return res.status(404).json({
-        message: "No order found",
+        message:
+          "You haven't purchased any subscription or your access has expired",
         response: null,
-        error: "No order found",
+        error:
+          "You haven't purchased any subscription or your access has expired",
       });
     }
 
@@ -100,8 +101,6 @@ const getAccessQuestions = async (req, res) => {
 
     const newTest = new Test({
       user: userId,
-      name,
-      avatarId: avatarId,
       levelId: order?.levelId,
       totalQuestions: questions?.length,
     });
@@ -252,7 +251,7 @@ const createResults = async (req, res) => {
         : "Better luck next time";
 
     const dynamicData = {
-      studentName: test?.name,
+      studentName: test?.user?.name,
       totalMarks: totalQuestions,
       score: totalScore,
       percentage: Number(overallPercentage.toFixed(2)),
@@ -265,7 +264,6 @@ const createResults = async (req, res) => {
       })),
       to_email: test?.user?.email,
     };
-    console.log("dynamicData", dynamicData);
     await sendMail(configs.templates.accessSecResult, dynamicData);
 
     return res.status(201).json({

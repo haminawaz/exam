@@ -4,20 +4,15 @@ import { useRouter } from "next/navigation";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function page() {
-  const [name, setName] = useState("");
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
-  const [errors, setErrors] = useState({});
   const [testId, setTestId] = useState(null);
-  const [token, setToken] = useState(null);
-  const [avatars, setAvatars] = useState([]);
   const [selected, setSelected] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [quizStarted, setQuizStarted] = useState(false);
   const [userResponses, setUserResponses] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
   const router = useRouter();
 
   useEffect(() => {
@@ -61,8 +56,6 @@ export default function page() {
   const sendResults = async () => {
     try {
       const requestBody = {
-        name,
-        avatar: selectedAvatar?._id,
         responses: userResponses,
         testId,
       };
@@ -84,90 +77,52 @@ export default function page() {
     }
   };
 
-  const fetchQuestions = async () => {
-    try {
+  useEffect(() => {
+    const fetchQuestions = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.error("No authorization token found");
-        return;
+        return router.push("/access-simulator");
       }
-
-      const requestBody = {
-        name,
-        avatarId: selectedAvatar?._id,
-      };
-
-      const response = await fetch(`${serverBaseUrl}/user/question/paid`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
-      const responseData = await response.json();
-      if (response.ok) {
-        const questions = responseData?.response?.data?.questions || [];
-        setUserResponses([]);
-        setTestId(responseData?.response?.data?.testId);
-        setQuestions(questions);
-        setTimer(60);
-        setQuizStarted(true);
-      } else if (response.status === 403) {
-        const error = typeof responseData.error;
-        if (error === "object") {
-          setErrors(responseData.error);
-        }
-      } else if (response.status === 404) {
-        setQuestions([]);
-      } else {
-        console.error("Failed to fetch question");
-      }
-    } catch (error) {
-      console.error("Error fetching question:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchAvatars = async () => {
       try {
-        const response = await fetch(`${serverBaseUrl}/user/avatar`);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No authorization token found");
+          return;
+        }
+
+        const response = await fetch(`${serverBaseUrl}/user/question/paid`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const responseData = await response.json();
         if (response.ok) {
-          const avatars = responseData?.response?.data || [];
-          setAvatars(avatars);
-          setSelectedAvatar(avatars[0]);
+          const questions = responseData?.response?.data?.questions || [];
+          setUserResponses([]);
+          setTestId(responseData?.response?.data?.testId);
+          setQuestions(questions);
+          setTimer(60);
+          setQuizStarted(true);
         } else if (response.status === 404) {
-          setAvatars([]);
+          setQuestions([]);
         } else {
-          console.error("Failed to fetch avatars");
+          console.error("Failed to fetch question");
         }
       } catch (error) {
-        console.error("Error fetching avatars:", error);
+        console.error("Error fetching question:", error);
       }
     };
 
-    fetchAvatars();
-  }, []);
-
-  const handleStartQuiz = () => {
-    if (!token) {
-      router.push("/access-simulator");
-    }
-    if (!name || !selectedAvatar || !token) {
-      return;
-    }
     fetchQuestions();
-  };
+  }, []);
 
   useEffect(() => {
     const checkToken = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         router.replace("/access-simulator");
-        setToken(null);
-      } else {
-        setToken(token);
       }
     };
 
@@ -182,178 +137,120 @@ export default function page() {
 
   return (
     <>
-      {!quizStarted ? (
-        <section className="bg-[#f9f9f9] py-5">
-          <div className="bg-[#fff3e9] md:w-[70%] lg:w-[50%] m-auto py-5">
-            <h1 className="text-[25px] md:text-[40px] font-poppins  font-bold text-[#000000] text-center pb-5">
-              Bienvenue!
-            </h1>
-            <div className="bg-white mx-[40px] md:mx-[100px] m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px]">
-              <p className="text-[16px] font-quicksand font-bold text-[#000000] text-center py-5">
-                Choisis ton avatar préféré
-              </p>
-              <div className="flex justify-center">
-                <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 justify-center items-center">
-                  {avatars?.map((avatar, index) => (
-                    <img
-                      key={index}
-                      src={avatar?.avatarUrl}
-                      alt={`Avatar ${index + 1}`}
-                      className="cursor-pointer  hover:border-gray-500 transition w-25"
-                      onClick={() => setSelectedAvatar(avatar)}
-                    />
-                  ))}
+      <section className="bg-[#f9f9f9] py-5">
+        <div className="bg-[#fff3e9] md:w-[70%] lg:w-[50%] m-auto ">
+          <div className="bg-white mx-5 md:mx-[100px] m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px] rounded-lg text-center">
+            {questions && questions.length > 1 ? (
+              quizCompleted ? (
+                <div>
+                  <h1 className="text-2xl font-bold">Test complété</h1>
+                  <p className="text-lg font-semibold">
+                    Ton score: {score}/{questions.length}
+                  </p>
+                  {(score / questions.length) * 100 >= 70 ? (
+                    <>
+                      <img
+                        src="/images/quiz/good.png"
+                        alt="Success"
+                        className="m-auto mt-5"
+                      />
+                      <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
+                        Congratulations, you did well!
+                      </h1>
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src="/images/quiz/bad.png"
+                        alt="Success"
+                        className="m-auto mt-5"
+                      />
+                      <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
+                        Tu dois t'exercer encore. Tu es capable!
+                      </h1>
+                    </>
+                  )}
                 </div>
-              </div>
-              <p className="text-[16px] font-quicksand font-bold text-[#000000] text-center py-2 pt-5">
-                Choisis ton pseudonyme
-              </p>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Emile"
-                className="w-full h-12 px-4 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] text-center placeholder:text-center focus:outline-none"
-              />
-              {!name && (
-                <p className="joi-error-message mt-0 mb-3 text-center">
-                  Please Enter your name
-                </p>
-              )}
-              {errors?.name && (
-                <p className="joi-error-message mt-0 mb-3 text-center">
-                  {errors?.name[0]}
-                </p>
-              )}
-              {errors?.avatarId && (
-                <p className="joi-error-message mt-0 mb-3 text-center">
-                  {errors?.avatarId[0]}
-                </p>
-              )}
-              <div className="flex flex-col md:flex-row items-center gap-2">
-                <img
-                  src={selectedAvatar?.avatarUrl}
-                  alt="avtar"
-                  className="w-24 h-24"
-                />
-                <p className="text-[14px] font-quicksand font-bold text-[#000000] text-">
-                  Super! {name ? name : "Emile"} Ton profil est mis à jour.
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={handleStartQuiz}
-              className="bg-black text-white px-4 py-2 rounded-[10px] mt-4 mx-auto block cursor-pointer"
-            >
-              Start Quiz
-            </button>
-          </div>
-        </section>
-      ) : (
-        <section className="bg-[#f9f9f9] py-5">
-          <div className="bg-[#fff3e9] md:w-[70%] lg:w-[50%] m-auto ">
-            <div className="bg-white mx-5 md:mx-[100px] m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px] rounded-lg text-center">
-              {questions && questions.length > 1 ? (
-                quizCompleted ? (
-                  <div>
-                    <h1 className="text-2xl font-bold">Test complété</h1>
-                    <p className="text-lg font-semibold">
-                      Ton score: {score}/{questions.length}
-                    </p>
+              ) : (
+                <>
+                  <div className="flex items-center justify-center relative gap-[50px]">
                     <img
-                      src="/images/quiz/good.png"
-                      alt="Success"
-                      className="m-auto mt-5"
+                      src="/images/quiz/timer.png"
+                      alt="Timer"
+                      className="w-auto h-auto"
                     />
-                    <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
-                      {(score / questions.length) * 100 >= 70
-                        ? "Congratulations, you did well!"
-                        : " Tu dois t'exercer encore. Tu es capable!"}
-                    </h1>
+                    <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-lg">
+                      {timer}
+                    </p>
                   </div>
-                ) : (
-                  <>
+
+                  <p className="text-[18px] md:text-[22px] font-poppins font-bold text-[#000] py-5">
+                    {questions[currentQuestion]?.question}
+                  </p>
+
+                  {questions[currentQuestion]?.image && (
                     <div className="flex items-center justify-center relative gap-[50px]">
                       <img
-                        src="/images/quiz/timer.png"
-                        alt="Timer"
-                        className="w-auto h-auto"
+                        src={questions[currentQuestion]?.image}
+                        alt={`${questions[currentQuestion]?.image}`}
+                        className=""
                       />
-                      <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-lg">
-                        {timer}
+                    </div>
+                  )}
+
+                  <div className="bg-white m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px] mt-5 rounded-lg mb-5 flex flex-col justify-center items-center">
+                    {questions[currentQuestion]?.options?.map(
+                      (option, index) => (
+                        <div
+                          key={option}
+                          onClick={() => setSelected(option)}
+                          className={`flex flex-row gap-[50px] mt-1 rounded-md transition duration-300 cursor-pointer ${
+                            selected === option
+                              ? "bg-[#cde3ee]"
+                              : "hover:bg-[#cde3ee]"
+                          } items-center p-3`}
+                        >
+                          <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-[#000]">
+                            {String.fromCharCode(
+                              65 + index
+                            ).toLocaleLowerCase()}
+                            ) {option}
+                          </h1>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="items-center flex flex-col justify-center">
+                    <div className="flex items-center justify-center relative gap-[50px]">
+                      <button
+                        onClick={handleNext}
+                        className="bg-black text-white px-4 py-1 rounded-[10px] cursor-pointer"
+                        disabled={!selected}
+                      >
+                        {currentQuestion === questions.length - 1
+                          ? "Finish"
+                          : "suivant"}
+                      </button>
+                    </div>
+
+                    <div className="mt-5">
+                      <p className="text-[14px] font-quicksand font-semibold text-center">
+                        Question {currentQuestion + 1} of {questions.length}
                       </p>
                     </div>
-
-                    <p className="text-[18px] md:text-[22px] font-poppins font-bold text-[#000] py-5">
-                      {questions[currentQuestion]?.question}
-                    </p>
-
-                    {questions[currentQuestion]?.image && (
-                      <div className="flex items-center justify-center relative gap-[50px]">
-                        <img
-                          src={questions[currentQuestion]?.image}
-                          alt={`${questions[currentQuestion]?.image}`}
-                          className=""
-                        />
-                      </div>
-                    )}
-
-                    <div className="bg-white m-auto p-5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pb-[50px] mt-5 rounded-lg mb-5 flex flex-col justify-center items-center">
-                      {questions[currentQuestion]?.options?.map(
-                        (option, index) => (
-                          <div
-                            key={option}
-                            onClick={() => setSelected(option)}
-                            className={`flex flex-row gap-[50px] mt-1 rounded-md transition duration-300 cursor-pointer ${
-                              selected === option
-                                ? "bg-[#cde3ee]"
-                                : "hover:bg-[#cde3ee]"
-                            } items-center p-3`}
-                          >
-                            <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-[#000]">
-                              {String.fromCharCode(
-                                65 + index
-                              ).toLocaleLowerCase()}
-                              ) {option}
-                            </h1>
-                          </div>
-                        )
-                      )}
-                    </div>
-
-                    <div className="items-center flex flex-col justify-center">
-                      <div className="flex items-center justify-center relative gap-[50px]">
-                        <button
-                          onClick={handleNext}
-                          className="bg-black text-white px-4 py-1 rounded-[10px] cursor-pointer"
-                          disabled={!selected}
-                        >
-                          {currentQuestion === questions.length - 1
-                            ? "Finish"
-                            : "suivant"}
-                        </button>
-                      </div>
-
-                      <div className="mt-5">
-                        <p className="text-[14px] font-quicksand font-semibold text-center">
-                          Question {currentQuestion + 1} of {questions.length}
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                )
-              ) : (
-                <div className="my-5">
-                  <h1 className="text-2xl font-bold">No Questions Found</h1>
-                  <p className="text-lg font-semibold">
-                    Please try again later.
-                  </p>
-                </div>
-              )}
-            </div>
+                  </div>
+                </>
+              )
+            ) : (
+              <div className="my-5">
+                <h1 className="text-2xl font-bold">No Questions Found</h1>
+                <p className="text-lg font-semibold">Please try again later.</p>
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </>
   );
 }

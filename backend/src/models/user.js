@@ -13,8 +13,9 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    address: {
-      type: String,
+    avatarId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avatar",
       required: true,
     },
     code: {

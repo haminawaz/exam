@@ -33,6 +33,12 @@ export default function page() {
           setAlertMessage(responseData.message || "An error occurred");
           setTimeout(() => setAlertMessage(false), 3000);
         }
+      } else if (responseData.message === "User not found") {
+        setAlertMessage(responseData.message);
+        setTimeout(() => {
+          setAlertMessage(false);
+          router.push("/payment");
+        }, 3000);
       } else {
         setAlertMessage(responseData.message);
         setTimeout(() => setAlertMessage(false), 3000);
@@ -66,9 +72,9 @@ export default function page() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
-              required
+              className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
               placeholder="Please Enter Your Parent Email"
+              required
             />
             {errors?.email && (
               <p className="joi-error-message">{errors?.email[0]}</p>
@@ -79,9 +85,10 @@ export default function page() {
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
-              required
+              className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
               placeholder="please enter your code"
+              maxLength={6}
+              required
             />
             {errors?.code && (
               <p className="joi-error-message">{errors?.code[0]}</p>

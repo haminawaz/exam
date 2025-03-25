@@ -156,16 +156,29 @@ export default function page() {
                     <p className="text-lg font-semibold">
                       Ton score: {score}/{questions.length}
                     </p>
-                    <img
-                      src="/images/quiz/good.png"
-                      alt="Success"
-                      className="m-auto mt-5"
-                    />
-                    <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
-                      {score >= 7
-                        ? "Congratulations, you did well!"
-                        : " Tu dois t'exercer encore. Tu es capable!"}
-                    </h1>
+                    {(score / questions.length) * 100 >= 70 ? (
+                      <>
+                        <img
+                          src="/images/quiz/good.png"
+                          alt="Success"
+                          className="m-auto mt-5"
+                        />
+                        <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
+                          Congratulations, you did well!
+                        </h1>
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          src="/images/quiz/bad.png"
+                          alt="Success"
+                          className="m-auto mt-5"
+                        />
+                        <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
+                          Tu dois t'exercer encore. Tu es capable!
+                        </h1>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <>

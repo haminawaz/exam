@@ -10,10 +10,12 @@ export default function Welcome({ setActiveSection }) {
   const [levels, setLevels] = useState([]);
   const [token, setToken] = useState(null);
   const [errors, setErrors] = useState({});
+  const [avatars, setAvatars] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [alertMessage, setAlertMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
   const [loginFormData, setLoginFormData] = useState({
     email: "",
     code: "",
@@ -21,7 +23,6 @@ export default function Welcome({ setActiveSection }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    address: "",
   });
 
   const handleLoginChange = (e) => {
@@ -35,11 +36,12 @@ export default function Welcome({ setActiveSection }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    const updatedFormData = { ...formData, avatarId: selectedAvatar?._id };
     try {
       const response = await fetch(`${serverBaseUrl}/user/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       });
       const responseData = await response.json();
       if (response.ok) {
@@ -123,9 +125,9 @@ export default function Welcome({ setActiveSection }) {
           setLevels(levels);
         } else if (responseData.message === "Invalid token or expired") {
           localStorage.removeItem("token");
-          setToken(null)
-          fetchLevels()
-        }else if (response.status === 404) {
+          setToken(null);
+          fetchLevels();
+        } else if (response.status === 404) {
           setLevels([]);
         } else {
           console.error("Failed to fetch levels");
@@ -161,6 +163,25 @@ export default function Welcome({ setActiveSection }) {
     setSelectedLevel(3);
     setErrors({});
     setAlertMessage(false);
+    fetchAvatars();
+  };
+
+  const fetchAvatars = async () => {
+    try {
+      const response = await fetch(`${serverBaseUrl}/user/avatar`);
+      const responseData = await response.json();
+      if (response.ok) {
+        const avatars = responseData?.response?.data || [];
+        setAvatars(avatars);
+        setSelectedAvatar(avatars[0]);
+      } else if (response.status === 404) {
+        setAvatars([]);
+      } else {
+        console.error("Failed to fetch avatars");
+      }
+    } catch (error) {
+      console.error("Error fetching avatars:", error);
+    }
   };
 
   const backToCourses = () => {
@@ -296,7 +317,7 @@ export default function Welcome({ setActiveSection }) {
                   name="email"
                   value={loginFormData.email}
                   onChange={handleLoginChange}
-                  className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
+                  className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
                   placeholder="Please Enter Your Parent Email"
                 />
@@ -310,8 +331,9 @@ export default function Welcome({ setActiveSection }) {
                   name="code"
                   value={loginFormData.code}
                   onChange={handleLoginChange}
-                  className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
+                  className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
+                  maxLength={6}
                   placeholder="please enter your code"
                 />
                 {errors?.code && (
@@ -379,12 +401,43 @@ export default function Welcome({ setActiveSection }) {
 
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="mb-5">
+                <div className="flex justify-center">
+                  <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 justify-center items-center">
+                    {avatars?.map((avatar, index) => (
+                      <img
+                        key={index}
+                        src={avatar?.avatarUrl}
+                        alt={`Avatar ${index + 1}`}
+                        className="cursor-pointer  hover:border-gray-500 transition w-25"
+                        onClick={() => setSelectedAvatar(avatar)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {errors?.avatarId && (
+                  <p className="joi-error-message mt-0 mb-3 text-center">
+                    {errors?.avatarId[0]}
+                  </p>
+                )}
+              </div>
+              <p className="text-[16px] font-quicksand font-bold text-[#7f7f7f]">
+                Choisis ton avatar préféré
+              </p>
+              <div className="flex flex-col md:flex-row items-center gap-2">
+                <img
+                  src={selectedAvatar?.avatarUrl}
+                  alt="Selected Avatar"
+                  className="w-24 h-24"
+                />
+              </div>
+
+              <div className="mb-2">
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
+                  className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
                   placeholder="Enter your name"
                 />
@@ -399,7 +452,7 @@ export default function Welcome({ setActiveSection }) {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
+                  className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
                   placeholder="Please Enter Your Parent Email"
                 />
@@ -407,22 +460,6 @@ export default function Welcome({ setActiveSection }) {
                   <p className="joi-error-message">{errors?.email[0]}</p>
                 )}
               </div>
-
-              <div className="mb-5">
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-opacity-40 border-2 placeholder-[#FE8840] border-[#FE8840] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE8840] transition-all"
-                  required
-                  placeholder="Enter your address"
-                />
-                {errors?.address && (
-                  <p className="joi-error-message">{errors?.address[0]}</p>
-                )}
-              </div>
-
               <div className="flex justify-center items-center">
                 <button
                   type="submit"

@@ -33,23 +33,13 @@ module.exports = {
         "string.trim":
           "Email should not contain any spaces at the beginning or end",
       }),
-    address: Joi.string()
-      .pattern(
-        /^(?!.*\s{2,})(?!.*([,#\-/().'])[\s]*[,#\-/().'])[A-Za-z0-9\s,#\-/().']+$/
-      )
-      .min(2)
-      .max(255)
-      .required()
-      .trim()
-      .messages({
-        "string.base": "Address must be a string",
-        "any.required": "Address is required",
-        "string.empty": "Address cannot be empty",
-        "string.min": "Address must be at least {#limit} character long",
-        "string.max": "Address must not exceed {#limit} characters",
-        "string.pattern.base":
-          "Invalid address! Please enter a valid address without extra spaces or special characters",
-      }),
+    avatarId: Joi.string().length(24).hex().required().messages({
+      "string.base": "Avatar is invalid",
+      "string.empty": "Avatar is required",
+      "string.length": "Avatar is invalid",
+      "string.hex": "Avatar is invalid",
+      "any.required": "Avatar is required",
+    }),
   }),
 
   loginSchema: Joi.object({

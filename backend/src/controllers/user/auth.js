@@ -5,7 +5,7 @@ const { configs } = require("../../config/email-config.js");
 const { sendMail } = require("../../utils/sendMail.js");
 
 const registerUser = async (req, res) => {
-  const { name, email, address } = req.body;
+  const { name, email, avatarId } = req.body;
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
   try {
@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
     await User.create({
       name,
       email,
-      address,
+      avatarId,
       code,
     });
 

@@ -33,11 +33,11 @@ const topicResultSchema = new mongoose.Schema(
         },
         selectedAnswer: {
           type: String,
-          required: true,
+          default: null,
         },
         isCorrect: {
           type: Boolean,
-          required: true,
+          default: false,
         },
       },
     ],
