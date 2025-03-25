@@ -4,7 +4,6 @@ const Level = require("../../models/level.js");
 const Order = require("../../models/order.js");
 const Test = require("../../models/test.js");
 const { configurations } = require("../../config/config.js");
-const { configs } = require("../../config/email-config.js");
 const { sendMail } = require("../../utils/sendMail.js");
 
 const stripe = Stripe(configurations.stripeSecretKey);
@@ -199,16 +198,210 @@ const checkoutComplete = async (req, res) => {
         month: "long",
         day: "numeric",
       });
+
+      const orderCompleteTemplate = `
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Payment Confirmation</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f9fafb;
+                  margin: 0;
+                  padding: 0;
+                }
+
+                .container {
+                  min-height: 100vh;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 3rem 1rem;
+                }
+
+                .card {
+                  width: 100%;
+                  max-width: 600px;
+                  background-color: #ffffff;
+                  padding: 2rem;
+                  border-radius: 12px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .card h1 {
+                  font-family: 'Pacifico', sans-serif;
+                  font-size: 2rem;
+                  color: #4b5563;
+                  margin-bottom: 1.5rem;
+                }
+
+                .check-icon {
+                  width: 4rem;
+                  height: 4rem;
+                  margin: 1rem auto;
+                  background-color: #d1fae5;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin-bottom: 1rem;
+                }
+
+                .check-icon i {
+                  font-size: 2rem;
+                  color: #10b981;
+                }
+
+                .section-title {
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                  color: #1f2937;
+                  margin-bottom: 1rem;
+                }
+
+                .section-text {
+                  color: #4b5563;
+                }
+
+                .plan-card, .summary-card {
+                  background-color: #d1fae5;
+                  padding: 1.5rem;
+                  border-radius: 12px;
+                  margin-bottom: 1.5rem;
+                }
+
+                .plan-card p {
+                  color: #4b5563;
+                }
+
+                .plan-price {
+                  color: #4b5563;
+                  font-weight: bold;
+                  font-size: 1.25rem;
+                }
+
+                .status-tag {
+                  display: inline-block;
+                  padding: 0.25rem 0.75rem;
+                  background-color: #10b981;
+                  color: #d1fae5;
+                  font-size: 0.875rem;
+                  border-radius: 12px;
+                  font-weight: 500;
+                }
+
+                .summary-list {
+                  margin-top: 1rem;
+                  gap: 1rem;
+                }
+
+                .summary-list div {
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 0.875rem;
+                  color: #4b5563;
+                }
+
+                .footer {
+                  text-align: center;
+                  margin-top: 2rem;
+                }
+
+                .footer p {
+                  color: #6b7280;
+                  font-size: 0.875rem;
+                }
+
+                .footer a {
+                  color: #6b7280;
+                  text-decoration: underline;
+                }
+
+                .footer .social-icons i {
+                  margin-right: 1rem;
+                  color: #6b7280;
+                  font-size: 1.25rem;
+                  cursor: pointer;
+                }
+
+                .social-icons i:hover {
+                  color: #10b981;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="card">
+                  <div class="text-center">
+                    <h2 class="section-title">Order Confirmation</h2>
+                    <p class="section-text">Thank you for your order, ${buyer.name}!</p>
+                  </div>
+
+                  <div class="plan-card text-center">
+                    <p class="section-text">Your payment has been successfully processed!</p>
+                    <p class="section-text">You can now start your preparations using our premium features.</p>
+                  </div>
+
+                  <div class="plan-card">
+                    <h3 class="section-title">Plan Details</h3>
+                    <div class="flex justify-between">
+                      <div>
+                        <p>Premium Plan - Level ${level.level}</p>
+                        <p class="text-sm text-gray-500">2 Month Subscription</p>
+                      </div>
+                      <div class="text-right">
+                        <p class="plan-price">${order.price}</p>
+                        <span class="status-tag">Paid</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="summary-card">
+                    <h3 class="section-title">Order Summary</h3>
+                    <div class="summary-list">
+                      <div>
+                        <span>Order ID:</span>
+                        <span>${order._id.toString()}</span>
+                      </div>
+                      <div>
+                        <span>Payment Date:</span>
+                        <span>${paymentDate}</span>
+                      </div>
+                      <div>
+                        <span>Expiry Date:</span>
+                        <span>${expiryDate}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="footer">
+                    <p>Need help? Contact our support team</p>
+                    <p class="text-sm">support@logo.com | +1 (555) 123-4567</p>
+
+                    <div class="social-icons">
+                      <i class="ri-twitter-line"></i>
+                      <i class="ri-facebook-line"></i>
+                      <i class="ri-instagram-line"></i>
+                    </div>
+
+                    <div class="text-xs">
+                      <p>© 2025 Logo. All rights reserved.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </body>
+          </html>
+
+      `;
       const dynamicData = {
-        buyerName: buyer.name,
-        price: order.price,
-        paymentDate,
-        orderId: order._id.toString(),
-        levelNumber: level.level,
-        expiryDate,
+        subject: "Payment Successfully",
         to_email: buyer.email,
       };
-      await sendMail(configs.templates.accesSecOrder, dynamicData);
+      await sendMail(orderCompleteTemplate, dynamicData);
 
       return res.status(201).json({
         message: "Order has been placed successfully",
