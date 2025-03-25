@@ -108,7 +108,9 @@ const registerUser = async (req, res) => {
         <div class="container">
           <div class="card">
             <h2 class="section-title">Account Created Successfully</h2>
-            <p class="section-text">Dear ${name}, your account has been successfully created!</p>
+            <p class="section-text">Dear ${
+              name ? name.charAt(0).toUpperCase() + name.slice(1) : ""
+            }, your account has been successfully created!</p>
             <div class="code-box">
               Your login code: <strong>${code}</strong>
             </div>

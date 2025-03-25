@@ -1,8 +1,11 @@
+const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 const Test = require("../../models/test");
+const User = require("../../models/user.js");
 const Order = require("../../models/order");
 const Question = require("../../models/question");
 const TopicResult = require("../../models/topicResult");
+const { configurations } = require("../../config/config");
 const { sendMail } = require("../../utils/sendMail.js");
 
 const getAllFreeQuestions = async (req, res) => {
@@ -27,6 +30,58 @@ const getAllFreeQuestions = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
+      response: null,
+      error: error.message,
+    });
+  }
+};
+
+const loginUser = async (req, res) => {
+  const { email, code } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        response: null,
+        error: "User not found",
+      });
+    }
+    if (user.code !== code) {
+      return res.status(401).json({
+        message: "Invalid credentials",
+        response: null,
+        error: "Invalid credentials",
+      });
+    }
+
+    const order = await Order.findOne({ userId: user._id }).lean();
+    if (!order || order?.expiryDate < new Date()) {
+      return res.status(404).json({
+        message:
+          "You haven't purchased any subscription or your access has expired",
+        response: null,
+        error:
+          "You haven't purchased any subscription or your access has expired",
+      });
+    }
+
+    const token = jwt.sign({ email }, configurations.jwtSecret, {
+      expiresIn: "24h",
+    });
+
+    const data = {
+      data: token,
+    };
+    return res.status(200).json({
+      message: "You've successfully logged in",
+      response: data,
+      error: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
       response: null,
       error: error.message,
     });
@@ -344,7 +399,12 @@ const createResults = async (req, res) => {
             <div class="section">
               <h2>Student Performance Report</h2>
               <div class="grid">
-                <p><strong>Student Name:</strong> ${test?.user?.name}</p>
+                <p><strong>Student Name:</strong> ${
+                  test?.user?.name
+                    ? test.user.name.charAt(0).toUpperCase() +
+                      test.user.name.slice(1)
+                    : ""
+                }</p>
               </div>
             </div>
             <div class="section grid">
@@ -359,18 +419,29 @@ const createResults = async (req, res) => {
             </div>
             <div class="section">
               <h2>Subject-wise Performance</h2>
-              ${subjectTopicAggregation.map(
-                (subject) =>
-                  `<div class="subject">
-                  <h4>${subject.topicName}</h4>
-                  <p> ${subject.score}/ ${subject.totalQuestions} (${subject.percentage}%)</p>
-                  <div class="progress-bar">
-                    <div style="width: ${subject.percentage}%; background: {{#if (gte percentage 90)}}#10b981{{else if (gte percentage 80)}}#3b82f6{{else if (gte percentage 70)}}#facc15{{else}}#ef4444{{/if}};"></div>
+              ${subjectTopicAggregation
+                .map((subject) => {
+                  let color;
+                  if (subject.percentage >= 90) {
+                    color = "#10b981";
+                  } else if (subject.percentage >= 80) {
+                    color = "#3b82f6";
+                  } else if (subject.percentage >= 70) {
+                    color = "#facc15";
+                  } else {
+                    color = "#ef4444";
+                  }
+                  return `
+                  <div class="subject">
+                    <h4>${subject.topicName}</h4>
+                    <p>${subject.score}/${subject.totalQuestions} (${subject.percentage}%)</p>
+                    <div class="progress-bar">
+                      <div style="width: ${subject.percentage}%; background: ${color};"></div>
+                    </div>
                   </div>
-                </div>
-                `
-              )}
-            </div>
+                `;
+                })
+                .join("")}
             <div class="section">
               <h2>Remarks</h2>
               <p>${remarks}</p>
@@ -404,6 +475,7 @@ const createResults = async (req, res) => {
 
 module.exports = {
   getAllFreeQuestions,
+  loginUser,
   getAccessQuestions,
   createResults,
 };

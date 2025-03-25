@@ -9,6 +9,7 @@ export default function page() {
   const [testId, setTestId] = useState(null);
   const [selected, setSelected] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [disabled, setDisabled] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const [userResponses, setUserResponses] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -78,44 +79,47 @@ export default function page() {
   };
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        return router.push("/access-simulator");
-      }
-      try {
+    if (!disabled) {
+      const fetchQuestions = async () => {
+        setDisabled(true);
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("No authorization token found");
-          return;
+          return router.push("/access-simulator");
         }
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            console.error("No authorization token found");
+            return;
+          }
 
-        const response = await fetch(`${serverBaseUrl}/user/question/paid`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseData = await response.json();
-        if (response.ok) {
-          const questions = responseData?.response?.data?.questions || [];
-          setUserResponses([]);
-          setTestId(responseData?.response?.data?.testId);
-          setQuestions(questions);
-          setTimer(60);
-          setQuizStarted(true);
-        } else if (response.status === 404) {
-          setQuestions([]);
-        } else {
-          console.error("Failed to fetch question");
+          const response = await fetch(`${serverBaseUrl}/user/question/paid`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const responseData = await response.json();
+          if (response.ok) {
+            const questions = responseData?.response?.data?.questions || [];
+            setUserResponses([]);
+            setTestId(responseData?.response?.data?.testId);
+            setQuestions(questions);
+            setTimer(60);
+            setQuizStarted(true);
+          } else if (response.status === 404) {
+            setQuestions([]);
+          } else {
+            console.error("Failed to fetch question");
+          }
+        } catch (error) {
+          console.error("Error fetching question:", error);
         }
-      } catch (error) {
-        console.error("Error fetching question:", error);
-      }
-    };
+      };
 
-    fetchQuestions();
+      fetchQuestions();
+    }
   }, []);
 
   useEffect(() => {

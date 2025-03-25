@@ -337,7 +337,12 @@ const checkoutComplete = async (req, res) => {
                 <div class="card">
                   <div class="text-center">
                     <h2 class="section-title">Order Confirmation</h2>
-                    <p class="section-text">Thank you for your order, ${buyer.name}!</p>
+                    <p class="section-text">Thank you for your order, ${
+                      buyer?.name
+                        ? buyer.name.charAt(0).toUpperCase() +
+                          buyer.name.slice(1)
+                        : ""
+                    }!</p>
                   </div>
 
                   <div class="plan-card text-center">

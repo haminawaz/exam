@@ -9,13 +9,15 @@ export default function page() {
   const [code, setCode] = useState("");
   const [errors, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setDisabled(true);
     setErrors({});
     try {
-      const response = await fetch(`${serverBaseUrl}/user/auth/login`, {
+      const response = await fetch(`${serverBaseUrl}/user/question/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
@@ -25,7 +27,9 @@ export default function page() {
         const token = responseData?.response?.data;
         localStorage.setItem("token", token);
         router.push("/access-quiz");
-      } else if (response.status === 403) {
+        return;
+      }
+      if (response.status === 403) {
         const error = typeof responseData.error;
         if (error === "object") {
           setErrors(responseData.error);
@@ -33,7 +37,7 @@ export default function page() {
           setAlertMessage(responseData.message || "An error occurred");
           setTimeout(() => setAlertMessage(false), 3000);
         }
-      } else if (responseData.message === "User not found") {
+      } else if (response.status === 404) {
         setAlertMessage(responseData.message);
         setTimeout(() => {
           setAlertMessage(false);
@@ -45,6 +49,8 @@ export default function page() {
       }
     } catch (error) {
       console.error("Error logging in:", error);
+    } finally {
+      setTimeout(false);
     }
   };
 
@@ -97,6 +103,7 @@ export default function page() {
           <div className="flex justify-center items-center">
             <button
               type="submit"
+              disabled={disabled}
               className="primary-btn mt-5 font-quicksand bg-[#FE8840] text-white px-[60px] py-3 rounded-[25px] cursor-pointer transition"
             >
               Login

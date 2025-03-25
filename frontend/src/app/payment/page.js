@@ -515,7 +515,7 @@ export default function Welcome({ setActiveSection }) {
                 Please Check Your Email
               </h1>
               <p className="text-[18px] font-medium text-[#B6B6B6] text-center">
-                An Access Code has been successfully sent to your email.
+                Now you can Access the paid test.
               </p>
             </div>
           </div>
