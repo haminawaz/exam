@@ -2,12 +2,7 @@ const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lastName: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -18,8 +13,9 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    address: {
-      type: String,
+    avatarId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avatar",
       required: true,
     },
     code: {

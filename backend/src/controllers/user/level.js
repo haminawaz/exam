@@ -1,8 +1,11 @@
 const Subject = require("../../models/subject");
+const Order = require("../../models/order");
 
-const getAllSubjects = async (req, res) => {
+const getAllLevels = async (req, res) => {
+  const user = req.decoded;
   try {
-    const levels = await Subject.aggregate([
+    let levels;
+    levels = await Subject.aggregate([
       {
         $lookup: {
           from: "levels",
@@ -17,16 +20,26 @@ const getAllSubjects = async (req, res) => {
           _id: "$levelData._id",
           price: { $first: "$levelData.price" },
           level: { $first: "$levelData.level" },
-          courses: { $push: { subject: "$name", image: "$image" } },
+          image: { $first: "$levelData.image" },
+          difficulty: { $first: "$levelData.difficulty" },
+          courses: { $push: { subject: "$name" } },
         },
       },
-      { $project: { _id: 0 } },
       {
         $sort: {
           level: 1,
         },
       },
     ]);
+
+    if (user) {
+      const userOrders = await Order.find({ userId: user._id });
+
+      levels = levels.map((level) => ({
+        ...level,
+        buy: userOrders.some((order) => order.levelId.equals(level._id)),
+      }));
+    }
 
     if (!levels || levels?.lenght < 1) {
       return res.status(404).json({
@@ -54,5 +67,5 @@ const getAllSubjects = async (req, res) => {
 };
 
 module.exports = {
-  getAllSubjects,
+  getAllLevels,
 };

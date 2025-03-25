@@ -6,7 +6,7 @@ export const WhyChoose = () => {
     {
       image: "/images/teacher.png",
       title:
-        "Un contenu conçu par des enseignants qualifiés et 100% conformes au programme.",
+        "Un contenu conçu par des enseignants qualifiés et 100% conforme au programme.",
       description:
         "Nos simulations d'examens d'admission sont préparées par des enseignants qualifiés et sont conformes au programme du Ministère de l'éducation du Québec.",
     },
@@ -39,7 +39,7 @@ export const WhyChoose = () => {
           {features?.map((feature, index) => (
             <div
               key={index}
-              className=" max-w-[90%] md:w-[350px] lg:w-[400px] md:p-[26px] bg-white rounded-xl text-center border border-[#FE8840] flex flex-col items-center h-full"
+              className=" max-w-[90%] md:w-[350px] lg:w-[400px] md:p-[26px] bg-white rounded-xl text-center border border-[#FE8840] flex flex-col items-center"
             >
               <img
                 className="w-[400px] h-[170px] p-0"

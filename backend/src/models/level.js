@@ -8,6 +8,15 @@ const LevelSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
+      default: 1,
+      min: 0,
+    },
+    difficulty: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
       required: true,
     },
   },

@@ -14,15 +14,9 @@ export const Promotional = () => {
   return (
     <section className="flex flex-col py-3 items-center my-[50px]">
       <h1 className="font-poppins text-[25px] md:text-[40px] font-bold text-center py-5">
-        De la préparation à la réussite: suivez notre guide!
+        De la préparation à la réussite!
       </h1>
       <div className="relative md:w-[70%] m-auto">
-        <img
-          className="absolute top-[-23%] right-[-15%] w-[30%] h-auto p-2 rounded-xl z-[-1]"
-          src="/images/videoimg.png"
-          alt="Acces"
-        />
-
         <video
           ref={videoRef}
           className="w-full border-[7px] border-[#FE8840] rounded-[20px] z-[1]"
