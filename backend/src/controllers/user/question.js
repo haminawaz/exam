@@ -91,6 +91,7 @@ const loginUser = async (req, res) => {
 const getAccessQuestions = async (req, res) => {
   const user = req.decoded;
   const userId = user._id;
+  const { name, avatarId } = req.body;
 
   try {
     const order = await Order.findOne({ userId }).lean();
@@ -137,11 +138,25 @@ const getAccessQuestions = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "levels",
+          localField: "subjectsDetails.levelId",
+          foreignField: "_id",
+          as: "levelDetails",
+        },
+      },
+      {
+        $unwind: "$levelDetails",
+      },
+      {
         $project: {
           question: 1,
           options: 1,
           correct: 1,
           topicId: 1,
+          topicName: "$topicDetails.topicName",
+          subjectName: "$subjectsDetails.name",
+          level: "$levelDetails.level",
         },
       },
     ]);
@@ -155,6 +170,8 @@ const getAccessQuestions = async (req, res) => {
 
     const newTest = new Test({
       user: userId,
+      name,
+      avatarId,
       levelId: order?.levelId,
       totalQuestions: questions?.length,
     });
@@ -400,9 +417,8 @@ const createResults = async (req, res) => {
               <h2>Student Performance Report</h2>
               <div class="grid">
                 <p><strong>Student Name:</strong> ${
-                  test?.user?.name
-                    ? test.user.name.charAt(0).toUpperCase() +
-                      test.user.name.slice(1)
+                  test?.name
+                    ? test.name.charAt(0).toUpperCase() + test.name.slice(1)
                     : ""
                 }</p>
               </div>

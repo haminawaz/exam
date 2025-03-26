@@ -17,9 +17,10 @@ router.post(
   loginUser
 );
 
-router.get(
+router.post(
   "/paid",
   verifyUserToken,
+  bodyValidator("accessQuestionSchema"),
   getAccessQuestions
 );
 

@@ -4,13 +4,12 @@ const {
   createCheckout,
   checkoutComplete,
 } = require("../../controllers/user/order.js");
-const { verifyUserToken } = require("../../middlewares/authMiddleware.js");
-const { paramsValidator } = require("../../middlewares/joi.js");
+const { paramsValidator, bodyValidator } = require("../../middlewares/joi.js");
 
 router.post(
   "/checkout/:levelId",
-  verifyUserToken,
   paramsValidator("orderParamsSchema"),
+  bodyValidator("registerSchema"),
   createCheckout
 );
 

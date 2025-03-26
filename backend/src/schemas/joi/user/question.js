@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 module.exports = {
-  registerSchema: Joi.object({
+  accessQuestionSchema: Joi.object({
     name: Joi.string()
       .min(2)
       .max(70)
@@ -18,20 +18,6 @@ module.exports = {
         "string.empty": "Name is not allowed to be empty",
         "string.trim":
           "Name should not contain any spaces at the beginning or end",
-      }),
-    email: Joi.string()
-      .trim()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: false },
-      })
-      .required()
-      .messages({
-        "string.email": "Enter valid email",
-        "any.required": "Email is required",
-        "string.empty": "Email is not allowed to be empty",
-        "string.trim":
-          "Email should not contain any spaces at the beginning or end",
       }),
     avatarId: Joi.string().length(24).hex().required().messages({
       "string.base": "Avatar is invalid",

@@ -9,12 +9,30 @@ const { sendMail } = require("../../utils/sendMail.js");
 const stripe = Stripe(configurations.stripeSecretKey);
 
 const createCheckout = async (req, res) => {
-  const user = req.decoded;
+  const { firstName, lastName, email, address } = req.body;
   const { levelId } = req.params;
 
+  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
   try {
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        firstName,
+        lastName,
+        email,
+        address,
+        code,
+      });
+    } else {
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.code = code;
+      user.address = address;
+      await user.save();
+    }
+
     const orders = await Order.find({
-      userId: user._id,
+      userId: user?._id,
       paymentStatus: "completed",
     }).populate("levelId");
 
@@ -102,7 +120,7 @@ const createCheckout = async (req, res) => {
         userId: user._id.toString(),
         levelId: level._id.toString(),
       },
-      success_url: `${configurations.frontendBaseUrl}/payment?selected-level=5`,
+      success_url: `${configurations.frontendBaseUrl}/payment?selected-level=4`,
       cancel_url: `${configurations.frontendBaseUrl}/payment`,
     });
 
@@ -201,206 +219,224 @@ const checkoutComplete = async (req, res) => {
 
       const orderCompleteTemplate = `
           <!DOCTYPE html>
-          <html lang="en">
+          <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
             <head>
               <meta charset="UTF-8" />
+              <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Payment Confirmation</title>
+              <title>Order Confirmation</title>
               <style>
-                body {
-                  font-family: Arial, sans-serif;
-                  background-color: #f9fafb;
+                body, table, td, div, p {
                   margin: 0;
                   padding: 0;
+                  font-family: Arial, sans-serif;
+                  color: #333333;
                 }
-
-                .container {
-                  min-height: 100vh;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  padding: 3rem 1rem;
+                body {
+                  background-color: #f3f4f6;
                 }
-
-                .card {
+                .email-container {
                   width: 100%;
                   max-width: 600px;
+                  margin: 0 auto;
                   background-color: #ffffff;
-                  padding: 2rem;
-                  border-radius: 12px;
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                  border-radius: 8px;
+                  overflow: hidden;
+                  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
                 }
-
-                .card h1 {
-                  font-family: 'Pacifico', sans-serif;
-                  font-size: 2rem;
-                  color: #4b5563;
-                  margin-bottom: 1.5rem;
+                .email-header {
+                  background-color: #10b981;
+                  padding: 20px;
+                  text-align: center;
+                  color: #ffffff;
                 }
-
-                .check-icon {
-                  width: 4rem;
-                  height: 4rem;
-                  margin: 1rem auto;
-                  background-color: #d1fae5;
-                  border-radius: 50%;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  margin-bottom: 1rem;
+                .email-header h1 {
+                  margin: 0;
+                  font-size: 24px;
                 }
-
-                .check-icon i {
-                  font-size: 2rem;
-                  color: #10b981;
+                .email-body {
+                  padding: 20px 20px 30px 20px;
                 }
-
                 .section-title {
-                  font-size: 1.5rem;
+                  font-size: 18px;
                   font-weight: bold;
                   color: #1f2937;
-                  margin-bottom: 1rem;
+                  margin-bottom: 8px;
                 }
-
                 .section-text {
+                  font-size: 14px;
+                  line-height: 1.6;
                   color: #4b5563;
                 }
-
-                .plan-card, .summary-card {
-                  background-color: #d1fae5;
-                  padding: 1.5rem;
-                  border-radius: 12px;
-                  margin-bottom: 1.5rem;
-                }
-
-                .plan-card p {
-                  color: #4b5563;
-                }
-
-                .plan-price {
-                  color: #4b5563;
+                .highlight {
+                  color: #10b981;
                   font-weight: bold;
-                  font-size: 1.25rem;
                 }
-
-                .status-tag {
+                .box {
+                  background-color: #d1fae5;
+                  border-radius: 6px;
+                  padding: 16px;
+                  margin-top: 16px;
+                  margin-bottom: 16px;
+                }
+                .box p {
+                  margin-bottom: 8px;
+                }
+                .price-div {
+                  display:flex;
+                  justify-content:center;
+                  align-items:center;
+                  margin-top:8px;
+                  text-align: center;
+                }
+                .price {
+                  font-size: 18px;
+                  font-weight: bold;
+                  color: #000000;
+                  margin-right: 10px;
+                }
+                .badge-paid {
                   display: inline-block;
-                  padding: 0.25rem 0.75rem;
-                  background-color: #10b981;
-                  color: #d1fae5;
-                  font-size: 0.875rem;
+                  padding: 3px 12px;
                   border-radius: 12px;
-                  font-weight: 500;
+                  background-color: #10b981;
+                  color: #ffffff;
+                  font-size: 12px;
+                  font-weight: 600;
                 }
-
-                .summary-list {
-                  margin-top: 1rem;
-                  gap: 1rem;
+                .divider {
+                  border-bottom: 1px solid #e5e7eb;
+                  margin: 16px 0;
                 }
-
-                .summary-list div {
+                .summary-row {
                   display: flex;
                   justify-content: space-between;
-                  font-size: 0.875rem;
-                  color: #4b5563;
+                  margin-bottom: 8px;
                 }
-
-                .footer {
+                .summary-row .bold {
+                  font-weight: bold;
+                }
+                .secret-code {
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #dc2626;
+                  margin-top: 8px;
+                }
+                .email-footer {
                   text-align: center;
-                  margin-top: 2rem;
-                }
-
-                .footer p {
+                  padding: 16px;
+                  font-size: 12px;
                   color: #6b7280;
-                  font-size: 0.875rem;
                 }
-
-                .footer a {
+                .email-footer a {
                   color: #6b7280;
                   text-decoration: underline;
                 }
-
-                .footer .social-icons i {
-                  margin-right: 1rem;
+                .social-icons i {
+                  margin: 0 6px;
                   color: #6b7280;
-                  font-size: 1.25rem;
                   cursor: pointer;
+                  font-size: 16px;
                 }
-
                 .social-icons i:hover {
                   color: #10b981;
                 }
               </style>
             </head>
             <body>
-              <div class="container">
-                <div class="card">
-                  <div class="text-center">
-                    <h2 class="section-title">Order Confirmation</h2>
-                    <p class="section-text">Thank you for your order, ${
-                      buyer?.name
-                        ? buyer.name.charAt(0).toUpperCase() +
-                          buyer.name.slice(1)
-                        : ""
-                    }!</p>
-                  </div>
-
-                  <div class="plan-card text-center">
-                    <p class="section-text">Your payment has been successfully processed!</p>
-                    <p class="section-text">You can now start your preparations using our premium features.</p>
-                  </div>
-
-                  <div class="plan-card">
-                    <h3 class="section-title">Plan Details</h3>
-                    <div class="flex justify-between">
-                      <div>
-                        <p>Premium Plan - Level ${level.level}</p>
-                        <p class="text-sm text-gray-500">2 Month Subscription</p>
+              <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                width="100%"
+                style="padding: 20px 0"
+              >
+                <tr>
+                  <td align="center" valign="top">
+                    <div class="email-container">
+                      <div class="email-header">
+                        <h1>Order Confirmation</h1>
                       </div>
-                      <div class="text-right">
-                        <p class="plan-price">${order.price}</p>
-                        <span class="status-tag">Paid</span>
+                      <div class="email-body">
+                        <p class="section-text">
+                          Thank you for your order, 
+                          <span class="highlight">
+                            <strong>
+                              ${
+                                buyer?.firstName.charAt(0).toUpperCase() +
+                                buyer.firstName.slice(1)
+                              }
+                              ${
+                                buyer?.lastName.charAt(0).toUpperCase() +
+                                buyer.lastName.slice(1)
+                              }
+                            </strong>
+                          </span>!
+                        </p>                            
+                        <p class="section-text">
+                          Your payment has been <strong>successfully processed</strong>! 
+                          You can now start your preparations using our premium features.
+                        </p>
+                        <div class="box" style="text-align:center;">
+                          <p class="section-text" style="margin-bottom: 12px;">
+                            <strong>Your Premium Access Code:</strong>
+                          </p>
+                          <p class="secret-code">
+                            ${buyer?.code}
+                          </p>
+                          <p class="section-text" style="margin-top: 12px;">
+                            <em>Please keep this code secret. It allows access to premium questions.</em>
+                          </p>
+                        </div>
+                        <div class="box">
+                          <h2 class="section-title" style="margin-top:0;">Plan Details</h2>
+                          <p class="section-text" style="margin: 0;">
+                            Premium Plan - Level ${level.level}
+                          </p>
+                          <p class="section-text" style="margin: 0;">
+                            2 Month Subscription
+                          </p>
+                          <div class="price-div">
+                            <span class="price">
+                              $${order.price}
+                            </span>
+                            <span class="badge-paid">Paid</span>
+                          </div>
+                        </div>
+                        <div class="box">
+                          <h2 class="section-title" style="margin-top:0;">Order Summary</h2>
+                          <div class="summary-row">
+                            <span class="bold">Order ID:</span>
+                            <span>${order._id.toString()}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="bold">Payment Date:</span>
+                            <span>${paymentDate}</span>
+                          </div>
+                          <div class="summary-row">
+                            <span class="bold">Expiry Date:</span>
+                            <span>${expiryDate}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="email-footer">
+                        <p>Need help? Contact our support team</p>
+                        <p>support@logo.com | +1 (555) 123-4567</p>
+                        <div class="social-icons">
+                          <i class="ri-twitter-line"></i>
+                          <i class="ri-facebook-line"></i>
+                          <i class="ri-instagram-line"></i>
+                        </div>
+                        <p style="margin-top: 8px;">
+                          © 2025 Logo. All rights reserved.
+                        </p>
                       </div>
                     </div>
-                  </div>
-
-                  <div class="summary-card">
-                    <h3 class="section-title">Order Summary</h3>
-                    <div class="summary-list">
-                      <div>
-                        <span>Order ID:</span>
-                        <span>${order._id.toString()}</span>
-                      </div>
-                      <div>
-                        <span>Payment Date:</span>
-                        <span>${paymentDate}</span>
-                      </div>
-                      <div>
-                        <span>Expiry Date:</span>
-                        <span>${expiryDate}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="footer">
-                    <p>Need help? Contact our support team</p>
-                    <p class="text-sm">support@logo.com | +1 (555) 123-4567</p>
-
-                    <div class="social-icons">
-                      <i class="ri-twitter-line"></i>
-                      <i class="ri-facebook-line"></i>
-                      <i class="ri-instagram-line"></i>
-                    </div>
-
-                    <div class="text-xs">
-                      <p>© 2025 Logo. All rights reserved.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </td>
+                </tr>
+              </table>
             </body>
           </html>
-
       `;
       const dynamicData = {
         subject: "Payment Successfully",

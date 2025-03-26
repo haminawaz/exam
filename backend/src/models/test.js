@@ -7,6 +7,15 @@ const TestSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
+    avatarId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avatar",
+      required: true,
+    },
     levelId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Level",
