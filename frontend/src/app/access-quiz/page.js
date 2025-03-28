@@ -265,10 +265,12 @@ export default function page() {
                     </p>
                     {(score / questions.length) * 100 >= 70 ? (
                       <>
-                        <img
-                          src="/images/quiz/good.png"
+                        <video
+                          src="/images/quiz/good.mp4"
                           alt="Success"
-                          className="m-auto mt-5"
+                          className="m-auto mt-5 w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
+                          autoPlay
+                          loop
                         />
                         <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
                           Congratulations, you did well!
@@ -276,10 +278,12 @@ export default function page() {
                       </>
                     ) : (
                       <>
-                        <img
-                          src="/images/quiz/bad.png"
+                        <video
+                          src="/images/quiz/bad.mp4"
                           alt="Success"
-                          className="m-auto mt-5"
+                          className="m-auto mt-5 w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
+                          autoPlay
+                          loop
                         />
                         <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
                           Tu dois t'exercer encore. Tu es capable!
