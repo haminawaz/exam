@@ -14,6 +14,8 @@ const LevelSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: true,
+      enum: ["facile", "difficile"],
+      default: "facile"
     },
     image: {
       type: String,

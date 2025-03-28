@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 import { Suspense, useState } from "react";
-
+import { usePathname } from "next/navigation";
 import { AuthContextProvider } from "./contexts/auth-context";
 import { Spinner } from "./components/ui/spinner";
 import QueryProvider from "./libs/query-provider";
@@ -12,6 +12,9 @@ import { Hero } from "./public/Hero";
 
 export default function RootLayout({ children }) {
   const [activeSection, setActiveSection] = useState("default");
+
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
   return (
     <html lang="en">
       <head>
@@ -45,13 +48,13 @@ export default function RootLayout({ children }) {
                     </div>
                   }
                 >
-                  <Header />
-                  <TopMenue setActiveSection={setActiveSection} />
-                  <Hero activeSection={activeSection} />
+                  {!isAdmin && <Header />}
+                  {!isAdmin && <TopMenue setActiveSection={setActiveSection} />}
+                  {!isAdmin && <Hero activeSection={activeSection} />}
                   {children}
                 </Suspense>
               </main>
-              <Footer />
+              {!isAdmin && <Footer />}
             </AuthContextProvider>
           </QueryProvider>
         </Suspense>
