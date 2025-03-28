@@ -9,7 +9,7 @@ Avatars
   },
   {
     "_id": { "$oid": "67db50d3eab6e0b97ffe1b02" },
-    "avatarUrl": "/images/choose-avatar/boy 16.png"
+    "avatarUrl": "/images/choose-avatar/boy_16.png"
   },
   {
     "_id": { "$oid": "67db50d3eab6e0b97ffe1b03" },
@@ -17,7 +17,7 @@ Avatars
   },
   {
     "_id": { "$oid": "67db50d3eab6e0b97ffe1b04" },
-    "avatarUrl": "/images/choose-avatar/boy_17.png"
+    "avatarUrl": "/images/choose-avatar/Boy_17.png"
   },
   {
     "_id": { "$oid": "67db50d3eab6e0b97ffe1b05" },
