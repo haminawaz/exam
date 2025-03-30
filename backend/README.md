@@ -1,3 +1,16 @@
+Admin
+
+```javascript
+
+[
+  {
+    "_id": { "$oid": "67e66ca0d38c851154601d2e" },
+    "email":"admin@exam.com",
+    "password":"$2b$10$z5RG1SUy9nO0wr72zki7heZCYnfwSdUhAnEf0RajEjDHbqCM6dUPu"
+  }
+]
+```
+
 Avatars
 
 ```javascript

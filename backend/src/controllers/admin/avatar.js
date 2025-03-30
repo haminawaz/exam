@@ -1,5 +1,6 @@
 const path = require("path");
 const Avatar = require("../../models/avatar");
+const { configurations } = require("../../config/config");
 const { imageUpload, imageDelete } = require("../../utils/uploadFile");
 
 const getAllAvatars = async (req, res) => {
@@ -38,7 +39,7 @@ const createAvatar = async (req, res) => {
     const uploadFolder = "choose-avatar";
     await imageUpload(newAvatar._id, req.file, uploadFolder);
 
-    newAvatar.avatarUrl = `/images/${uploadFolder}/level_${
+    newAvatar.avatarUrl = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
       newAvatar._id
     }${path.extname(req.file.originalname)}`;
     await newAvatar.save();

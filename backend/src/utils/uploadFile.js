@@ -2,9 +2,14 @@ const fs = require("fs");
 const path = require("path");
 
 const imageUpload = async (levelId, file, folderName) => {
+  const folderPath = path.join(__dirname, `../../uploads/${folderName}`);
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
   const imagePath = path.join(
     __dirname,
-    `../../../frontend/public/images/${folderName}`,
+    `../../uploads/${folderName}`,
     `level_${levelId}${path.extname(file.originalname)}`
   );
 
@@ -13,7 +18,7 @@ const imageUpload = async (levelId, file, folderName) => {
 };
 
 const imageDelete = async (image) => {
-  const imagePath = path.join(__dirname, `../../../frontend/public/${image}`);
+  const imagePath = path.join(__dirname, `../../uploads/${image}`);
 
   if (fs.existsSync(imagePath)) {
     fs.unlinkSync(imagePath);

@@ -1,5 +1,6 @@
 const path = require("path");
 const Level = require("../../models/level");
+const {configurations} = require("../../config/config.js")
 const { imageUpload, imageDelete } = require("../../utils/uploadFile");
 
 const getAllLevels = async (req, res) => {
@@ -54,7 +55,7 @@ const createLevel = async (req, res) => {
       const uploadFolder = "payment";
       await imageUpload(newLevel._id, req.file, uploadFolder);
 
-      newLevel.image = `/images/${uploadFolder}/level_${
+      newLevel.image = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
         newLevel._id
       }${path.extname(req.file.originalname)}`;
     }
@@ -130,7 +131,7 @@ const updateLevel = async (req, res) => {
       }
       const uploadFolder = "payment";
       await imageUpload(existingLevel._id, req.file, uploadFolder);
-      existingLevel.image = `/images/${uploadFolder}/level_${
+      existingLevel.image = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
         existingLevel._id
       }${path.extname(req.file.originalname)}`;
     }
