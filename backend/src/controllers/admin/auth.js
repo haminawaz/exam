@@ -13,18 +13,18 @@ const loginAdmin = async (req, res) => {
     const admin = await Admin.findOne({ email });
     if (!admin) {
       return res.status(404).json({
-        message: "Admin not found",
+        message: "Invalid email or password",
         response: null,
-        error: "Admin not found",
+        error: "Invalid email or password",
       });
     }
 
     const passwordMatch = await bcrypt.compare(password, admin.password);
     if (!passwordMatch) {
       return res.status(401).json({
-        message: "Invalid credentials",
+        message: "Invalid email or password",
         response: null,
-        error: "Invalid credentials",
+        error: "Invalid email or password",
       });
     }
 

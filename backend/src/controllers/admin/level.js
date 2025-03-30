@@ -4,7 +4,9 @@ const { imageUpload, imageDelete } = require("../../utils/uploadFile");
 
 const getAllLevels = async (req, res) => {
   try {
-    const levels = await Level.find().select("-createdAt -updatedAt -__v");
+    const levels = await Level.find()
+      .select("-createdAt -updatedAt -__v")
+      .sort("-createdAt");
     if (!levels || levels?.lenght < 1) {
       return res.status(404).json({
         message: "No levels found",

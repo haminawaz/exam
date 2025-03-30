@@ -4,7 +4,7 @@ const Subject = require("../../models/subject");
 const getAllTopics = async (req, res) => {
   try {
     const topics = await Topic.find()
-      .populate("subjectId", "subject")
+      .populate("subjectId", "name")
       .select("topicName subjectId");
     if (!topics || topics?.lenght < 1) {
       return res.status(404).json({
@@ -82,7 +82,7 @@ const createTopic = async (req, res) => {
 const getTopic = async (req, res) => {
   const topicId = req.params.topicId;
   try {
-    const topic = await Topic.findById(topicId).populate("levelId", "level");
+    const topic = await Topic.findById(topicId).populate("subjectId", "name");
     if (!topic) {
       return res.status(404).json({
         message: "Topic not found",
@@ -93,8 +93,8 @@ const getTopic = async (req, res) => {
 
     const data = {
       _id: topic._id,
-      name: topic.name,
-      level: topic.levelId.level,
+      name: topic.topicName,
+      subject: topic.subjectId.name,
     };
     return res.status(200).json({
       message: "Topic retrieved successfully",

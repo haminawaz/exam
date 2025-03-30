@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Edit, Trash2 } from "lucide-react";
 import { Alert, Modal } from "antd";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function Home() {
-  const token = localStorage.getItem("token");
+  const router = useRouter();
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const [levels, setLevels] = useState([]);
   const [errors, setErrors] = useState({});
   const [level, setLevel] = useState(null);
@@ -42,14 +43,13 @@ export default function Home() {
         setLevels(levels);
       } else if (responseData?.message === "Invalid token or expired") {
         localStorage.clear();
-        const router = useRouter();
         router.push("/admin/login");
       } else {
         setAlertMessage(responseData.message || "Failed to get levels");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during retrieved levels:", error);
     } finally {
       setLoading(false);
     }
@@ -278,7 +278,7 @@ export default function Home() {
         </div>
       )}
       <div className="p-6">
-        {levels.length > 0 ? (
+        {levels?.length > 0 ? (
           <>
             <h1 className="text-xl font-medium text-gray-800 mb-6">
               Levels Management

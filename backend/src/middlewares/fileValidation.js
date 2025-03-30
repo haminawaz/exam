@@ -39,6 +39,16 @@ const validateFile = (functionName) => {
       }
     }
 
+    if (functionName === "createAvatar") {
+      if (!req.file) {
+        return res.status(403).json({
+          message: "Avatar is required",
+          response: null,
+          error: "Avatar is required",
+        });
+      }
+    }
+
     next();
   };
 };

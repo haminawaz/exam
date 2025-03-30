@@ -2,6 +2,8 @@ const { adminLoginSchema } = require("./joi/admin/auth");
 
 const { levelBodySchema, levelParamsSchema } = require("./joi/admin/level");
 
+const { avatarParamsSchema } = require("./joi/admin/avatar");
+
 const {
   subjectParamsSchema,
   createSubjectParamsSchema,
@@ -32,4 +34,5 @@ module.exports = {
   topicBodySchema,
   topicParamsSchema,
   createTopicParamsSchema,
+  avatarParamsSchema,
 };

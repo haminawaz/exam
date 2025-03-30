@@ -5,7 +5,9 @@ const getAllSubjects = async (req, res) => {
   try {
     const subjects = await Subject.find()
       .populate("levelId", "level")
-      .select("name levelId");
+      .select("name levelId")
+      .sort("-createdAt");
+
     if (!subjects || subjects?.lenght < 1) {
       return res.status(404).json({
         message: "No subjects found",
@@ -21,7 +23,7 @@ const getAllSubjects = async (req, res) => {
     }));
     return res.status(200).json({
       message: "All subjects retrieved successfully",
-      response: data,
+      response: { data },
       error: null,
     });
   } catch (error) {
