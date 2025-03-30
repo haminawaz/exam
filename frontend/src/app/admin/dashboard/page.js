@@ -492,6 +492,7 @@ export default function Home() {
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
             <button
+              type="button"
               onClick={() => handleCancelCreate()}
               className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer"
             >
@@ -640,6 +641,7 @@ export default function Home() {
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
             <button
+              type="button"
               onClick={() => handleCancelUpdate()}
               className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer"
             >
