@@ -12,6 +12,7 @@ const sidebarItems = [
   { icon: Home, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Users, label: "Users", href: "/admin/dashboard/users" },
   { icon: BookA, label: "Subjects", href: "/admin/dashboard/subjects" },
+  { icon: BookA, label: "Topics", href: "/admin/dashboard/topics" },
 ];
 
 export const Sidebar = () => {

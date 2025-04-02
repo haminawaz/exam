@@ -1,7 +1,8 @@
-const path = require("path");
 const Level = require("../../models/level");
-const {configurations} = require("../../config/config.js")
-const { imageUpload, imageDelete } = require("../../utils/uploadFile");
+const Subject = require("../../models/subject");
+const Topic = require("../../models/topic");
+const Question = require("../../models/question");
+const { uploadFileS3, deleteFileS3 } = require("../../utils/upload-file.js");
 
 const getAllLevels = async (req, res) => {
   try {
@@ -52,12 +53,8 @@ const createLevel = async (req, res) => {
       difficulty,
     });
     if (req.file) {
-      const uploadFolder = "payment";
-      await imageUpload(newLevel._id, req.file, uploadFolder);
-
-      newLevel.image = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
-        newLevel._id
-      }${path.extname(req.file.originalname)}`;
+      const uploadedImageUrl = await uploadFileS3(req.file, "level");
+      newLevel.image = uploadedImageUrl;
     }
     await newLevel.save();
 
@@ -126,14 +123,16 @@ const updateLevel = async (req, res) => {
     existingLevel.difficulty = difficulty || existingLevel.difficulty;
 
     if (req.file) {
-      if (existingLevel?.image) {
-        await imageDelete(existingLevel?.image);
+      let oldFileUrl = null;
+      if (existingLevel?.image && existingLevel?.image.startsWith("https://")) {
+        oldFileUrl = existingLevel.image;
       }
-      const uploadFolder = "payment";
-      await imageUpload(existingLevel._id, req.file, uploadFolder);
-      existingLevel.image = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
-        existingLevel._id
-      }${path.extname(req.file.originalname)}`;
+      const uploadedImageUrl = await uploadFileS3(
+        req.file,
+        "level",
+        oldFileUrl
+      );
+      existingLevel.image = uploadedImageUrl;
     }
 
     await existingLevel.save();
@@ -165,8 +164,18 @@ const deleteLevel = async (req, res) => {
       });
     }
 
-    if (existingLevel?.image) {
-      await imageDelete(existingLevel?.image);
+    const subjects = await Subject.find({ levelId: levelId });
+    for (let subject of subjects) {
+      const topics = await Topic.find({ subjectId: subject._id });
+      for (let topic of topics) {
+        await Question.deleteMany({ topicId: topic._id });
+        await Topic.findByIdAndDelete(topic._id);
+      }
+      await Subject.findByIdAndDelete(subject._id);
+    }
+
+    if (existingLevel?.image && existingLevel?.image.startsWith("https://")) {
+      await deleteFileS3(existingLevel.image);
     }
 
     await Level.findByIdAndDelete(levelId);

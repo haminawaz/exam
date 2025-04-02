@@ -1,4 +1,6 @@
 const Subject = require("../../models/subject");
+const Topic = require("../../models/topic");
+const Question = require("../../models/question");
 const Level = require("../../models/level");
 
 const getAllSubjects = async (req, res) => {
@@ -19,7 +21,8 @@ const getAllSubjects = async (req, res) => {
     const data = subjects.map((subject) => ({
       _id: subject._id,
       name: subject.name,
-      level: subject.levelId.level,
+      level: subject?.levelId?.level,
+      levelId: subject?.levelId?._id,
     }));
     return res.status(200).json({
       message: "All subjects retrieved successfully",
@@ -117,7 +120,7 @@ const getSubject = async (req, res) => {
 
 const updateSubject = async (req, res) => {
   const subjectId = req.params.subjectId;
-  const { subjectName } = req.body;
+  const { subjectName, levelId } = req.body;
 
   try {
     const existingSubject = await Subject.findById(subjectId);
@@ -128,6 +131,30 @@ const updateSubject = async (req, res) => {
         error: "Subject not found",
       });
     }
+
+    const duplicateSubject = await Subject.findOne({
+      name: subjectName,
+      levelId,
+      _id: { $ne: subjectId },
+    });
+    if (duplicateSubject) {
+      return res.status(400).json({
+        message: "Duplicate subject not allowed for same level",
+        response: null,
+        error: "Duplicate subject not allowed for same level",
+      });
+    }
+
+    const level = await Level.findById(levelId);
+    if (!level) {
+      return res.status(404).json({
+        message: "Level not found",
+        response: null,
+        error: "Level not found",
+      });
+    }
+
+    existingSubject.levelId = levelId || existingSubject.levelId;
     existingSubject.name = subjectName || existingSubject.name;
     await existingSubject.save();
 
@@ -156,6 +183,12 @@ const deleteSubject = async (req, res) => {
         response: null,
         error: "Subject not found",
       });
+    }
+
+    const topics = await Topic.find({ subjectId });
+    for (let topic of topics) {
+      await Question.deleteMany({ topicId: topic._id });
+      await Topic.findByIdAndDelete(topic._id);
     }
 
     await Subject.findByIdAndDelete(subjectId);

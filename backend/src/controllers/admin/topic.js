@@ -1,11 +1,17 @@
 const Topic = require("../../models/topic");
+const Question = require("../../models/question");
 const Subject = require("../../models/subject");
 
 const getAllTopics = async (req, res) => {
   try {
     const topics = await Topic.find()
-      .populate("subjectId", "name")
-      .select("topicName subjectId");
+      .populate({
+        path: "subjectId",
+        select: "name levelId",
+        populate: { path: "levelId", select: "level" },
+      })
+      .select("topicName subjectId")
+      .sort("-createdAt");
     if (!topics || topics?.lenght < 1) {
       return res.status(404).json({
         message: "No topics found",
@@ -15,13 +21,15 @@ const getAllTopics = async (req, res) => {
     }
 
     const data = topics.map((topic) => ({
-      _id: topic._id,
-      name: topic.topicName,
-      subject: topic.subjectId.name,
+      _id: topic?._id,
+      name: topic?.topicName,
+      subject: topic?.subjectId?.name,
+      subjectId: topic?.subjectId?._id,
+      level: topic?.subjectId?.levelId?.level,
     }));
     return res.status(200).json({
       message: "All topics retrieved successfully",
-      response: data,
+      response: { data },
       error: null,
     });
   } catch (error) {
@@ -112,7 +120,7 @@ const getTopic = async (req, res) => {
 
 const updateTopic = async (req, res) => {
   const topicId = req.params.topicId;
-  const { topicName } = req.body;
+  const { topicName, subjectId } = req.body;
 
   try {
     const existingTopic = await Topic.findById(topicId);
@@ -123,7 +131,29 @@ const updateTopic = async (req, res) => {
         error: "Topic not found",
       });
     }
+    const subject = await Subject.findById(subjectId);
+    if (!subject) {
+      return res.status(404).json({
+        message: "Subject not found",
+        response: null,
+        error: "Subject not found",
+      });
+    }
+    const duplicateTopic = await Topic.findOne({
+      topicName,
+      subjectId,
+      _id: { $ne: topicId },
+    });
+    if (duplicateTopic) {
+      return res.status(404).json({
+        message: "Duplicate topic not allowed for same subject",
+        response: null,
+        error: "Duplicate topic not allowed for same subject",
+      });
+    }
+
     existingTopic.topicName = topicName || existingTopic.topicName;
+    existingTopic.subjectId = subjectId || existingTopic.subjectId;
     await existingTopic.save();
 
     return res.status(200).json({
@@ -152,6 +182,7 @@ const deleteTopic = async (req, res) => {
       });
     }
 
+    await Question.deleteMany({ topicId });
     await Topic.findByIdAndDelete(topicId);
     return res.status(200).json({
       message: "Topic deleted successfully",

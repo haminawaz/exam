@@ -16,7 +16,7 @@ router.post(
   "/:subjectId",
   verifyAdminToken,
   paramsValidator("createTopicParamsSchema"),
-  bodyValidator("topicBodySchema"),
+  bodyValidator("createTopicBodySchema"),
   createTopic
 );
 
@@ -31,7 +31,7 @@ router.put(
   "/:topicId",
   verifyAdminToken,
   paramsValidator("topicParamsSchema"),
-  bodyValidator("topicBodySchema"),
+  bodyValidator("updateTopicBodySchema"),
   updateTopic
 );
 

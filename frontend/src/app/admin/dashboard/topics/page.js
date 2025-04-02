@@ -6,14 +6,14 @@ import { Edit, Trash2 } from "lucide-react";
 import { Alert, Modal } from "antd";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
-export default function Subjects() {
+export default function Topics() {
   const router = useRouter();
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const [topics, setTopics] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [errors, setErrors] = useState({});
-  const [levels, setLevels] = useState(null);
-  const [subject, setSubject] = useState(null);
+  const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
@@ -21,34 +21,9 @@ export default function Subjects() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [formData, setFormData] = useState({
-    levelId: "",
-    subjectName: "",
+    subjectId: "",
+    topicName: "",
   });
-
-  const fetchLevels = async () => {
-    try {
-      const response = await fetch(`${serverBaseUrl}/admin/level/`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const responseData = await response.json();
-      if (response.status === 200) {
-        const levels = responseData?.response?.data;
-        setLevels(levels);
-      } else if (responseData?.message === "Invalid token or expired") {
-        localStorage.clear();
-        router.push("/admin/login");
-      } else {
-        setAlertMessage(responseData.message || "Failed to get levels");
-        setTimeout(() => setAlertMessage(false), 3000);
-      }
-    } catch (error) {
-      console.error("Error during retrieving levels:", error);
-    }
-  };
 
   const fetchSubjects = async () => {
     try {
@@ -72,24 +47,49 @@ export default function Subjects() {
       }
     } catch (error) {
       console.error("Error during retrieving subjects:", error);
+    }
+  };
+
+  const fetchTopics = async () => {
+    try {
+      const response = await fetch(`${serverBaseUrl}/admin/topic/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+      if (response.status === 200) {
+        const topics = responseData?.response?.data;
+        setTopics(topics);
+      } else if (responseData?.message === "Invalid token or expired") {
+        localStorage.clear();
+        router.push("/admin/login");
+      } else {
+        setAlertMessage(responseData.message || "Failed to get topics");
+        setTimeout(() => setAlertMessage(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error during retrieving topics:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSubjects();
+    fetchTopics();
   }, []);
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     const body = JSON.stringify({
-      subjectName: formData.subjectName,
+      topicName: formData.topicName,
     });
     try {
       const response = await fetch(
-        `${serverBaseUrl}/admin/subject/${formData?.levelId}`,
+        `${serverBaseUrl}/admin/topic/${formData?.subjectId}`,
         {
           method: "POST",
           headers: {
@@ -101,9 +101,9 @@ export default function Subjects() {
       );
       const responseData = await response.json();
       if (response.ok) {
-        fetchSubjects();
+        fetchTopics();
         handleCancelCreate();
-        setSuccessMessage("Subject created successfully");
+        setSuccessMessage("Topic created successfully");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -116,11 +116,11 @@ export default function Subjects() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to create subject");
+        setAlertMessage(responseData.message || "Failed to create topic");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
-      console.error("Error creating subject:", error);
+      console.error("Error creating topic:", error);
     }
   };
 
@@ -128,12 +128,12 @@ export default function Subjects() {
     e.preventDefault();
     setErrors({});
     const body = JSON.stringify({
-      subjectName: formData.subjectName,
-      levelId: formData.levelId,
+      topicName: formData.topicName,
+      subjectId: formData.subjectId,
     });
     try {
       const response = await fetch(
-        `${serverBaseUrl}/admin/subject/${subject._id}`,
+        `${serverBaseUrl}/admin/topic/${topic._id}`,
         {
           method: "PUT",
           headers: {
@@ -145,9 +145,9 @@ export default function Subjects() {
       );
       const responseData = await response.json();
       if (response.ok) {
-        fetchSubjects();
+        fetchTopics();
         handleCancelUpdate();
-        setSuccessMessage("Subject updated successfully");
+        setSuccessMessage("Topic updated successfully");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -160,38 +160,38 @@ export default function Subjects() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to update subject");
+        setAlertMessage(responseData.message || "Failed to update topic");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
-      console.error("Error updating subject:", error);
+      console.error("Error updating topic:", error);
     }
   };
 
   const handleCreateClick = () => {
     setShowCreateModal(true);
-    fetchLevels();
+    fetchSubjects();
   };
 
-  const handleUpdateClick = (subject) => {
-    setSubject(subject);
-    fetchLevels();
+  const handleUpdateClick = (topic) => {
+    setTopic(topic);
+    fetchSubjects();
     setFormData({
-      levelId: subject.levelId,
-      subjectName: subject.name,
+      subjectId: topic.subjectId,
+      topicName: topic.name,
     });
     setShowUpdateModal(true);
   };
 
-  const handleDeleteClick = (subject) => {
-    setSubject(subject);
+  const handleDeleteClick = (topic) => {
+    setTopic(topic);
     setShowDeleteModal(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await fetch(
-        `${serverBaseUrl}/admin/subject/${subject._id}`,
+        `${serverBaseUrl}/admin/topic/${topic._id}`,
         {
           method: "DELETE",
           headers: {
@@ -202,18 +202,18 @@ export default function Subjects() {
       );
       const responseData = await response.json();
       if (response.status === 200) {
-        fetchSubjects();
-        setSuccessMessage("Subject deleted successfully");
+        fetchTopics();
+        setSuccessMessage("Topic deleted successfully");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Failed to delete subject.");
+        setAlertMessage(responseData.message || "Failed to delete topic");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
       console.error("Error during deletion:", error);
     } finally {
       setShowDeleteModal(false);
-      setSubject(null);
+      setTopic(null);
     }
   };
 
@@ -229,14 +229,14 @@ export default function Subjects() {
     setSuccessMessage(false);
     setAlertMessage(false);
     setShowUpdateModal(false);
-    setSubject(null);
+    setTopic(null);
     setFormData({});
     setErrors({});
   };
 
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setSubject(null);
+    setTopic(null);
   };
 
   const handleInputChange = (e) => {
@@ -279,10 +279,10 @@ export default function Subjects() {
         </div>
       )}
       <div className="p-6">
-        {subjects?.length > 0 ? (
+        {topics?.length > 0 ? (
           <>
             <h1 className="text-xl font-medium text-gray-800 mb-6">
-              Subjects Management
+              Topics Management
             </h1>
             <div className="bg-white rounded-md shadow-sm">
               <div className="flex justify-end items-center px-4 py-3 border-b border-gray-200">
@@ -291,7 +291,7 @@ export default function Subjects() {
                     onClick={() => handleCreateClick()}
                     className="px-4 py-2 bg-[#0772AA] text-white text-sm rounded cursor-pointer"
                   >
-                    Add Subject
+                    Add Topic
                   </button>
                 </div>
               </div>
@@ -299,32 +299,36 @@ export default function Subjects() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-200 text-gray-600 text-sm">
-                      <th className="text-left py-3 px-6 font-medium">Name</th>
+                      <th className="text-left py-3 px-6 font-medium">Topic</th>
                       <th className="text-left py-3 px-6 font-medium">Level</th>
+                      <th className="text-left py-3 px-6 font-medium">
+                        Subject
+                      </th>
                       <th className="text-left py-3 px-6 font-medium">
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {subjects?.map((subject) => (
+                    {topics?.map((topic) => (
                       <tr
-                        key={subject?._id}
+                        key={topic?._id}
                         className="border-b border-gray-200 hover:bg-gray-50"
                       >
-                        <td className="py-4 px-6">{subject.name}</td>
-                        <td className="py-4 px-6">Level {subject.level}</td>
+                        <td className="py-4 px-6">{topic.name}</td>
+                        <td className="py-4 px-6">Level {topic.level}</td>
+                        <td className="py-4 px-6">{topic.subject}</td>
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-2">
                             <button
                               className="text-yellow-500 cursor-pointer"
-                              onClick={() => handleUpdateClick(subject)}
+                              onClick={() => handleUpdateClick(topic)}
                             >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
                               className="text-gray-400 cursor-pointer"
-                              onClick={() => handleDeleteClick(subject)}
+                              onClick={() => handleDeleteClick(topic)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -339,14 +343,14 @@ export default function Subjects() {
           </>
         ) : (
           <div className="flex flex-col">
-            <h1 className="text-4xl text-center">No Subject found</h1>
+            <h1 className="text-4xl text-center">No Topic found</h1>
             <div className="flex justify-center items-center px-4 py-3">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleCreateClick()}
                   className="px-4 py-2 bg-[#0772AA] text-white text-sm rounded cursor-pointer"
                 >
-                  Add Subject
+                  Add Topic
                 </button>
               </div>
             </div>
@@ -355,7 +359,7 @@ export default function Subjects() {
       </div>
 
       <Modal
-        title="Create Subject"
+        title="Create Topic"
         open={showCreateModal}
         onCancel={() => handleCancelCreate()}
         footer={null}
@@ -363,49 +367,51 @@ export default function Subjects() {
         <form onSubmit={handleCreateSubmit} className="p-3 space-y-3">
           <div className="flex flex-col">
             <label
-              htmlFor="subjectName"
+              htmlFor="topicName"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
               Name
             </label>
             <input
               type="text"
-              name="subjectName"
-              placeholder="Enter subject name"
-              value={formData.subjectName || ""}
+              name="topicName"
+              placeholder="Enter topic name"
+              value={formData.topicName || ""}
               onChange={handleInputChange}
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
-            {errors?.subjectName && (
+            {errors?.topicName && (
               <p className="text-sm text-red-600 mt-1">
-                {errors?.subjectName[0]}
+                {errors?.topicName[0]}
               </p>
             )}
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="levelId"
+              htmlFor="subjectId"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
               Level
             </label>
             <select
-              name="levelId"
-              value={formData.levelId || ""}
+              name="subjectId"
+              value={formData.subjectId || ""}
               onChange={handleInputChange}
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             >
               <option value="">Select Level</option>
-              {levels?.map((level) => (
-                <option key={level._id} value={level._id}>
-                  Level {level.level}
+              {subjects?.map((subject) => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.name} (Level {subject.level})
                 </option>
               ))}
             </select>
-            {errors?.levelId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.levelId[0]}</p>
+            {errors?.subjectId && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors?.subjectId[0]}
+              </p>
             )}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
@@ -427,7 +433,7 @@ export default function Subjects() {
       </Modal>
 
       <Modal
-        title="Update Subject"
+        title="Update Topic"
         open={showUpdateModal}
         onCancel={() => handleCancelUpdate()}
         footer={null}
@@ -435,49 +441,51 @@ export default function Subjects() {
         <form onSubmit={handleUpdateSubmit} className="p-3 space-y-3">
           <div className="flex flex-col">
             <label
-              htmlFor="subjectName"
+              htmlFor="topicName"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
               Name
             </label>
             <input
               type="text"
-              name="subjectName"
-              placeholder="Enter subject name"
-              value={formData.subjectName}
+              name="topicName"
+              placeholder="Enter topic name"
+              value={formData.topicName || ""}
               onChange={handleInputChange}
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
-            {errors?.subjectName && (
+            {errors?.topicName && (
               <p className="text-sm text-red-600 mt-1">
-                {errors?.subjectName[0]}
+                {errors?.topicName[0]}
               </p>
             )}
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="levelId"
+              htmlFor="subjectId"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
               Level
             </label>
             <select
-              name="levelId"
-              value={formData.levelId || ""}
+              name="subjectId"
+              value={formData.subjectId || ""}
               onChange={handleInputChange}
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             >
               <option value="">Select Level</option>
-              {levels?.map((level) => (
-                <option key={level._id} value={level._id}>
-                  Level {level.level}
+              {subjects?.map((subject) => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.name} (Level {subject.level})
                 </option>
               ))}
             </select>
-            {errors?.levelId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.levelId[0]}</p>
+            {errors?.subjectId && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors?.subjectId[0]}
+              </p>
             )}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
@@ -519,7 +527,7 @@ export default function Subjects() {
           </button>,
         ]}
       >
-        <p>Are you sure you want to delete this subject?</p>
+        <p>Are you sure you want to delete this topic?</p>
       </Modal>
     </main>
   );

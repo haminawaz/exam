@@ -8,6 +8,11 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const gmailUser = process.env.GMAIL_USER;
 const gmailPassword = process.env.GMAIL_PASSWORD;
 
+const bucketName = process.env.AWS_BUCKET_NAME;
+const awsAccessKey = process.env.AWS_ACCESS_KEY_ID;
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const awsRegion = process.env.AWS_REGION;
+
 const configurations = {
   mongoDbUrl,
   jwtSecret,
@@ -16,6 +21,10 @@ const configurations = {
   stripeSecretKey,
   gmailUser,
   gmailPassword,
+  awsRegion,
+  bucketName,
+  awsAccessKey,
+  awsSecretAccessKey,
 };
 
 module.exports = {

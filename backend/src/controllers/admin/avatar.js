@@ -1,7 +1,5 @@
-const path = require("path");
 const Avatar = require("../../models/avatar");
-const { configurations } = require("../../config/config");
-const { imageUpload, imageDelete } = require("../../utils/uploadFile");
+const { uploadFileS3, deleteFileS3 } = require("../../utils/upload-file.js");
 
 const getAllAvatars = async (req, res) => {
   try {
@@ -36,12 +34,8 @@ const createAvatar = async (req, res) => {
     const newAvatar = new Avatar({
       avatarUrl: "",
     });
-    const uploadFolder = "choose-avatar";
-    await imageUpload(newAvatar._id, req.file, uploadFolder);
-
-    newAvatar.avatarUrl = `${configurations.backendBaseUrl}/uploads/${uploadFolder}/level_${
-      newAvatar._id
-    }${path.extname(req.file.originalname)}`;
+    const uploadedImageUrl = await uploadFileS3(req.file, "avatar");
+    newAvatar.avatarUrl = uploadedImageUrl;
     await newAvatar.save();
 
     return res.status(201).json({
@@ -115,7 +109,12 @@ const deleteAvatar = async (req, res) => {
         error: "Avatar not found",
       });
     }
-    await imageDelete(existingAvatar?.avatarUrl);
+    if (
+      existingAvatar?.avatarUrl &&
+      existingAvatar?.avatarUrl.startsWith("https://")
+    ) {
+      await deleteFileS3(existingLevel.avatarUrl);
+    }
 
     await Avatar.findByIdAndDelete(avatarId);
     return res.status(200).json({

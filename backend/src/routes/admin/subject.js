@@ -16,7 +16,7 @@ router.post(
   "/:levelId",
   verifyAdminToken,
   paramsValidator("createSubjectParamsSchema"),
-  bodyValidator("subjectBodySchema"),
+  bodyValidator("createSubjectBodySchema"),
   createSubject
 );
 
@@ -31,7 +31,7 @@ router.put(
   "/:subjectId",
   verifyAdminToken,
   paramsValidator("subjectParamsSchema"),
-  bodyValidator("subjectBodySchema"),
+  bodyValidator("updateSubjectBodySchema"),
   updateSubject
 );
 
