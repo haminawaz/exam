@@ -2,17 +2,20 @@
 
 import Link from "next/link";
 import {
-  Home,
+  Layers,
   Users,
-  BookA,
+  BookOpen,
+  FileText,
+  Image,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const sidebarItems = [
-  { icon: Home, label: "Dashboard", href: "/admin/dashboard" },
+  { icon: Image, label: "Avatars", href: "/admin/dashboard" },
+  { icon: Layers, label: "Levels", href: "/admin/dashboard/levels" },
   { icon: Users, label: "Users", href: "/admin/dashboard/users" },
-  { icon: BookA, label: "Subjects", href: "/admin/dashboard/subjects" },
-  { icon: BookA, label: "Topics", href: "/admin/dashboard/topics" },
+  { icon: BookOpen, label: "Subjects", href: "/admin/dashboard/subjects" },
+  { icon: FileText, label: "Topics", href: "/admin/dashboard/topics" },
 ];
 
 export const Sidebar = () => {
@@ -29,11 +32,7 @@ export const Sidebar = () => {
               key={item.href}
               href={item.href}
               className={`flex items-center justify-center p-3 rounded-md text-gray-600 
-                ${
-                  isActive
-                    ? "bg-[#0772AA] text-white"
-                    : "hover:bg-blue-100"
-                }`}
+                ${isActive ? "bg-[#0772AA] text-white" : "hover:bg-blue-100"}`}
             >
               <Icon
                 className={`h-5 w-5 ${

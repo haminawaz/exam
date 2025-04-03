@@ -15,6 +15,7 @@ export default function Topics() {
   const [errors, setErrors] = useState({});
   const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [alertMessage, setAlertMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -84,6 +85,7 @@ export default function Topics() {
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setDisabled(true);
     const body = JSON.stringify({
       topicName: formData.topicName,
     });
@@ -121,12 +123,15 @@ export default function Topics() {
       }
     } catch (error) {
       console.error("Error creating topic:", error);
+    } finally {
+      setDisabled(false);
     }
   };
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setDisabled(true);
     const body = JSON.stringify({
       topicName: formData.topicName,
       subjectId: formData.subjectId,
@@ -165,6 +170,8 @@ export default function Topics() {
       }
     } catch (error) {
       console.error("Error updating topic:", error);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -189,6 +196,7 @@ export default function Topics() {
   };
 
   const handleConfirmDelete = async () => {
+    setDisabled(true);
     try {
       const response = await fetch(
         `${serverBaseUrl}/admin/topic/${topic._id}`,
@@ -214,6 +222,7 @@ export default function Topics() {
     } finally {
       setShowDeleteModal(false);
       setTopic(null);
+      setDisabled(false);
     }
   };
 
@@ -392,7 +401,7 @@ export default function Topics() {
               htmlFor="subjectId"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Level
+              Subject
             </label>
             <select
               name="subjectId"
@@ -424,6 +433,7 @@ export default function Topics() {
             </button>
             <button
               type="submit"
+              disabled={disabled}
               className="px-6 py-2 bg-[#0772AA] text-white rounded-md focus:outline-none cursor-pointer"
             >
               Create
@@ -466,7 +476,7 @@ export default function Topics() {
               htmlFor="subjectId"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Level
+              Subject
             </label>
             <select
               name="subjectId"
@@ -498,6 +508,7 @@ export default function Topics() {
             </button>
             <button
               type="submit"
+              disabled={disabled}
               className="px-6 py-2 bg-[#0772AA] text-white rounded-md focus:outline-none cursor-pointer"
             >
               Update
@@ -520,6 +531,7 @@ export default function Topics() {
           </button>,
           <button
             key="delete"
+            disabled={disabled}
             onClick={handleConfirmDelete}
             className="px-4 py-2 bg-red-600 text-white rounded cursor-pointer"
           >
@@ -527,7 +539,10 @@ export default function Topics() {
           </button>,
         ]}
       >
-        <p>Are you sure you want to delete this topic?</p>
+        <p>
+          Are you sure you want to delete this topic? All data related to this
+          topic will also be deleted
+        </p>
       </Modal>
     </main>
   );

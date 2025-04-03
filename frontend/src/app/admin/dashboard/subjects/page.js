@@ -519,7 +519,10 @@ export default function Subjects() {
           </button>,
         ]}
       >
-        <p>Are you sure you want to delete this subject?</p>
+        <p>
+          Are you sure you want to delete this subject? All data related to this
+          subject will also be deleted
+        </p>
       </Modal>
     </main>
   );
