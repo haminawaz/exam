@@ -72,38 +72,6 @@ const createLevel = async (req, res) => {
   }
 };
 
-const getLevel = async (req, res) => {
-  const levelId = req.params.levelId;
-  try {
-    const level = await Level.findById(levelId).select(
-      "-createdAt -updatedAt -__v"
-    );
-    if (!level) {
-      return res.status(404).json({
-        message: "Level not found",
-        response: null,
-        error: "Level not found",
-      });
-    }
-
-    const data = {
-      data: level,
-    };
-
-    return res.status(200).json({
-      message: "Level retrieved successfully",
-      response: data,
-      error: null,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Internal Server Error",
-      response: null,
-      error: error.message,
-    });
-  }
-};
-
 const updateLevel = async (req, res) => {
   const { levelName, price, difficulty } = req.body;
   const levelId = req.params.levelId;
@@ -196,7 +164,6 @@ const deleteLevel = async (req, res) => {
 module.exports = {
   getAllLevels,
   createLevel,
-  getLevel,
   updateLevel,
   deleteLevel,
 };

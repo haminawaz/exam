@@ -3,7 +3,6 @@ const router = Router();
 const {
   getAllLevels,
   createLevel,
-  getLevel,
   updateLevel,
   deleteLevel,
 } = require("../../controllers/admin/level");
@@ -20,13 +19,6 @@ router.post(
   validateFile("createLevel"),
   bodyValidator("levelBodySchema"),
   createLevel
-);
-
-router.get(
-  "/:levelId",
-  verifyAdminToken,
-  paramsValidator("levelParamsSchema"),
-  getLevel
 );
 
 router.put(

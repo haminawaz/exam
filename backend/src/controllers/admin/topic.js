@@ -42,8 +42,7 @@ const getAllTopics = async (req, res) => {
 };
 
 const createTopic = async (req, res) => {
-  const subjectId = req.params.subjectId;
-  const { topicName } = req.body;
+  const { topicName, subjectId } = req.body;
 
   try {
     const subject = await Subject.findById(subjectId);
@@ -76,37 +75,6 @@ const createTopic = async (req, res) => {
     return res.status(201).json({
       message: "Topic created successfully",
       response: null,
-      error: null,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Internal Server Error",
-      response: null,
-      error: error.message,
-    });
-  }
-};
-
-const getTopic = async (req, res) => {
-  const topicId = req.params.topicId;
-  try {
-    const topic = await Topic.findById(topicId).populate("subjectId", "name");
-    if (!topic) {
-      return res.status(404).json({
-        message: "Topic not found",
-        response: null,
-        error: "Topic not found",
-      });
-    }
-
-    const data = {
-      _id: topic._id,
-      name: topic.topicName,
-      subject: topic.subjectId.name,
-    };
-    return res.status(200).json({
-      message: "Topic retrieved successfully",
-      response: { data },
       error: null,
     });
   } catch (error) {
@@ -201,7 +169,6 @@ const deleteTopic = async (req, res) => {
 module.exports = {
   getAllTopics,
   createTopic,
-  getTopic,
   updateTopic,
   deleteTopic,
 };

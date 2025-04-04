@@ -3,7 +3,6 @@ const router = Router();
 const {
   getAllTopics,
   createTopic,
-  getTopic,
   updateTopic,
   deleteTopic,
 } = require("../../controllers/admin/topic");
@@ -13,25 +12,17 @@ const { bodyValidator, paramsValidator } = require("../../middlewares/joi");
 router.get("/", verifyAdminToken, getAllTopics);
 
 router.post(
-  "/:subjectId",
+  "/",
   verifyAdminToken,
-  paramsValidator("createTopicParamsSchema"),
-  bodyValidator("createTopicBodySchema"),
+  bodyValidator("topicBodySchema"),
   createTopic
-);
-
-router.get(
-  "/:topicId",
-  verifyAdminToken,
-  paramsValidator("topicParamsSchema"),
-  getTopic
 );
 
 router.put(
   "/:topicId",
   verifyAdminToken,
   paramsValidator("topicParamsSchema"),
-  bodyValidator("updateTopicBodySchema"),
+  bodyValidator("topicBodySchema"),
   updateTopic
 );
 

@@ -39,8 +39,7 @@ const getAllSubjects = async (req, res) => {
 };
 
 const createSubject = async (req, res) => {
-  const levelId = req.params.levelId;
-  const { subjectName } = req.body;
+  const { subjectName, levelId } = req.body;
 
   try {
     const level = await Level.findById(levelId);
@@ -73,40 +72,6 @@ const createSubject = async (req, res) => {
     return res.status(201).json({
       message: "Subject created successfully",
       response: null,
-      error: null,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Internal Server Error",
-      response: null,
-      error: error.message,
-    });
-  }
-};
-
-const getSubject = async (req, res) => {
-  const subjectId = req.params.subjectId;
-  try {
-    const subject = await Subject.findById(subjectId).populate(
-      "levelId",
-      "level"
-    );
-    if (!subject) {
-      return res.status(404).json({
-        message: "Subject not found",
-        response: null,
-        error: "Subject not found",
-      });
-    }
-
-    const data = {
-      _id: subject._id,
-      name: subject.name,
-      level: subject.levelId.level,
-    };
-    return res.status(200).json({
-      message: "Subject retrieved successfully",
-      response: { data },
       error: null,
     });
   } catch (error) {
@@ -209,7 +174,6 @@ const deleteSubject = async (req, res) => {
 module.exports = {
   getAllSubjects,
   createSubject,
-  getSubject,
   updateSubject,
   deleteSubject,
 };

@@ -85,11 +85,12 @@ export default function Subjects() {
     e.preventDefault();
     setErrors({});
     const body = JSON.stringify({
+      levelId: formData.levelId,
       subjectName: formData.subjectName,
     });
     try {
       const response = await fetch(
-        `${serverBaseUrl}/admin/subject/${formData?.levelId}`,
+        `${serverBaseUrl}/admin/subject`,
         {
           method: "POST",
           headers: {

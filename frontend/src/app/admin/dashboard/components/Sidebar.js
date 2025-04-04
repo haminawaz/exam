@@ -6,16 +6,18 @@ import {
   Users,
   BookOpen,
   FileText,
+  CircleHelp,
   Image,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const sidebarItems = [
   { icon: Image, label: "Avatars", href: "/admin/dashboard" },
-  { icon: Layers, label: "Levels", href: "/admin/dashboard/levels" },
   { icon: Users, label: "Users", href: "/admin/dashboard/users" },
+  { icon: Layers, label: "Levels", href: "/admin/dashboard/levels" },
   { icon: BookOpen, label: "Subjects", href: "/admin/dashboard/subjects" },
   { icon: FileText, label: "Topics", href: "/admin/dashboard/topics" },
+  { icon: CircleHelp, label: "Questions", href: "/admin/dashboard/questions" },
 ];
 
 export const Sidebar = () => {

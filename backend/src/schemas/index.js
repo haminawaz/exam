@@ -5,18 +5,16 @@ const { levelBodySchema, levelParamsSchema } = require("./joi/admin/level");
 const { avatarParamsSchema } = require("./joi/admin/avatar");
 
 const {
+  subjectBodySchema,
   subjectParamsSchema,
-  createSubjectParamsSchema,
-  updateSubjectBodySchema,
-  createSubjectBodySchema,
 } = require("./joi/admin/subject");
 
+const { topicParamsSchema, topicBodySchema } = require("./joi/admin/topic");
+
 const {
-  topicParamsSchema,
-  createTopicParamsSchema,
-  createTopicBodySchema,
-  updateTopicBodySchema,
-} = require("./joi/admin/topic");
+  questionBodySchema,
+  questionParamsSchema,
+} = require("./joi/admin/question");
 
 const { orderParamsSchema, registerSchema } = require("./joi/user/order");
 
@@ -30,13 +28,11 @@ module.exports = {
   adminLoginSchema,
   levelBodySchema,
   levelParamsSchema,
+  subjectBodySchema,
   subjectParamsSchema,
-  createSubjectParamsSchema,
-  createSubjectBodySchema,
-  updateSubjectBodySchema,
-  createTopicBodySchema,
-  updateTopicBodySchema,
+  topicBodySchema,
   topicParamsSchema,
-  createTopicParamsSchema,
   avatarParamsSchema,
+  questionBodySchema,
+  questionParamsSchema,
 };

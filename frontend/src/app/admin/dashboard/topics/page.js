@@ -87,11 +87,12 @@ export default function Topics() {
     setErrors({});
     setDisabled(true);
     const body = JSON.stringify({
+      subjectId: formData.subjectId,
       topicName: formData.topicName,
     });
     try {
       const response = await fetch(
-        `${serverBaseUrl}/admin/topic/${formData?.subjectId}`,
+        `${serverBaseUrl}/admin/topic`,
         {
           method: "POST",
           headers: {
@@ -410,7 +411,7 @@ export default function Topics() {
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             >
-              <option value="">Select Level</option>
+              <option value="">Select Subject</option>
               {subjects?.map((subject) => (
                 <option key={subject._id} value={subject._id}>
                   {subject.name} (Level {subject.level})
@@ -485,7 +486,7 @@ export default function Topics() {
               required
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             >
-              <option value="">Select Level</option>
+              <option value="">Select Subject</option>
               {subjects?.map((subject) => (
                 <option key={subject._id} value={subject._id}>
                   {subject.name} (Level {subject.level})

@@ -3,7 +3,6 @@ const router = Router();
 const {
   getAllAvatars,
   createAvatar,
-  //   updateLevel,
   deleteAvatar,
 } = require("../../controllers/admin/avatar");
 const { paramsValidator } = require("../../middlewares/joi");
@@ -19,15 +18,6 @@ router.post(
   validateFile("createAvatar"),
   createAvatar
 );
-
-// router.put(
-//   "/:avatarId",
-//   verifyAdminToken,
-//   upload.single("levelImage"),
-//   validateFile(),
-//   paramsValidator("avatarParamsSchema"),
-//   updateLevel
-// );
 
 router.delete(
   "/:avatarId",
