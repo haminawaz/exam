@@ -9,6 +9,7 @@ const {
 } = require("../../controllers/admin/question");
 const { verifyAdminToken } = require("../../middlewares/authMiddleware");
 const { bodyValidator, paramsValidator } = require("../../middlewares/joi");
+const { upload, validateFile } = require("../../middlewares/fileValidation");
 
 router.get("/", verifyAdminToken, getAllQuestions);
 
@@ -17,6 +18,8 @@ router.get("/topic", verifyAdminToken, getAllTopics);
 router.post(
   "/",
   verifyAdminToken,
+  upload.single("questionImage"),
+  validateFile(),
   bodyValidator("questionBodySchema"),
   createQuestion
 );
@@ -24,6 +27,8 @@ router.post(
 router.put(
   "/:questionId",
   verifyAdminToken,
+  upload.single("questionImage"),
+  validateFile(),
   paramsValidator("questionParamsSchema"),
   bodyValidator("questionBodySchema"),
   updateQuestion

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Edit, Trash2 } from "lucide-react";
 import { Alert, Modal } from "antd";
@@ -8,6 +8,7 @@ const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function Topics() {
   const router = useRouter();
+  const fileInputRef = useRef(null);
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const [topics, setTopics] = useState([]);
@@ -21,11 +22,13 @@ export default function Topics() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [imagePreview, setImagePreview] = useState(false);
   const [formData, setFormData] = useState({
     question: "",
     options: [{ option: "" }, { option: "" }],
     correctOption: "",
     simulatorType: "paid",
+    image: null,
     topicId: "",
   });
 
@@ -89,21 +92,27 @@ export default function Topics() {
     e.preventDefault();
     setErrors({});
     setDisabled(true);
-    const body = JSON.stringify({
-      question: formData.question,
-      options: formData.options.map((option) => option.option),
-      correctOption: formData.correctOption,
-      simulatorType: formData.simulatorType,
-      topicId: formData.topicId,
-    });
+
+    const newFormData = new FormData();
+    newFormData.append("question", formData.question);
+    newFormData.append(
+      "options",
+      formData.options.map((option) => option.option)
+    );
+    newFormData.append("correctOption", formData.correctOption);
+    newFormData.append("simulatorType", formData.simulatorType);
+    newFormData.append("topicId", formData.topicId);
+
+    if (formData.image && formData.image instanceof File) {
+      newFormData.append("questionImage", formData.image);
+    }
     try {
       const response = await fetch(`${serverBaseUrl}/admin/question`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body,
+        body: newFormData,
       });
       const responseData = await response.json();
       if (response.ok) {
@@ -136,23 +145,28 @@ export default function Topics() {
     e.preventDefault();
     setErrors({});
     setDisabled(true);
-    const body = JSON.stringify({
-      question: formData.question,
-      options: formData.options.map((option) => option.option),
-      correctOption: formData.correctOption,
-      simulatorType: formData.simulatorType,
-      topicId: formData.topicId,
-    });
+    const newFormData = new FormData();
+    newFormData.append("question", formData.question);
+    newFormData.append(
+      "options",
+      formData.options.map((option) => option.option)
+    );
+    newFormData.append("correctOption", formData.correctOption);
+    newFormData.append("simulatorType", formData.simulatorType);
+    newFormData.append("topicId", formData.topicId);
+
+    if (formData.image && formData.image instanceof File) {
+      newFormData.append("questionImage", formData.image);
+    }
     try {
       const response = await fetch(
         `${serverBaseUrl}/admin/question/${question._id}`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body,
+          body: newFormData,
         }
       );
       const responseData = await response.json();
@@ -198,6 +212,7 @@ export default function Topics() {
       options: formattedOptions,
       correctOption: question.correctOptions,
       simulatorType: question.simulatorType,
+      image: question.questionImage,
       topicId: question.topicId,
     });
     setShowUpdateModal(true);
@@ -243,29 +258,39 @@ export default function Topics() {
     setSuccessMessage(false);
     setAlertMessage(false);
     setShowCreateModal(false);
+    setImagePreview(null);
     setFormData({
       question: "",
       options: [{ option: "" }, { option: "" }],
       correctOption: "",
       simulatorType: "paid",
+      image: null,
       topicId: "",
     });
     setErrors({});
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleCancelUpdate = () => {
     setSuccessMessage(false);
     setAlertMessage(false);
     setShowUpdateModal(false);
+    setImagePreview(null);
     setQuestion(null);
     setFormData({
       question: "",
       options: [{ option: "" }, { option: "" }],
       correctOption: "",
       simulatorType: "paid",
+      image: null,
       topicId: "",
     });
     setErrors({});
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleCancelDelete = () => {
@@ -276,6 +301,14 @@ export default function Topics() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, image: file });
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const truncateText = (text, charLimit) => {
@@ -360,6 +393,9 @@ export default function Topics() {
                   <thead>
                     <tr className="border-b border-gray-200 text-gray-600 text-sm">
                       <th className="text-left py-3 px-6 font-medium">
+                        Question Image
+                      </th>
+                      <th className="text-left py-3 px-6 font-medium">
                         Question
                       </th>
                       <th className="text-left py-3 px-6 font-medium">Topic</th>
@@ -382,6 +418,15 @@ export default function Topics() {
                         key={question?._id}
                         className="border-b border-gray-200 hover:bg-gray-50"
                       >
+                        <td className="py-1 px-6">
+                          {question.questionImage ? (
+                            <img
+                              src={question.questionImage}
+                              alt="level-img"
+                              className="w-14 h-14 object-contain"
+                            />
+                          ) : null}
+                        </td>
                         <td className="py-4 px-6">
                           {truncateText(question.question, 20)}
                         </td>
@@ -584,7 +629,32 @@ export default function Topics() {
               ))}
             </select>
             {errors?.topicId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.topictId[0]}</p>
+              <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="image"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Image
+            </label>
+            <input
+              type="file"
+              name="image"
+              accept="image/jpeg, image/png, image/svg+xml"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
+            />
+            {imagePreview && (
+              <div className="mt-3 w-full">
+                <img
+                  src={imagePreview}
+                  alt="Image Preview"
+                  className="h-24 w-full object-contain rounded-md"
+                />
+              </div>
             )}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
@@ -741,8 +811,33 @@ export default function Topics() {
               ))}
             </select>
             {errors?.topicId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.topictId[0]}</p>
+              <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
             )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="image"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Image
+            </label>
+            <input
+              type="file"
+              name="image"
+              accept="image/jpeg, image/png, image/svg+xml"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
+            />
+            {imagePreview || formData.image ? (
+              <div className="mt-3 w-full">
+                <img
+                  src={imagePreview || formData.image}
+                  alt="Image Preview"
+                  className="h-24 w-full object-contain rounded-md"
+                />
+              </div>
+            ) : null}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
             <button

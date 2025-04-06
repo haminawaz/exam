@@ -1,5 +1,8 @@
 const Topic = require("../../models/topic");
 const Question = require("../../models/question");
+const { uploadFileS3, deleteFileS3 } = require("../../utils/upload-file");
+
+const parseStringToArray = (str) => (str ? str.split(",") : []);
 
 const getAllQuestions = async (req, res) => {
   try {
@@ -26,6 +29,7 @@ const getAllQuestions = async (req, res) => {
       _id: question?._id,
       question: question?.question,
       options: question?.options,
+      questionImage: question?.image,
       correctOptions: question?.correct,
       simulatorType: question?.simulatorType,
       topicId: question?.topicId?._id,
@@ -109,13 +113,18 @@ const createQuestion = async (req, res) => {
       });
     }
 
+    const optionsArray = parseStringToArray(options);
     const newQuestion = new Question({
       question,
-      options,
+      options: optionsArray,
       correct: correctOption,
       simulatorType,
       topicId,
     });
+    if (req.file) {
+      const uploadedImageUrl = await uploadFileS3(req.file, "question");
+      newQuestion.image = uploadedImageUrl;
+    }
     await newQuestion.save();
 
     return res.status(201).json({
@@ -167,13 +176,29 @@ const updateQuestion = async (req, res) => {
         error: "Duplicate question not allowed for same topic",
       });
     }
+    const optionsArray = parseStringToArray(options);
 
     existingQuestion.question = question || existingQuestion.question;
-    existingQuestion.options = options || existingTopic.options;
+    existingQuestion.options = optionsArray || existingTopic.options;
     existingQuestion.correct = correctOption || existingTopic.correct;
     existingQuestion.simulatorType =
       simulatorType || existingTopic.simulatorType;
     existingQuestion.topicId = topicId || existingTopic.topicId;
+    if (req.file) {
+      let oldFileUrl = null;
+      if (
+        existingQuestion?.image &&
+        existingQuestion?.image.startsWith("https://")
+      ) {
+        oldFileUrl = existingQuestion.image;
+      }
+      const uploadedImageUrl = await uploadFileS3(
+        req.file,
+        "question",
+        oldFileUrl
+      );
+      existingQuestion.image = uploadedImageUrl;
+    }
     await existingQuestion.save();
 
     return res.status(200).json({
@@ -201,6 +226,12 @@ const deleteQuestion = async (req, res) => {
         response: null,
         error: "Question not found",
       });
+    }
+    if (
+      existingQuestion?.image &&
+      existingQuestion?.image.startsWith("https://")
+    ) {
+      await deleteFileS3(existingQuestion.image);
     }
 
     await Question.findByIdAndDelete(questionId);

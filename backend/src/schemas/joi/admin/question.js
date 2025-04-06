@@ -17,26 +17,28 @@ module.exports = {
       "string.empty": "Question is not allowed to be empty",
       "any.required": "Question is required",
     }),
-    options: Joi.array()
-      .items(
-        Joi.string().required().messages({
-          "string.base": "Option must be a string",
-          "string.empty": "Option is not allowed to be empty",
-          "any.required": "Option is required",
-        })
-      )
-      .min(2)
+    options: Joi.string()
+      .trim()
       .required()
+      .custom((value, helpers) => {
+        const options = value.split(",");
+        const uniqueOptions = new Set(options);
+        if (uniqueOptions.size !== options.length) {
+          return helpers.message("Duplicate options are not allowed");
+        }
+        return value;
+      })
       .messages({
-        "array.base": "Options must be an array",
-        "array.min": "There must be at least two options",
+        "string.base": "Options are not valid",
+        "string.empty": "Options are required",
         "any.required": "Options are required",
       }),
     correctOption: Joi.string()
       .required()
       .custom((value, helpers) => {
         const { options } = helpers.state.ancestors[0];
-        if (!options.includes(value)) {
+        const optionsArray = options.split(",").map((option) => option.trim());
+        if (!optionsArray.includes(value)) {
           return helpers.message("Correct Option must be one of the options");
         }
         return value;
