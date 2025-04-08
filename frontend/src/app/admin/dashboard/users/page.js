@@ -7,7 +7,8 @@ const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function Users() {
   const router = useRouter();
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState(false);
@@ -98,27 +99,31 @@ export default function Users() {
                           {user.firstName} {user.lastName}
                         </td>
                         <td className="py-4 px-6">{user.email}</td>
-                        <td className="py-4 px-6">Level {user.level}</td>
                         <td className="py-4 px-6">
-                          {new Date(
-                            user.ordersInfo[0].paymentDate
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
+                          {user.level && `Level ${user.level}`}
                         </td>
                         <td className="py-4 px-6">
-                          {user.ordersInfo[0].paymentStatus}
+                          {user.ordersInfo[0]?.paymentDate &&
+                            new Date(
+                              user.ordersInfo[0]?.paymentDate
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                         </td>
                         <td className="py-4 px-6">
-                          {new Date(
-                            user.ordersInfo[0].expiryDate
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
+                          {user.ordersInfo[0]?.paymentStatus}
+                        </td>
+                        <td className="py-4 px-6">
+                          {user.ordersInfo[0]?.expiryDate &&
+                            new Date(
+                              user.ordersInfo[0]?.expiryDate
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                         </td>
                       </tr>
                     ))}
