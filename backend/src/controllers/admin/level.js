@@ -141,7 +141,6 @@ const deleteLevel = async (req, res) => {
       }
       await Subject.findByIdAndDelete(subject._id);
     }
-
     if (existingLevel?.image && existingLevel?.image.startsWith("https://")) {
       await deleteFileS3(existingLevel.image);
     }
