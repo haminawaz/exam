@@ -76,6 +76,9 @@ export default function Users() {
                       <th className="text-left py-3 px-6 font-medium">Name</th>
                       <th className="text-left py-3 px-6 font-medium">Email</th>
                       <th className="text-left py-3 px-6 font-medium">
+                        Address
+                      </th>
+                      <th className="text-left py-3 px-6 font-medium">
                         Purchased Level
                       </th>
                       <th className="text-left py-3 px-6 font-medium">
@@ -99,31 +102,46 @@ export default function Users() {
                           {user.firstName} {user.lastName}
                         </td>
                         <td className="py-4 px-6">{user.email}</td>
-                        <td className="py-4 px-6">
-                          {user.level && `Level ${user.level}`}
+                        <td className="py-4 px-6">{user.address}</td>
+                        <td className="py-4 px-6 text-center">
+                          {user.level ? (
+                            `Level ${user.level}`
+                          ) : (
+                            <p className="font-bold">—</p>
+                          )}
                         </td>
-                        <td className="py-4 px-6">
-                          {user.ordersInfo[0]?.paymentDate &&
+                        <td className="py-4 px-6 text-center">
+                          {user.ordersInfo[0]?.paymentDate ? (
                             new Date(
                               user.ordersInfo[0]?.paymentDate
                             ).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            })}
+                            })
+                          ) : (
+                            <p className="font-bold">—</p>
+                          )}
                         </td>
-                        <td className="py-4 px-6">
-                          {user.ordersInfo[0]?.paymentStatus}
+                        <td className="py-4 px-6 text-center">
+                          {user.ordersInfo[0]?.paymentStatus ? (
+                            user.ordersInfo[0]?.paymentStatus
+                          ) : (
+                            <p className="font-bold">—</p>
+                          )}
                         </td>
-                        <td className="py-4 px-6">
-                          {user.ordersInfo[0]?.expiryDate &&
+                        <td className="py-4 px-6 text-center">
+                          {user.ordersInfo[0]?.expiryDate ? (
                             new Date(
                               user.ordersInfo[0]?.expiryDate
                             ).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            })}
+                            })
+                          ) : (
+                            <p className="font-bold">—</p>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -5,6 +5,7 @@ const User = require("../../models/user.js");
 const Order = require("../../models/order");
 const Question = require("../../models/question");
 const TopicResult = require("../../models/topicResult");
+const Email = require("../../models/email");
 const { configurations } = require("../../config/config");
 const { sendMail } = require("../../utils/sendMail.js");
 
@@ -321,6 +322,10 @@ const createResults = async (req, res) => {
         ? "Congragulations you have passed the exam"
         : "Better luck next time";
 
+    const emailTemplate = await Email.findOne({ name: "result" });
+    const emailHeader = emailTemplate.header || null;
+    const emailFooter = emailTemplate.footer || null;
+
     const testResultTemplate = `
       <!DOCTYPE html>
       <html lang="en">
@@ -402,7 +407,7 @@ const createResults = async (req, res) => {
               height: 100%;
               border-radius: 4px;
             }
-            .footer {
+            .header-footer {
               font-size: 14px;
               color: #6b7280;
               text-align: center;
@@ -415,6 +420,9 @@ const createResults = async (req, res) => {
           <div class="container">
             <div class="section">
               <h2>Student Performance Report</h2>
+              <header class="header-footer">
+                <p>${emailHeader}</p>
+              </header>
               <div class="grid">
                 <p><strong>Student Name:</strong> ${
                   test?.name
@@ -462,8 +470,8 @@ const createResults = async (req, res) => {
               <h2>Remarks</h2>
               <p>${remarks}</p>
             </div>
-            <footer class="footer">
-              <p>For any queries, contact: academic@school.edu | Phone: (555) 123-4567</p>
+            <footer class="header-footer">
+              <p>${emailFooter}</p>
             </footer>
           </div>
         </body>

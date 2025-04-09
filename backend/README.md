@@ -11,6 +11,20 @@ Admin
 ]
 ```
 
+Email
+
+```javascript
+{
+  "_id": {
+    "$oid": "67f6a8632a7390ce62b96387"
+  },
+  "name": "result",
+  "header": "How was the exam?",
+  "footer": "For any queries, contact: academic@school.edu | Phone: (555) 123-4567"
+}
+
+```
+
 Avatars
 
 ```javascript

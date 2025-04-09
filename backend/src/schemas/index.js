@@ -9,6 +9,11 @@ const {
   subjectParamsSchema,
 } = require("./joi/admin/subject");
 
+const {
+  emailBodySchema,
+  emailParamsSchema,
+} = require("./joi/admin/email");
+
 const { topicParamsSchema, topicBodySchema } = require("./joi/admin/topic");
 
 const {
@@ -26,6 +31,8 @@ module.exports = {
   orderParamsSchema,
   accessQuestionSchema,
   adminLoginSchema,
+  emailBodySchema,
+  emailParamsSchema,
   levelBodySchema,
   levelParamsSchema,
   subjectBodySchema,

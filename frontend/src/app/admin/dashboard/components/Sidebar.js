@@ -7,6 +7,7 @@ import {
   BookOpen,
   FileText,
   CircleHelp,
+  Mail,
   Image,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -18,6 +19,7 @@ const sidebarItems = [
   { icon: BookOpen, label: "Subjects", href: "/admin/dashboard/subjects" },
   { icon: FileText, label: "Topics", href: "/admin/dashboard/topics" },
   { icon: CircleHelp, label: "Questions", href: "/admin/dashboard/questions" },
+  { icon: Mail, label: "Emails", href: "/admin/dashboard/emails" },
 ];
 
 export const Sidebar = () => {
