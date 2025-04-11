@@ -33,7 +33,6 @@ const createCheckout = async (req, res) => {
 
     const orders = await Order.find({
       userId: user?._id,
-      paymentStatus: "completed",
     }).populate("levelId");
 
     const currentDate = new Date();
@@ -63,6 +62,17 @@ const createCheckout = async (req, res) => {
     const orderLevel = level.level;
 
     if (orderLevel > 1) {
+      const alreadyHasHigherLevel = orders.some(
+        (order) => order.levelId.level > orderLevel
+      );
+      if (alreadyHasHigherLevel) {
+        return res.status(400).json({
+          message: `You already buy a higher level, so you dont buy level ${orderLevel}`,
+          response: null,
+          error: `You already buy a higher level, so you dont buy level ${orderLevel}`,
+        });
+      }
+
       const hasPreviousLevel = orders.some(
         (order) => order.levelId.level === orderLevel - 1
       );
@@ -81,7 +91,7 @@ const createCheckout = async (req, res) => {
       const passedTest = await Test.findOne({
         user: user._id,
         "levelId.level": orderLevel - 1,
-        score: { $gte: 75 },
+        percentage: { $gte: 70 },
       });
       if (!passedTest) {
         return res.status(400).json({

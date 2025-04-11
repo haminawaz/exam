@@ -9,10 +9,7 @@ const {
   subjectParamsSchema,
 } = require("./joi/admin/subject");
 
-const {
-  emailBodySchema,
-  emailParamsSchema,
-} = require("./joi/admin/email");
+const { emailBodySchema, emailParamsSchema } = require("./joi/admin/email");
 
 const { topicParamsSchema, topicBodySchema } = require("./joi/admin/topic");
 
@@ -24,6 +21,8 @@ const {
 const { orderParamsSchema, registerSchema } = require("./joi/user/order");
 
 const { accessQuestionSchema, loginSchema } = require("./joi/user/question");
+
+const { tokenParamsSchema, tokenQuerySchema } = require("./joi/admin/token");
 
 module.exports = {
   registerSchema,
@@ -42,4 +41,6 @@ module.exports = {
   avatarParamsSchema,
   questionBodySchema,
   questionParamsSchema,
+  tokenParamsSchema,
+  tokenQuerySchema,
 };

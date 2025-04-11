@@ -14,15 +14,15 @@ const orderSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: true,
+      default: null,
     },
     transactionId: {
       type: String,
-      required: true,
+      default: null,
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "completed", "failed", "refunded"],
+      enum: ["pending", "completed", "failed", "refunded", "gifted"],
       default: "pending",
     },
     paymentDate: {
