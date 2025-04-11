@@ -26,6 +26,7 @@ const sendMail = async (template, dynamicData) => {
   }
 };
 
+
 module.exports = {
   sendMail,
 };
