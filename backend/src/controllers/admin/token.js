@@ -74,7 +74,8 @@ const createToken = async (req, res) => {
         "levelId.level": orderLevel - 1,
         percentage: { $gte: 70 },
       });
-      if (!passedTest) {
+      console.log("passedTest", passedTest)
+      if (!passedTest || passedTest.length < 1) {
         return res.status(400).json({
           message: `User cannot have level ${orderLevel} without passing the test with 70% for level ${
             orderLevel - 1

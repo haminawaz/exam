@@ -117,7 +117,7 @@ export default function Home() {
 
             <div className="flex items-center justify-center w-full mt-4">
               <button
-                className="bg-[#0772AA] hover:bg-[#077999] rounded-xl px-6 py-3 text-white"
+                className="bg-[#0772AA] hover:bg-[#077999] rounded-xl px-6 py-3 text-white cursor-pointer"
                 disabled={disabled}
                 type="submit"
               >
