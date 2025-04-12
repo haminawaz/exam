@@ -5,7 +5,7 @@ const QuestionSchema = new mongoose.Schema(
     topicId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Topic",
-      required: true,
+      default: null,
     },
     question: {
       type: String,

@@ -54,12 +54,18 @@ module.exports = {
       "string.empty": "Simulator Type is not allowed to be empty",
       "any.required": "Simulator Type is required",
     }),
-    topicId: Joi.string().length(24).hex().required().messages({
-      "string.base": "Topic is invalid",
-      "string.empty": "Topic is required",
-      "string.length": "Topic is invalid",
-      "string.hex": "Topic is invalid",
-      "any.required": "Topic is required",
+    topicId: Joi.when("simulatorType", {
+      is: "paid",
+      then: Joi.string().length(24).hex().required().messages({
+        "string.base": "Topic is invalid",
+        "string.empty": "Topic is required",
+        "string.length": "Topic is invalid",
+        "string.hex": "Topic is invalid",
+        "any.required": "Topic is required",
+      }),
+      otherwise: Joi.forbidden().messages({
+        "any.unknown": "Topic is not allowed",
+      }),
     }),
   }),
 };

@@ -6,7 +6,7 @@ const parseStringToArray = (str) => (str ? str.split(",") : []);
 
 const getAllQuestions = async (req, res) => {
   try {
-    const questions = await Question.find()
+    const paidQuestions = await Question.find({ simulatorType: "paid" })
       .populate({
         path: "topicId",
         select: "topicName subjectId",
@@ -17,7 +17,17 @@ const getAllQuestions = async (req, res) => {
         },
       })
       .sort("-createdAt");
-    if (!questions || questions?.lenght < 1) {
+
+    const freeQuestions = await Question.find({ simulatorType: "free" }).sort(
+      "-createdAt"
+    );
+
+    if (
+      !paidQuestions ||
+      paidQuestions.length < 1 ||
+      !freeQuestions ||
+      freeQuestions.length < 1
+    ) {
       return res.status(404).json({
         message: "No questions found",
         response: null,
@@ -25,7 +35,7 @@ const getAllQuestions = async (req, res) => {
       });
     }
 
-    const data = questions.map((question) => ({
+    const formattedPaid = paidQuestions.map((question) => ({
       _id: question?._id,
       question: question?.question,
       options: question?.options,
@@ -37,6 +47,21 @@ const getAllQuestions = async (req, res) => {
       subjectName: question?.topicId?.subjectId?.name,
       level: question?.topicId?.subjectId?.levelId?.level,
     }));
+
+    const formattedFree = freeQuestions.map((question) => ({
+      _id: question?._id,
+      question: question?.question,
+      options: question?.options,
+      questionImage: question?.image,
+      correctOptions: question?.correct,
+      simulatorType: question?.simulatorType,
+    }));
+
+    const data = {
+      paidQuestions: formattedPaid,
+      freeQuestions: formattedFree,
+    };
+
     return res.status(200).json({
       message: "All questions retrieved successfully",
       response: { data },
@@ -92,25 +117,27 @@ const createQuestion = async (req, res) => {
   const { question, options, correctOption, simulatorType, topicId } = req.body;
 
   try {
-    const topic = await Topic.findById(topicId);
-    if (!topic) {
-      return res.status(404).json({
-        message: "Topic not found",
-        response: null,
-        error: "Topic not found",
-      });
-    }
+    if (simulatorType === "paid") {
+      const topic = await Topic.findById(topicId);
+      if (!topic) {
+        return res.status(404).json({
+          message: "Topic not found",
+          response: null,
+          error: "Topic not found",
+        });
+      }
 
-    const existingQuestion = await Question.findOne({
-      question,
-      topicId,
-    });
-    if (existingQuestion) {
-      return res.status(400).json({
-        message: "Question already exists",
-        response: null,
-        error: "Question already exists",
+      const existingQuestion = await Question.findOne({
+        question,
+        topicId,
       });
+      if (existingQuestion) {
+        return res.status(400).json({
+          message: "Question already exists",
+          response: null,
+          error: "Question already exists",
+        });
+      }
     }
 
     const optionsArray = parseStringToArray(options);
@@ -119,7 +146,7 @@ const createQuestion = async (req, res) => {
       options: optionsArray,
       correct: correctOption,
       simulatorType,
-      topicId,
+      topicId: simulatorType === "paid" ? topicId : undefined,
     });
     if (req.file) {
       const uploadedImageUrl = await uploadFileS3(req.file, "question");
@@ -155,27 +182,30 @@ const updateQuestion = async (req, res) => {
       });
     }
 
-    const topic = await Topic.findById(topicId);
-    if (!topic) {
-      return res.status(404).json({
-        message: "Topic not found",
-        response: null,
-        error: "Topic not found",
+    if (simulatorType === "paid") {
+      const topic = await Topic.findById(topicId);
+      if (!topic) {
+        return res.status(404).json({
+          message: "Topic not found",
+          response: null,
+          error: "Topic not found",
+        });
+      }
+
+      const duplicateQuestion = await Question.findOne({
+        question,
+        topicId,
+        _id: { $ne: questionId },
       });
+      if (duplicateQuestion) {
+        return res.status(404).json({
+          message: "Duplicate question not allowed for same topic",
+          response: null,
+          error: "Duplicate question not allowed for same topic",
+        });
+      }
     }
 
-    const duplicateQuestion = await Question.findOne({
-      question,
-      topicId,
-      _id: { $ne: questionId },
-    });
-    if (duplicateQuestion) {
-      return res.status(404).json({
-        message: "Duplicate question not allowed for same topic",
-        response: null,
-        error: "Duplicate question not allowed for same topic",
-      });
-    }
     const optionsArray = parseStringToArray(options);
 
     existingQuestion.question = question || existingQuestion.question;
@@ -183,7 +213,8 @@ const updateQuestion = async (req, res) => {
     existingQuestion.correct = correctOption || existingTopic.correct;
     existingQuestion.simulatorType =
       simulatorType || existingTopic.simulatorType;
-    existingQuestion.topicId = topicId || existingTopic.topicId;
+    existingQuestion.topicId =
+      simulatorType === "paid" ? topicId || existingTopic.topicId : undefined;
     if (req.file) {
       let oldFileUrl = null;
       if (

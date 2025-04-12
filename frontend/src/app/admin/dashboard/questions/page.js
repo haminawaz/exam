@@ -13,6 +13,7 @@ export default function Topics() {
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const [topics, setTopics] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [freeQuestions, setFreeQuestions] = useState([]);
   const [errors, setErrors] = useState({});
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ export default function Topics() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [imagePreview, setImagePreview] = useState(false);
+  const [activeTab, setActiveTab] = useState("paid");
   const [formData, setFormData] = useState({
     question: "",
     options: [{ option: "" }, { option: "" }],
@@ -31,6 +33,7 @@ export default function Topics() {
     image: null,
     topicId: "",
   });
+  const currentQuestions = activeTab === "paid" ? questions : freeQuestions;
 
   const fetchQuestions = async () => {
     try {
@@ -43,8 +46,10 @@ export default function Topics() {
       });
       const responseData = await response.json();
       if (response.status === 200) {
-        const questions = responseData?.response?.data;
-        setQuestions(questions);
+        const paidQ = responseData?.response?.data?.paidQuestions;
+        const freeQ = responseData?.response?.data?.freeQuestions;
+        setQuestions(paidQ);
+        setFreeQuestions(freeQ);
       } else if (responseData?.message === "Invalid token or expired") {
         localStorage.clear();
         router.push("/admin/login");
@@ -100,9 +105,12 @@ export default function Topics() {
       formData.options.map((option) => option.option)
     );
     newFormData.append("correctOption", formData.correctOption);
-    newFormData.append("simulatorType", formData.simulatorType);
-    newFormData.append("topicId", formData.topicId);
-
+    if (activeTab === "paid") {
+      newFormData.append("simulatorType", "paid");
+      newFormData.append("topicId", formData.topicId);
+    }else {
+      newFormData.append("simulatorType", "free");
+    }
     if (formData.image && formData.image instanceof File) {
       newFormData.append("questionImage", formData.image);
     }
@@ -152,8 +160,12 @@ export default function Topics() {
       formData.options.map((option) => option.option)
     );
     newFormData.append("correctOption", formData.correctOption);
-    newFormData.append("simulatorType", formData.simulatorType);
-    newFormData.append("topicId", formData.topicId);
+    if (activeTab === "paid") {
+      newFormData.append("simulatorType", "paid");
+      newFormData.append("topicId", formData.topicId);
+    }else {
+      newFormData.append("simulatorType", "free");
+    }
 
     if (formData.image && formData.image instanceof File) {
       newFormData.append("questionImage", formData.image);
@@ -213,7 +225,7 @@ export default function Topics() {
       correctOption: question.correctOptions,
       simulatorType: question.simulatorType,
       image: question.questionImage,
-      topicId: question.topicId,
+      topicId: question.simulatorType === "paid" ? question.topicId : "",
     });
     setShowUpdateModal(true);
   };
@@ -372,11 +384,34 @@ export default function Topics() {
         </div>
       )}
       <div className="p-6">
-        {questions?.length > 0 ? (
+        <h1 className="text-xl font-medium text-gray-800 mb-6">
+          Questions Management
+        </h1>
+        <div className="mb-4">
+          <button
+            className={`px-4 py-2 mr-2 rounded cursor-pointer ${
+              activeTab === "paid"
+                ? "bg-[#0772AA] text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setActiveTab("paid")}
+          >
+            Paid Questions
+          </button>
+          <button
+            className={`px-4 py-2 rounded cursor-pointer ${
+              activeTab === "free"
+                ? "bg-[#0772AA] text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => setActiveTab("free")}
+          >
+            Free Questions
+          </button>
+        </div>
+
+        {currentQuestions?.length > 0 ? (
           <>
-            <h1 className="text-xl font-medium text-gray-800 mb-6">
-              Questions Management
-            </h1>
             <div className="bg-white rounded-md shadow-sm">
               <div className="flex justify-end items-center px-4 py-3 border-b border-gray-200">
                 <div className="flex items-center gap-2">
@@ -398,11 +433,19 @@ export default function Topics() {
                       <th className="text-left py-3 px-6 font-medium">
                         Question
                       </th>
-                      <th className="text-left py-3 px-6 font-medium">Topic</th>
-                      <th className="text-left py-3 px-6 font-medium">
-                        Subject
-                      </th>
-                      <th className="text-left py-3 px-6 font-medium">Level</th>
+                      {activeTab === "paid" && (
+                        <>
+                          <th className="text-left py-3 px-6 font-medium">
+                            Topic
+                          </th>
+                          <th className="text-left py-3 px-6 font-medium">
+                            Subject
+                          </th>
+                          <th className="text-left py-3 px-6 font-medium">
+                            Level
+                          </th>
+                        </>
+                      )}
                       <th className="text-left py-3 px-6 font-medium">
                         Options
                       </th>
@@ -413,7 +456,7 @@ export default function Topics() {
                     </tr>
                   </thead>
                   <tbody>
-                    {questions?.map((question) => (
+                    {currentQuestions?.map((question) => (
                       <tr
                         key={question?._id}
                         className="border-b border-gray-200 hover:bg-gray-50"
@@ -430,9 +473,17 @@ export default function Topics() {
                         <td className="py-4 px-6">
                           {truncateText(question.question, 20)}
                         </td>
-                        <td className="py-4 px-6">{question.topicName}</td>
-                        <td className="py-4 px-6">{question.subjectName}</td>
-                        <td className="py-4 px-6">Level {question.level}</td>
+                        {activeTab === "paid" && (
+                          <>
+                            <td className="py-4 px-6">{question.topicName}</td>
+                            <td className="py-4 px-6">
+                              {question.subjectName}
+                            </td>
+                            <td className="py-4 px-6">
+                              Level {question.level}
+                            </td>
+                          </>
+                        )}
                         <td className="py-4 px-6">
                           <div className="group relative inline-block cursor-pointer">
                             View Options
@@ -478,7 +529,9 @@ export default function Topics() {
           </>
         ) : (
           <div className="flex flex-col">
-            <h1 className="text-4xl text-center">No Question found</h1>
+            <h1 className="text-4xl text-center">
+              {activeTab === "paid" ? "No Paid" : "No Free"} Questions found
+            </h1>
             <div className="flex justify-center items-center px-4 py-3">
               <div className="flex items-center gap-2">
                 <button
@@ -494,7 +547,7 @@ export default function Topics() {
       </div>
 
       <Modal
-        title="Create Topic"
+        title="Create Question"
         open={showCreateModal}
         onCancel={() => handleCancelCreate()}
         footer={null}
@@ -582,56 +635,36 @@ export default function Topics() {
               </p>
             )}
           </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="simulatorType"
-              className="text-sm font-semibold text-gray-700 mb-2"
-            >
-              Simulator Type
-            </label>
-            <select
-              name="simulatorType"
-              value={formData.simulatorType || ""}
-              onChange={handleInputChange}
-              required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
-            >
-              <option value="">Select Simulator Type</option>
-              <option value="paid">Paid</option>
-              <option value="free">Free</option>
-            </select>
-            {errors?.simulatorType && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors?.simulatorType[0]}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="topicId"
-              className="text-sm font-semibold text-gray-700 mb-2"
-            >
-              Topic
-            </label>
-            <select
-              name="topicId"
-              value={formData.topicId || ""}
-              onChange={handleInputChange}
-              required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
-            >
-              <option value="">Select Topic</option>
-              {topics?.map((topic) => (
-                <option key={topic._id} value={topic._id}>
-                  {topic.topicName} (Subject {topic.subjectName} Level{" "}
-                  {topic.level})
-                </option>
-              ))}
-            </select>
-            {errors?.topicId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
-            )}
-          </div>
+          {activeTab === "paid" && (
+            <div className="flex flex-col">
+              <label
+                htmlFor="topicId"
+                className="text-sm font-semibold text-gray-700 mb-2"
+              >
+                Topic
+              </label>
+              <select
+                name="topicId"
+                value={formData.topicId || ""}
+                onChange={handleInputChange}
+                required
+                className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
+              >
+                <option value="">Select Topic</option>
+                {topics?.map((topic) => (
+                  <option key={topic._id} value={topic._id}>
+                    {topic.topicName} (Subject {topic.subjectName} Level{" "}
+                    {topic.level})
+                  </option>
+                ))}
+              </select>
+              {errors?.topicId && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors?.topicId[0]}
+                </p>
+              )}
+            </div>
+          )}
           <div className="flex flex-col">
             <label
               htmlFor="image"
@@ -677,7 +710,7 @@ export default function Topics() {
       </Modal>
 
       <Modal
-        title="Update Topic"
+        title="Update Question"
         open={showUpdateModal}
         onCancel={() => handleCancelUpdate()}
         footer={null}
@@ -764,56 +797,34 @@ export default function Topics() {
               </p>
             )}
           </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="simulatorType"
-              className="text-sm font-semibold text-gray-700 mb-2"
-            >
-              Simulator Type
-            </label>
-            <select
-              name="simulatorType"
-              value={formData.simulatorType || ""}
-              onChange={handleInputChange}
-              required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
-            >
-              <option value="">Select Simulator Type</option>
-              <option value="paid">Paid</option>
-              <option value="free">Free</option>
-            </select>
-            {errors?.simulatorType && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors?.simulatorType[0]}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="topicId"
-              className="text-sm font-semibold text-gray-700 mb-2"
-            >
-              Topic
-            </label>
-            <select
-              name="topicId"
-              value={formData.topicId || ""}
-              onChange={handleInputChange}
-              required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
-            >
-              <option value="">Select Topic</option>
-              {topics?.map((topic) => (
-                <option key={topic._id} value={topic._id}>
-                  {topic.topicName} (Subject {topic.subjectName} Level{" "}
-                  {topic.level})
-                </option>
-              ))}
-            </select>
-            {errors?.topicId && (
-              <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
-            )}
-          </div>
+          {activeTab === "paid" && (
+            <div className="flex flex-col">
+              <label
+                htmlFor="topicId"
+                className="text-sm font-semibold text-gray-700 mb-2"
+              >
+                Topic
+              </label>
+              <select
+                name="topicId"
+                value={formData.topicId || ""}
+                onChange={handleInputChange}
+                required
+                className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none cursor-pointer"
+              >
+                <option value="">Select Topic</option>
+                {topics?.map((topic) => (
+                  <option key={topic._id} value={topic._id}>
+                    {topic.topicName} (Subject {topic.subjectName} Level{" "}
+                    {topic.level})
+                  </option>
+                ))}
+              </select>
+              {errors?.topicId && (
+                <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
+              )}
+            </div>
+          )}
           <div className="flex flex-col">
             <label
               htmlFor="image"
