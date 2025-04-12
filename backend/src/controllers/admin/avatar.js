@@ -73,7 +73,7 @@ const deleteAvatar = async (req, res) => {
 
     await Avatar.findByIdAndDelete(avatarId);
     return res.status(200).json({
-      message: "Level deleted successfully",
+      message: "Avatar deleted successfully",
       response: null,
       error: null,
     });

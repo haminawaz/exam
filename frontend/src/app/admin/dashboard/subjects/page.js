@@ -104,7 +104,7 @@ export default function Subjects() {
       if (response.ok) {
         fetchSubjects();
         handleCancelCreate();
-        setSuccessMessage("Subject created successfully");
+        setSuccessMessage(responseData.message || "Subject created successfully");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -148,7 +148,7 @@ export default function Subjects() {
       if (response.ok) {
         fetchSubjects();
         handleCancelUpdate();
-        setSuccessMessage("Subject updated successfully");
+        setSuccessMessage(responseData.message || "Subject updated successfully");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -204,10 +204,10 @@ export default function Subjects() {
       const responseData = await response.json();
       if (response.status === 200) {
         fetchSubjects();
-        setSuccessMessage("Subject deleted successfully");
+        setSuccessMessage(responseData.message || "Subject deleted successfully");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Failed to delete subject.");
+        setAlertMessage(responseData.message || "Failed to delete subject");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

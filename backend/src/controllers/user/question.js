@@ -24,7 +24,7 @@ const getAllFreeQuestions = async (req, res) => {
       data: questions,
     };
     return res.status(200).json({
-      message: "Questions retrieved successfully",
+      message: "All questions retrieved successfully",
       response: data,
       error: null,
     });
@@ -185,7 +185,7 @@ const getAccessQuestions = async (req, res) => {
       },
     };
     return res.status(200).json({
-      message: "Questions retrieved successfully",
+      message: "All questions retrieved successfully",
       response: data,
       error: null,
     });

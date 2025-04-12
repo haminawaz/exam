@@ -15,7 +15,7 @@ const getAllAvatars = async (req, res) => {
       data: avatars,
     };
     return res.status(200).json({
-      message: "Avatars retrieved successfully",
+      message: "All avatars retrieved successfully",
       response: data,
       error: null,
     });

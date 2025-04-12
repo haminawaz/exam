@@ -94,7 +94,7 @@ const getUsers = async (req, res) => {
       data: users,
     };
     return res.status(200).json({
-      message: "Successfully fetched users",
+      message: "All users retrieved successfully",
       response: data,
       error: null,
     });

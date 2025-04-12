@@ -208,7 +208,7 @@ export default function Level() {
         setSuccessMessage("Level deleted successfully");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Failed to delete level.");
+        setAlertMessage(responseData.message || "Failed to delete level");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
