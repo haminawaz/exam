@@ -39,11 +39,11 @@ export default function Topics() {
       if (response.status === 200) {
         const subjects = responseData?.response?.data;
         setSubjects(subjects);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get subjects");
+        setAlertMessage(responseData.message || "Impossible d'obtenir les sujets");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -64,11 +64,11 @@ export default function Topics() {
       if (response.status === 200) {
         const topics = responseData?.response?.data;
         setTopics(topics);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get topics");
+        setAlertMessage(responseData.message || "Impossible d'obtenir les sujets");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -106,7 +106,7 @@ export default function Topics() {
       if (response.ok) {
         fetchTopics();
         handleCancelCreate();
-        setSuccessMessage("Topic created successfully");
+        setSuccessMessage("Sujet créé avec succès");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -115,11 +115,11 @@ export default function Topics() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to create topic");
+        setAlertMessage(responseData.message || "Echec de la création du sujet");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -153,7 +153,7 @@ export default function Topics() {
       if (response.ok) {
         fetchTopics();
         handleCancelUpdate();
-        setSuccessMessage("Topic updated successfully");
+        setSuccessMessage("Sujet mis à jour avec succès");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -162,11 +162,11 @@ export default function Topics() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to update topic");
+        setAlertMessage(responseData.message || "Echec de la mise à jour du sujet");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -212,10 +212,10 @@ export default function Topics() {
       const responseData = await response.json();
       if (response.status === 200) {
         fetchTopics();
-        setSuccessMessage("Topic deleted successfully");
+        setSuccessMessage("Sujet supprimé avec succès");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Failed to delete topic");
+        setAlertMessage(responseData.message || "Echec de la suppression du sujet");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

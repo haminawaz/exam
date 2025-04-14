@@ -14,9 +14,9 @@ const getAllFreeQuestions = async (req, res) => {
     const questions = await Question.find({ simulatorType: "free" });
     if (!questions || questions?.lenght < 1) {
       return res.status(404).json({
-        message: "No questions found",
+        message: "Aucune question trouvée",
         response: null,
-        error: "No questions found",
+        error: "Aucune question trouvée",
       });
     }
 
@@ -24,13 +24,13 @@ const getAllFreeQuestions = async (req, res) => {
       data: questions,
     };
     return res.status(200).json({
-      message: "All questions retrieved successfully",
+      message: "Toutes les questions ont été récupérées avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -44,16 +44,16 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "Utilisateur introuvable",
         response: null,
-        error: "User not found",
+        error: "Utilisateur introuvable",
       });
     }
     if (user.code !== code) {
       return res.status(401).json({
-        message: "Invalid credentials",
+        message: "Identifiants non valides",
         response: null,
-        error: "Invalid credentials",
+        error: "Identifiants non valides",
       });
     }
 
@@ -61,10 +61,10 @@ const loginUser = async (req, res) => {
     if (!order || order?.expiryDate < new Date()) {
       return res.status(404).json({
         message:
-          "You haven't purchased any subscription or your access has expired",
+          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
         response: null,
         error:
-          "You haven't purchased any subscription or your access has expired",
+          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
       });
     }
 
@@ -76,13 +76,13 @@ const loginUser = async (req, res) => {
       data: token,
     };
     return res.status(200).json({
-      message: "You've successfully logged in",
+      message: "Vous vous êtes connecté avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -99,10 +99,10 @@ const getAccessQuestions = async (req, res) => {
     if (!order || order?.expiryDate < new Date()) {
       return res.status(404).json({
         message:
-          "You haven't purchased any subscription or your access has expired",
+          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
         response: null,
         error:
-          "You haven't purchased any subscription or your access has expired",
+          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
       });
     }
 
@@ -163,9 +163,9 @@ const getAccessQuestions = async (req, res) => {
     ]);
     if (questions?.lenght < 1) {
       return res.status(404).json({
-        message: "No questions found",
+        message: "Aucune question trouvée",
         response: null,
-        error: "No questions found",
+        error: "Aucune question trouvée",
       });
     }
 
@@ -185,13 +185,13 @@ const getAccessQuestions = async (req, res) => {
       },
     };
     return res.status(200).json({
-      message: "All questions retrieved successfully",
+      message: "Toutes les questions ont été récupérées avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -484,13 +484,13 @@ const createResults = async (req, res) => {
     await sendMail(testResultTemplate, dynamicData);
 
     return res.status(201).json({
-      message: "Results created successfully",
+      message: "Résultats créés avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

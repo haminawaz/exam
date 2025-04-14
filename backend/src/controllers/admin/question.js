@@ -29,9 +29,9 @@ const getAllQuestions = async (req, res) => {
       freeQuestions.length < 1
     ) {
       return res.status(404).json({
-        message: "No questions found",
+        message: "Aucune question trouvée",
         response: null,
-        error: "No questions found",
+        error: "Aucune question trouvée",
       });
     }
 
@@ -63,13 +63,13 @@ const getAllQuestions = async (req, res) => {
     };
 
     return res.status(200).json({
-      message: "All questions retrieved successfully",
+      message: "Toutes les questions ont été récupérées avec succès",
       response: { data },
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -87,9 +87,9 @@ const getAllTopics = async (req, res) => {
       .sort("-createdAt");
     if (!topics || topics?.lenght < 1) {
       return res.status(404).json({
-        message: "No topics found",
+        message: "Sujet introuvable",
         response: null,
-        error: "No topics found",
+        error: "Sujet introuvable",
       });
     }
 
@@ -100,13 +100,13 @@ const getAllTopics = async (req, res) => {
       level: topic?.subjectId?.levelId?.level,
     }));
     return res.status(200).json({
-      message: "All topics retrieved successfully",
+      message: "Tous les sujets ont été récupérés avec succès",
       response: { data },
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -121,9 +121,9 @@ const createQuestion = async (req, res) => {
       const topic = await Topic.findById(topicId);
       if (!topic) {
         return res.status(404).json({
-          message: "Topic not found",
+          message: "Sujet introuvable",
           response: null,
-          error: "Topic not found",
+          error: "Sujet introuvable",
         });
       }
 
@@ -133,9 +133,9 @@ const createQuestion = async (req, res) => {
       });
       if (existingQuestion) {
         return res.status(400).json({
-          message: "Question already exists",
+          message: "La question existe déjà",
           response: null,
-          error: "Question already exists",
+          error: "La question existe déjà",
         });
       }
     }
@@ -155,13 +155,13 @@ const createQuestion = async (req, res) => {
     await newQuestion.save();
 
     return res.status(201).json({
-      message: "Question created successfully",
+      message: "Question créée avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -176,9 +176,9 @@ const updateQuestion = async (req, res) => {
     const existingQuestion = await Question.findById(questionId);
     if (!existingQuestion) {
       return res.status(404).json({
-        message: "Question not found",
+        message: "Question introuvable",
         response: null,
-        error: "Question not found",
+        error: "Question introuvable",
       });
     }
 
@@ -186,9 +186,9 @@ const updateQuestion = async (req, res) => {
       const topic = await Topic.findById(topicId);
       if (!topic) {
         return res.status(404).json({
-          message: "Topic not found",
+          message: "Sujet introuvable",
           response: null,
-          error: "Topic not found",
+          error: "Sujet introuvable",
         });
       }
 
@@ -199,9 +199,9 @@ const updateQuestion = async (req, res) => {
       });
       if (duplicateQuestion) {
         return res.status(404).json({
-          message: "Duplicate question not allowed for same topic",
+          message: "Question en double non autorisée pour le même sujet",
           response: null,
-          error: "Duplicate question not allowed for same topic",
+          error: "Question en double non autorisée pour le même sujet",
         });
       }
     }
@@ -233,13 +233,13 @@ const updateQuestion = async (req, res) => {
     await existingQuestion.save();
 
     return res.status(200).json({
-      message: "Question updated successfully",
+      message: "Question mise à jour avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -253,9 +253,9 @@ const deleteQuestion = async (req, res) => {
     const existingQuestion = await Question.findById(questionId);
     if (!existingQuestion) {
       return res.status(404).json({
-        message: "Question not found",
+        message: "Question introuvable",
         response: null,
-        error: "Question not found",
+        error: "Question introuvable",
       });
     }
     if (
@@ -267,13 +267,13 @@ const deleteQuestion = async (req, res) => {
 
     await Question.findByIdAndDelete(questionId);
     return res.status(200).json({
-      message: "Question deleted successfully",
+      message: "Question supprimée successfully",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

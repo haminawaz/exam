@@ -45,18 +45,18 @@ const createCheckout = async (req, res) => {
     });
     if (hasPurchased) {
       return res.status(400).json({
-        message: "You already have purchased this level",
+        message: "Vous avez déjà acheté ce niveau",
         response: null,
-        error: "You already have purchased this level",
+        error: "Vous avez déjà acheté ce niveau",
       });
     }
 
     const level = await Level.findById(levelId);
     if (!level) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
     const orderLevel = level.level;
@@ -67,9 +67,9 @@ const createCheckout = async (req, res) => {
       );
       if (alreadyHasHigherLevel) {
         return res.status(400).json({
-          message: `You already buy a higher level, so you dont buy level ${orderLevel}`,
+          message: `Vous avez déjà acheté un niveau supérieur, donc vous n'achetez pas le niveau ${orderLevel}`,
           response: null,
-          error: `You already buy a higher level, so you dont buy level ${orderLevel}`,
+          error: `Vous avez déjà acheté un niveau supérieur, donc vous n'achetez pas le niveau ${orderLevel}`,
         });
       }
 
@@ -78,13 +78,9 @@ const createCheckout = async (req, res) => {
       );
       if (!hasPreviousLevel) {
         return res.status(400).json({
-          message: `You cannot buy level ${orderLevel} without purchasing level ${
-            orderLevel - 1
-          } first`,
+          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${orderLevel - 1} au préalable`,
           response: null,
-          error: `You cannot buy level ${orderLevel} without purchasing level ${
-            orderLevel - 1
-          } first`,
+          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${orderLevel - 1} au préalable`,
         });
       }
 
@@ -95,13 +91,9 @@ const createCheckout = async (req, res) => {
       });
       if (!passedTest) {
         return res.status(400).json({
-          message: `You cannot buy level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${orderLevel - 1}`,
           response: null,
-          error: `You cannot buy level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${orderLevel - 1}`,
         });
       }
     }
@@ -141,13 +133,13 @@ const createCheckout = async (req, res) => {
     };
 
     return res.status(201).json({
-      message: "Checkout session created successfully",
+      message: "La session de paiement a été créée avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -160,9 +152,9 @@ const checkoutComplete = async (req, res) => {
 
   if (!sig) {
     return res.status(400).json({
-      message: "No stripe-signature header value was provided",
+      message: "Aucune valeur d'en-tête de signature par bande n'a été fournie",
       response: null,
-      error: "No stripe-signature header value was provided",
+      error: "Aucune valeur d'en-tête de signature par bande n'a été fournie",
     });
   }
   try {
@@ -173,9 +165,9 @@ const checkoutComplete = async (req, res) => {
       const existingTransaction = await Order.findOne({ transactionId });
       if (existingTransaction) {
         return res.status(409).json({
-          message: "Transaction already processed",
+          message: "La transaction a déjà été traitée",
           response: null,
-          error: "Transaction already processed",
+          error: "La transaction a déjà été traitée",
         });
       }
 
@@ -455,7 +447,7 @@ const checkoutComplete = async (req, res) => {
       await sendMail(orderCompleteTemplate, dynamicData);
 
       return res.status(201).json({
-        message: "Order has been placed successfully",
+        message: "La commande a été passée avec succès",
         response: null,
         error: null,
       });
@@ -469,7 +461,7 @@ const checkoutComplete = async (req, res) => {
   } catch (error) {
     console.log("error", error);
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

@@ -3,11 +3,11 @@ const Joi = require("joi");
 module.exports = {
   orderParamsSchema: Joi.object({
     levelId: Joi.string().length(24).hex().required().messages({
-      "string.base": "Level is invalid",
-      "string.empty": "Level is required",
-      "string.length": "Level is invalid",
-      "string.hex": "Level is invalid",
-      "any.required": "Level is required",
+      "string.base": "Le niveau est invalide",
+      "string.empty": "Le niveau n'est pas valide",
+      "string.length": "Le niveau est invalide",
+      "string.hex": "Le niveau est invalide",
+      "any.required": "Le niveau n'est pas valide",
     }),
   }),
 
@@ -19,15 +19,15 @@ module.exports = {
       .required()
       .trim()
       .messages({
-        "string.base": "First name must be a string",
+        "string.base": "Le prénom doit être une chaîne",
         "string.pattern.base":
-          "First name must start with a letter and can include numbers, spaces, but cannot be entirely numbers",
-        "any.required": "First name is required",
-        "string.min": "First name must be at least {#limit} characters long",
-        "string.max": "First name must not exceed {#limit} characters",
-        "string.empty": "First name is not allowed to be empty",
+          "Prénom doit commencer par une lettre et peut contenir des chiffres et des espaces, mais ne peut pas être entièrement composé de chiffres",
+        "any.required": "Le prénom est obligatoire",
+        "string.min": "Le prénom doit comporter au moins {#limit} caractères",
+        "string.max": "Le prénom ne doit pas dépasser {#limit} caractères",
+        "string.empty": "Le prénom ne doit pas être vide",
         "string.trim":
-          "First name should not contain any spaces at the beginning or end",
+          "Le prénom ne doit contenir ni espaces ni espaces",
       }),
     lastName: Joi.string()
       .min(2)
@@ -36,15 +36,15 @@ module.exports = {
       .required()
       .trim()
       .messages({
-        "string.base": "Last name must be a string",
+        "string.base": "Le nom de famille doit être une chaîne",
         "string.pattern.base":
-          "Last name must start with a letter and can include numbers, spaces, but cannot be entirely numbers",
-        "any.required": "Last name is required",
-        "string.min": "Last name must be at least {#limit} characters long",
-        "string.max": "Last name must not exceed {#limit} characters",
-        "string.empty": "Last name is not allowed to be empty",
+          "Le nom de famille doit commencer par une lettre et peut contenir des chiffres et des espaces, mais ne peut pas être entièrement composé de chiffres",
+        "any.required": "Le nom de famille est obligatoire",
+        "string.min": "Le nom de famille doit comporter au moins {#limit} caractères",
+        "string.max": "Le nom de famille ne doit pas dépasser {#limit} caractères",
+        "string.empty": "Le nom de famille ne doit pas être vide",
         "string.trim":
-          "Last name should not contain any spaces at the beginning or end",
+          "Le nom de famille ne doit contenir ni espaces ni espaces",
       }),
     email: Joi.string()
       .trim()
@@ -54,11 +54,11 @@ module.exports = {
       })
       .required()
       .messages({
-        "string.email": "Enter valid email",
-        "any.required": "Email is required",
-        "string.empty": "Email is not allowed to be empty",
+        "string.email": "Entrez une adresse e-mail valide",
+        "any.required": "L'e-mail est obligatoire",
+        "string.empty": "L'e-mail ne doit pas être vide",
         "string.trim":
-          "Email should not contain any spaces at the beginning or end",
+          "L'e-mail ne doit pas contenir d'espace au début ou à la fin",
       }),
     address: Joi.string()
       .pattern(
@@ -69,13 +69,13 @@ module.exports = {
       .required()
       .trim()
       .messages({
-        "string.base": "Address must be a string",
-        "any.required": "Address is required",
-        "string.empty": "Address cannot be empty",
-        "string.min": "Address must be at least {#limit} character long",
-        "string.max": "Address must not exceed {#limit} characters",
+        "string.base": "L'adresse doit être une chaîne",
+        "any.required": "L'adresse est obligatoire",
+        "string.empty": "L'adresse ne peut pas être vide",
+        "string.min": "L'adresse doit comporter au moins {#limit} caractères",
+        "string.max": "L'adresse ne doit pas dépasser {#limit} caractères",
         "string.pattern.base":
-          "Invalid address! Please enter a valid address without extra spaces or special characters",
+          "Adresse non valide ! Veuillez saisir une adresse valide, sans espaces ni caractères spéciaux",
       }),
   }),
 };

@@ -257,7 +257,7 @@ export default function page() {
                 )
               ) : (
                 <div className="my-5">
-                  <h1 className="text-2xl font-bold">No Questions Found</h1>
+                  <h1 className="text-2xl font-bold">Aucune question trouvée</h1>
                   <p className="text-lg font-semibold">
                     Please try again later.
                   </p>

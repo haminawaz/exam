@@ -52,11 +52,11 @@ export default function Users() {
       if (response.status === 200) {
         const users = responseData?.response?.data;
         setUsers(users);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get users");
+        setAlertMessage(responseData.message || "Echec d'obtenir un utilisateur");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -79,11 +79,11 @@ export default function Users() {
       if (response.status === 200) {
         const levels = responseData?.response?.data;
         setLevels(levels);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get levels");
+        setAlertMessage(responseData.message || "Impossible d'obtenir les niveaux ");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -154,7 +154,7 @@ export default function Users() {
       if (response.ok) {
         fetchUsers();
         handleCancelCreate();
-        setFormSuccessMessage("User created successfully");
+        setFormSuccessMessage("Utilisateur créé avec succès");
         setTimeout(() => {
           setFormSuccessMessage(false);
         }, 3000);
@@ -163,11 +163,11 @@ export default function Users() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to create user");
+        setAlertMessage(responseData.message || "Echec de la création des utilisateur");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -196,7 +196,7 @@ export default function Users() {
         fetchUsers();
         handleCancelToken();
         setSuccessMessage(
-          "Token created successfully for this user. Also send to the user email"
+          "Echec de la création de l'avatar pour cet utilisateur. Envoyez également à l'adresse e-mail de l'utilisateur"
         );
         setTimeout(() => {
           setSuccessMessage(false);
@@ -206,11 +206,11 @@ export default function Users() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to create token");
+        setAlertMessage(responseData.message || "Echec de la création du jeton");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

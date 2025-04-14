@@ -12,9 +12,9 @@ const getAllSubjects = async (req, res) => {
 
     if (!subjects || subjects?.lenght < 1) {
       return res.status(404).json({
-        message: "No subjects found",
+        message: "Aucun sujet trouvé",
         response: null,
-        error: "No subjects found",
+        error: "Aucun sujet trouvé",
       });
     }
 
@@ -25,13 +25,13 @@ const getAllSubjects = async (req, res) => {
       levelId: subject?.levelId?._id,
     }));
     return res.status(200).json({
-      message: "All subjects retrieved successfully",
+      message: "Tous les sujets ont été récupérés avec succès",
       response: { data },
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -45,9 +45,9 @@ const createSubject = async (req, res) => {
     const level = await Level.findById(levelId);
     if (!level) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
 
@@ -57,9 +57,9 @@ const createSubject = async (req, res) => {
     });
     if (existingSubject) {
       return res.status(400).json({
-        message: "Subject already exists",
+        message: "L'objet existe déjà",
         response: null,
-        error: "Subject already exists",
+        error: "L'objet existe déjà",
       });
     }
 
@@ -70,13 +70,13 @@ const createSubject = async (req, res) => {
     await newSubject.save();
 
     return res.status(201).json({
-      message: "Subject created successfully",
+      message: "Objet créé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -91,9 +91,9 @@ const updateSubject = async (req, res) => {
     const existingSubject = await Subject.findById(subjectId);
     if (!existingSubject) {
       return res.status(404).json({
-        message: "Subject not found",
+        message: "Objet introuvable",
         response: null,
-        error: "Subject not found",
+        error: "Objet introuvable",
       });
     }
 
@@ -104,18 +104,18 @@ const updateSubject = async (req, res) => {
     });
     if (duplicateSubject) {
       return res.status(400).json({
-        message: "Duplicate subject not allowed for same level",
+        message: "Objet en double non autorisé pour le même niveau",
         response: null,
-        error: "Duplicate subject not allowed for same level",
+        error: "Objet en double non autorisé pour le même niveau",
       });
     }
 
     const level = await Level.findById(levelId);
     if (!level) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
 
@@ -124,13 +124,13 @@ const updateSubject = async (req, res) => {
     await existingSubject.save();
 
     return res.status(200).json({
-      message: "Subject updated successfully",
+      message: "Objet mis à jour avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -144,9 +144,9 @@ const deleteSubject = async (req, res) => {
     const existingSubject = await Subject.findById(subjectId);
     if (!existingSubject) {
       return res.status(404).json({
-        message: "Subject not found",
+        message: "Objet introuvable",
         response: null,
-        error: "Subject not found",
+        error: "Objet introuvable",
       });
     }
 
@@ -158,13 +158,13 @@ const deleteSubject = async (req, res) => {
 
     await Subject.findByIdAndDelete(subjectId);
     return res.status(200).json({
-      message: "Subject deleted successfully",
+      message: "Objet supprimé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

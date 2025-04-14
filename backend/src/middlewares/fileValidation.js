@@ -13,7 +13,7 @@ const upload = multer({
       cb(null, true);
     } else {
       req.fileValidationError =
-        "Only JPEG, JPG, PNG, and SVG file formats are allowed";
+        "Seuls les formats de fichiers JPEG,JPG,PNG et SVG sont autorisés";
       cb(null, false);
     }
   },
@@ -32,9 +32,9 @@ const validateFile = (functionName) => {
     if (functionName === "createLevel") {
       if (!req.file) {
         return res.status(403).json({
-          message: "Image is required",
+          message: "L'image est requise",
           response: null,
-          error: "Image is required",
+          error: "L'image est requise",
         });
       }
     }
@@ -42,9 +42,9 @@ const validateFile = (functionName) => {
     if (functionName === "createAvatar") {
       if (!req.file) {
         return res.status(403).json({
-          message: "Avatar is required",
+          message: "L'avatar est obligatoire",
           response: null,
-          error: "Avatar is required",
+          error: "L'avatar est obligatoire",
         });
       }
     }

@@ -46,7 +46,7 @@ export default function Welcome({ setActiveSection }) {
         if (response.ok) {
           const levels = responseData?.response?.data || [];
           setLevels(levels);
-        } else if (responseData.message === "Invalid token or expired") {
+        } else if (responseData.message === "Jeton invalide ou expiré") {
           localStorage.removeItem("token");
           setToken(null);
           fetchLevels();
@@ -115,7 +115,7 @@ export default function Welcome({ setActiveSection }) {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
@@ -123,7 +123,7 @@ export default function Welcome({ setActiveSection }) {
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
-      console.error(error.message || "An error occurred");
+      console.error(error.message || "Une erreur s'est produite");
     } finally {
       setDisabled(false);
     }

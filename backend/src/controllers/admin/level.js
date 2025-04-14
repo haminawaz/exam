@@ -11,9 +11,9 @@ const getAllLevels = async (req, res) => {
       .sort("-createdAt");
     if (!levels || levels?.lenght < 1) {
       return res.status(404).json({
-        message: "No levels found",
+        message: "Aucun niveau n'a été détecté",
         response: null,
-        error: "No levels found",
+        error: "Aucun niveau n'a été détecté",
       });
     }
 
@@ -21,13 +21,13 @@ const getAllLevels = async (req, res) => {
       data: levels,
     };
     return res.status(200).json({
-      message: "All levels retrieved successfully",
+      message: "Tous les niveaux ont été récupérés avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -41,9 +41,9 @@ const createLevel = async (req, res) => {
     const existingLevel = await Level.findOne({ level: levelName });
     if (existingLevel) {
       return res.status(400).json({
-        message: "Level already exists",
+        message: "Niveau a déjà été créé",
         response: null,
-        error: "Level already exists",
+        error: "Niveau a déjà été créé",
       });
     }
 
@@ -59,13 +59,13 @@ const createLevel = async (req, res) => {
     await newLevel.save();
 
     return res.status(201).json({
-      message: "Level created successfully",
+      message: "Niveau mis à jour avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -80,9 +80,9 @@ const updateLevel = async (req, res) => {
     const existingLevel = await Level.findById(levelId);
     if (!existingLevel) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
 
@@ -106,13 +106,13 @@ const updateLevel = async (req, res) => {
     await existingLevel.save();
 
     return res.status(200).json({
-      message: "Level updated successfully",
+      message: "Niveau supprimé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -126,9 +126,9 @@ const deleteLevel = async (req, res) => {
     const existingLevel = await Level.findById(levelId);
     if (!existingLevel) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
 
@@ -148,13 +148,13 @@ const deleteLevel = async (req, res) => {
 
     await Level.findByIdAndDelete(levelId);
     return res.status(200).json({
-      message: "Level deleted successfully",
+      message: "Niveau supprimé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

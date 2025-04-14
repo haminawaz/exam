@@ -22,9 +22,9 @@ const _validate = async (data, validator) => {
         acc[detail.path[0]].push(detail.message);
         return acc;
       }, {});
-      throw { status: 403, message: "Invalid format", error: errors };
+      throw { status: 403, message: "Format non valide", error: errors };
     }
-    throw { status: 500, message: "Internal server error", error: err };
+    throw { status: 500, message: "Erreur interne du serveur", error: err };
   }
 };
 

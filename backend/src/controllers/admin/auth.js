@@ -13,18 +13,18 @@ const loginAdmin = async (req, res) => {
     const admin = await Admin.findOne({ email });
     if (!admin) {
       return res.status(404).json({
-        message: "Invalid email or password",
+        message: "E-mail ou mot de passe non valide",
         response: null,
-        error: "Invalid email or password",
+        error: "E-mail ou mot de passe non valide",
       });
     }
 
     const passwordMatch = await bcrypt.compare(password, admin.password);
     if (!passwordMatch) {
       return res.status(401).json({
-        message: "Invalid email or password",
+        message: "E-mail ou mot de passe non valide",
         response: null,
-        error: "Invalid email or password",
+        error: "E-mail ou mot de passe non valide",
       });
     }
 
@@ -33,7 +33,7 @@ const loginAdmin = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "You've successfully logged in",
+      message: "Vous vous êtes connecté avec succès",
       response: {
         token,
         data: {
@@ -46,7 +46,7 @@ const loginAdmin = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -67,13 +67,13 @@ const updateProfile = async (req, res) => {
     };
 
     return res.status(200).json({
-      message: "Profile updated successfully",
+      message: "Le profil a été mis à jour avec succès",
       response: data,
       error: null,
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Erreur interne du serveur",
       response: null,
       error: err.message,
     });
@@ -90,9 +90,9 @@ const updatePassword = async (req, res) => {
     const passwordMatch = await bcrypt.compare(currentPassword, admin.password);
     if (!passwordMatch) {
       return res.status(400).json({
-        message: "Current password does not match",
+        message: "Le mot de passe actuel ne correspond pas",
         response: null,
-        error: "Current password does not match",
+        error: "Le mot de passe actuel ne correspond pas",
       });
     }
 
@@ -100,13 +100,13 @@ const updatePassword = async (req, res) => {
     await Admin.findByIdAndUpdate(admin._id, { password: hashedPassword });
 
     return res.status(200).json({
-      message: "Password updated successfully",
+      message: "Le mot de passe a été créé avec succès",
       response: null,
       error: null,
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Erreur interne du serveur",
       response: null,
       error: err.message,
     });

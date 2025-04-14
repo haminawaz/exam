@@ -8,9 +8,9 @@ const createUser = async (req, res) => {
     let existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists",
+        message: "L'utilisateur existe déjà",
         response: null,
-        error: "User already exists",
+        error: "L'utilisateur existe déjà",
       });
     }
 
@@ -23,13 +23,13 @@ const createUser = async (req, res) => {
     });
 
     return res.status(201).json({
-      message: "User created successfully",
+      message: "Utilisateur créé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -84,9 +84,9 @@ const getUsers = async (req, res) => {
 
     if (users.length === 0) {
       return res.status(404).json({
-        message: "No users found",
+        message: "Aucun utilisateur trouvé",
         response: null,
-        error: "No users found",
+        error: "Aucun utilisateur trouvé",
       });
     }
 
@@ -94,14 +94,14 @@ const getUsers = async (req, res) => {
       data: users,
     };
     return res.status(200).json({
-      message: "All users retrieved successfully",
+      message: "Tous les utilisateurs ont été récupérés avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     console.error("Error fetching users:", error);
     return res.status(500).json({
-      message: "Internal server error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

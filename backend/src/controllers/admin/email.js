@@ -5,9 +5,9 @@ const getAllEmails = async (req, res) => {
     const emails = await Email.find().sort("-createdAt");
     if (!emails || emails?.lenght < 1) {
       return res.status(404).json({
-        message: "No emails found",
+        message: "Aucun e-mail n'a été trouvé",
         response: null,
-        error: "No emails found",
+        error: "Aucun e-mail n'a été trouvé",
       });
     }
 
@@ -16,13 +16,13 @@ const getAllEmails = async (req, res) => {
     };
 
     return res.status(200).json({
-      message: "All emails retrieved successfully",
+      message: "Tous les e-mails ont été récupérés avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -36,9 +36,9 @@ const updateEmail = async (req, res) => {
     const existingEmail = await Email.findById(emailId);
     if (!existingEmail) {
       return res.status(404).json({
-        message: "Email not found",
+        message: "Aucun e-mail n'a été trouvé",
         response: null,
-        error: "Email not found",
+        error: "Aucun e-mail n'a été trouvé",
       });
     }
 
@@ -48,9 +48,9 @@ const updateEmail = async (req, res) => {
     });
     if (duplicateEmail) {
       return res.status(400).json({
-        message: "Duplicate email are not allowed",
+        message: "Les e-mails en double ne sont pas autorisés",
         response: null,
-        error: "Duplicate email are not allowed",
+        error: "Les e-mails en double ne sont pas autorisés",
       });
     }
 
@@ -59,13 +59,13 @@ const updateEmail = async (req, res) => {
     await existingEmail.save();
 
     return res.status(200).json({
-      message: "Email updated successfully",
+      message: "E-mail mis à jour avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

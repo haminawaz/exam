@@ -3,21 +3,21 @@ const Joi = require("joi");
 module.exports = {
   topicParamsSchema: Joi.object({
     topicId: Joi.string().length(24).hex().required().messages({
-      "string.base": "Topic is invalid",
-      "string.empty": "Topic is required",
-      "string.length": "Topic is invalid",
-      "string.hex": "Topic is invalid",
-      "any.required": "Topic is required",
+      "string.base": "Le sujet n'est pas valide",
+      "string.empty": "Le sujet n'est pas valide",
+      "string.length": "Le sujet n'est pas valide",
+      "string.hex": "Le sujet n'est pas valide",
+      "any.required": "Le sujet n'est pas valide",
     }),
   }),
 
   topicBodySchema: Joi.object({
     subjectId: Joi.string().length(24).hex().required().messages({
-      "string.base": "Subject is invalid",
-      "string.empty": "Subject is required",
-      "string.length": "Subject is invalid",
-      "string.hex": "Subject is invalid",
-      "any.required": "Subject is required",
+      "string.base": "L'objet n'est pas valide",
+      "string.empty": "L'objet est obligatoire",
+      "string.length": "L'objet n'est pas valide",
+      "string.hex": "L'objet n'est pas valide",
+      "any.required": "L'objet est obligatoire",
     }),
     topicName: Joi.string()
       .min(2)
@@ -26,15 +26,15 @@ module.exports = {
       .required()
       .trim()
       .messages({
-        "string.base": "Topic name must be a string",
+        "string.base": "Le nom du sujet doit être une chaîne",
         "string.pattern.base":
-          "Topic name can only contain letters, accented letters, spaces, and hyphens",
-        "any.required": "Topic name is required",
-        "string.min": "Topic name must be at least {#limit} characters long",
-        "string.max": "Topic name must not exceed {#limit} characters",
-        "string.empty": "Topic name cannot be empty",
+          "Le nom du sujet ne peut contenir que des lettres, des accents, des espaces et des tirets",
+        "any.required": "Le nom du sujet est obligatoire",
+        "string.min": "Le nom du sujet doit comporter au moins {#limit} caractères",
+        "string.max": "Le nom du sujet ne doit pas dépasser {#limit} caractères",
+        "string.empty": "Le nom du sujet ne doit pas être vide",
         "string.trim":
-          "Topic name should not contain spaces at the beginning or end",
+          "Le nom du sujet ne doit contenir ni espaces ni espaces au début ni à la fin",
       }),
   }),
 };

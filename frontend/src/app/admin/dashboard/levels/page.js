@@ -44,11 +44,11 @@ export default function Level() {
       if (response.status === 200) {
         const levels = responseData?.response?.data;
         setLevels(levels);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get levels");
+        setAlertMessage(responseData.message || "Impossible d'obtenir les niveaux ");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -86,12 +86,12 @@ export default function Level() {
       if (response.ok) {
         fetchLevels();
         setImagePreview(null);
-        setFormSuccessMessage("Level created successfully");
+        setFormSuccessMessage("Niveau mis à jour avec succès");
         setTimeout(() => {
           setFormSuccessMessage(false);
           handleCancelCreate();
         }, 3000);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else if (response.status === 403) {
@@ -99,11 +99,11 @@ export default function Level() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setFormAlertMessage(responseData.message || "An error occurred");
+          setFormAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setFormAlertMessage(false), 3000);
         }
       } else {
-        setFormAlertMessage(responseData.message || "Failed to create level");
+        setFormAlertMessage(responseData.message || "Impossible créer la niveaux");
         setTimeout(() => setFormAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -139,7 +139,7 @@ export default function Level() {
       const responseData = await response.json();
       if (response.ok) {
         fetchLevels();
-        setFormSuccessMessage("Level updated successfully");
+        setFormSuccessMessage("Niveau supprimé avec succès");
         setTimeout(() => {
           setFormSuccessMessage(false);
           handleCancelUpdate();
@@ -149,11 +149,11 @@ export default function Level() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setFormAlertMessage(responseData.message || "An error occurred");
+          setFormAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setFormAlertMessage(false), 3000);
         }
       } else {
-        setFormAlertMessage(responseData.message || "Failed to update level");
+        setFormAlertMessage(responseData.message || "Impossible de mettre à jour niveau");
         setTimeout(() => setFormAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -205,10 +205,10 @@ export default function Level() {
       const responseData = await response.json();
       if (response.status === 200) {
         fetchLevels();
-        setSuccessMessage("Level deleted successfully");
+        setSuccessMessage("Niveau supprimé avec succès");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Failed to delete level");
+        setAlertMessage(responseData.message || "Impossible de supprimer le niveau");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

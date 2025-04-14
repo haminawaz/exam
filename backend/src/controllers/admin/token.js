@@ -13,18 +13,18 @@ const createToken = async (req, res) => {
     let existingUser = await User.findById(userId);
     if (!existingUser) {
       return res.status(404).json({
-        message: "User not found",
+        message: "Utilisateur introuvable",
         response: null,
-        error: "User not found",
+        error: "Utilisateur introuvable",
       });
     }
 
     const level = await Level.findById(levelId);
     if (!level) {
       return res.status(404).json({
-        message: "Level not found",
+        message: "Niveau introuvable",
         response: null,
-        error: "Level not found",
+        error: "Niveau introuvable",
       });
     }
     const orderLevel = level.level;
@@ -41,31 +41,27 @@ const createToken = async (req, res) => {
         order.levelId._id.toString() === levelId && expiryDate > currentDate;
       if (orderValid) {
         return res.status(400).json({
-          message: "User has already purchased this level",
+          message: "L'utilisateur a déjà acheté ce niveau",
           response: null,
-          error: "User has already purchased this level",
+          error: "L'utilisateur a déjà acheté ce niveau",
         });
       }
 
       const alreadyHasHigherLevel = order.levelId.level > orderLevel;
       if (alreadyHasHigherLevel) {
         return res.status(400).json({
-          message: `User already has level ${order.levelId.level}, cannot assign lower than level ${order.levelId.level}`,
+          message: `L'utilisateur a déjà le niveau ${order.levelId.level},ne peut pas attribuer un niveau inférieur au niveau ${order.levelId.level}`,
           response: null,
-          error: `User already has level ${order.levelId.level}, cannot assign lower than level ${order.levelId.level}`,
+          error: `L'utilisateur a déjà le niveau ${order.levelId.level},ne peut pas attribuer un niveau inférieur au niveau ${order.levelId.level}`,
         });
       }
 
       const hasPreviousLevel = order.levelId.level === orderLevel - 1;
       if (!hasPreviousLevel) {
         return res.status(400).json({
-          message: `User cannot have level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
           response: null,
-          error: `User cannot have level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
         });
       }
 
@@ -76,13 +72,9 @@ const createToken = async (req, res) => {
       });
       if (!passedTest || passedTest.length < 1) {
         return res.status(400).json({
-          message: `User cannot have level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
           response: null,
-          error: `User cannot have level ${orderLevel} without passing the test with 70% for level ${
-            orderLevel - 1
-          }`,
+          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
         });
       }
 
@@ -97,9 +89,9 @@ const createToken = async (req, res) => {
       if (alreadyHasHigherLevel) {
         return res.status(400).json({
           message:
-            "The user has not purchased any levels yet, so the starting level will be Level 1",
+            "L'utilisateur n'a pas encore acheté de niveaux,donc le niveau de départ sera le niveau 1",
           response: null,
-          error: `The user has not purchased any levels yet, so the starting level will be Level 1`,
+          error: `L'utilisateur n'a pas encore acheté de niveaux,donc le niveau de départ sera le niveau 1`,
         });
       }
 
@@ -348,13 +340,13 @@ const createToken = async (req, res) => {
     await sendMail(orderCompleteTemplate, dynamicData);
 
     return res.status(201).json({
-      message: "Token created successfully for the user",
+      message: "Jeton créé avec succès pour l'utilisateur",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

@@ -43,9 +43,9 @@ const getAllLevels = async (req, res) => {
 
     if (!levels || levels?.lenght < 1) {
       return res.status(404).json({
-        message: "No levels found",
+        message: "Aucun niveau n'a été détecté",
         response: null,
-        error: "No levels found",
+        error: "Aucun niveau n'a été détecté",
       });
     }
 
@@ -53,13 +53,13 @@ const getAllLevels = async (req, res) => {
       data: levels,
     };
     return res.status(200).json({
-      message: "All levels and subjects retrieved successfully",
+      message: "Tous les niveaux et sujets ont été récupérés avec succès",
       response: data,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });

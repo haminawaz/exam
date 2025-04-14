@@ -33,11 +33,11 @@ export default function Avatar() {
       const responseData = await response.json();
       if (response.status === 200) {
         setAvatars(responseData?.response?.data || []);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get avatars");
+        setAlertMessage(responseData.message || "Échec de l'obtention des avatars");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -71,16 +71,16 @@ export default function Avatar() {
       if (response.ok) {
         fetchAvatars();
         setImagePreview(null);
-        setSuccessMessage("Avatar created successfully");
+        setSuccessMessage("Avatar créé avec succès");
         setTimeout(() => {
           setSuccessMessage(false);
           handleCancelCreate();
         }, 3000);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to create avatar");
+        setAlertMessage(responseData.message || "Échec de la création de l'avatar");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -115,13 +115,13 @@ export default function Avatar() {
       const responseData = await response.json();
       if (response.status === 200) {
         fetchAvatars();
-        setSuccessMessage("Avatar deleted successfully");
+        setSuccessMessage("L'avatar a été supprimé avec succès");
         setTimeout(() => setSuccessMessage(false), 3000);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to delete avatar");
+        setAlertMessage(responseData.message || "Échec de la suppression de l'avatar");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

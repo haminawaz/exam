@@ -11,7 +11,7 @@ const verifyUserToken = (req, res, next) => {
     jwt.verify(token, jwtSecret, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
-          message: "Invalid token or expired",
+          message: "Jeton invalide ou expiré",
           response: null,
           error: err,
         });
@@ -20,9 +20,9 @@ const verifyUserToken = (req, res, next) => {
       const user = await User.findOne({ email }).select("email");
       if (!user) {
         return res.status(404).json({
-          message: "User not found",
+          message: "Utilisateur introuvable",
           response: null,
-          error: "User not found",
+          error: "Utilisateur introuvable",
           
         });
       }
@@ -31,9 +31,9 @@ const verifyUserToken = (req, res, next) => {
     });
   } else {
     return res.status(401).json({
-      message: "Access denied",
+      message: "Accès refusé",
       response: null,
-      error: "Access denied, authentication token missing",
+      error: "Accès refusé,jeton d'authentification manquant",
     });
   }
 };
@@ -45,7 +45,7 @@ const decodedUserToken = (req, res, next) => {
     jwt.verify(token, jwtSecret, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
-          message: "Invalid token or expired",
+          message: "Jeton invalide ou expiré",
           response: null,
           error: err,
         });
@@ -54,9 +54,9 @@ const decodedUserToken = (req, res, next) => {
       const user = await User.findOne({ email }).select("email");
       if (!user) {
         return res.status(401).json({
-          message: "Invalid token or expired",
+          message: "Jeton invalide ou expiré",
           response: null,
-          error: "Invalid token or expired",
+          error: "Jeton invalide ou expiré",
         });
       }
       req.decoded = user;
@@ -75,7 +75,7 @@ const verifyAdminToken = (req, res, next) => {
     jwt.verify(token, jwtSecret, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
-          message: "Invalid token or expired",
+          message: "Jeton invalide ou expiré",
           response: null,
           error: err,
         });
@@ -84,9 +84,9 @@ const verifyAdminToken = (req, res, next) => {
       const admin = await Admin.findOne({ email }).select("email");
       if (!admin) {
         return res.status(404).json({
-          message: "Admin not found",
+          message: "Admin introuvable",
           response: null,
-          error: "Admin not found",
+          error: "Admin introuvable",
           
         });
       }
@@ -95,9 +95,9 @@ const verifyAdminToken = (req, res, next) => {
     });
   } else {
     return res.status(401).json({
-      message: "Access denied",
+      message: "Accès refusé",
       response: null,
-      error: "Access denied, authentication token missing",
+      error: "Accès refusé,jeton d'authentification manquant",
     });
   }
 };

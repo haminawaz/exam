@@ -34,7 +34,7 @@ export default function page() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else if (response.status === 404) {

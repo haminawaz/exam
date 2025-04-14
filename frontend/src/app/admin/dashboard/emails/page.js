@@ -35,11 +35,11 @@ export default function Subjects() {
       if (response.status === 200) {
         const emails = responseData?.response?.data;
         setEmails(emails);
-      } else if (responseData?.message === "Invalid token or expired") {
+      } else if (responseData?.message === "Jeton invalide ou expiré") {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Failed to get emails");
+        setAlertMessage(responseData.message || "Impossible de recevoir les e-mails");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export default function Subjects() {
       if (response.ok) {
         fetchEmails();
         handleCancelUpdate();
-        setSuccessMessage("Email updated successfully");
+        setSuccessMessage("E-mail mis à jour avec succès");
         setTimeout(() => {
           setSuccessMessage(false);
         }, 3000);
@@ -85,11 +85,11 @@ export default function Subjects() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setAlertMessage(responseData.message || "An error occurred");
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Failed to update email");
+        setAlertMessage(responseData.message || "Impossible de mettre à jour l'e-mail");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {

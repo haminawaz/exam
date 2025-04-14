@@ -10,11 +10,11 @@ module.exports = {
       })
       .required()
       .messages({
-        "string.email": "Enter valid email",
-        "any.required": "Email is required",
-        "string.empty": "Email is not allowed to be empty",
+        "string.email": "Entrez une adresse e-mail valide",
+        "any.required": "L'e-mail est obligatoire",
+        "string.empty": "L'e-mail ne doit pas être vide",
         "string.trim":
-          "Email should not contain any spaces at the beginning or end",
+          "L'e-mail ne doit pas contenir d'espace au début ou à la fin",
       }),
     password: Joi.string()
       .required()
@@ -26,11 +26,11 @@ module.exports = {
       )
       .messages({
         "string.pattern.name":
-          "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-        "string.min": "Password must be at least 6 characters long",
-        "string.max": "Password must be at most 30 characters long",
-        "any.required": "Password is required",
-        "string.empty": "Password is not allowed to be empty",
+          "Le mot de passe doit contenir au moins une lettre majuscule,une lettre minuscule,un chiffre et un caractère spécial",
+        "string.min": "Le mot de passe doit comporter au moins 6 caractères",
+        "string.max": "Le mot de passe doit comporter au maximum 30 caractères",
+        "any.required": "Le mot de passe est obligatoire",
+        "string.empty": "Le mot de passe ne doit pas être vide",
       }),
   }),
 };

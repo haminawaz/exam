@@ -14,9 +14,9 @@ const getAllTopics = async (req, res) => {
       .sort("-createdAt");
     if (!topics || topics?.lenght < 1) {
       return res.status(404).json({
-        message: "No topics found",
+        message: "Aucun sujet trouvé",
         response: null,
-        error: "No topics found",
+        error: "Aucun sujet trouvé",
       });
     }
 
@@ -28,13 +28,13 @@ const getAllTopics = async (req, res) => {
       level: topic?.subjectId?.levelId?.level,
     }));
     return res.status(200).json({
-      message: "All topics retrieved successfully",
+      message: "Tous les sujets ont été récupérés avec succès",
       response: { data },
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -48,9 +48,9 @@ const createTopic = async (req, res) => {
     const subject = await Subject.findById(subjectId);
     if (!subject) {
       return res.status(404).json({
-        message: "Subject not found",
+        message: "Objet introuvable",
         response: null,
-        error: "Subject not found",
+        error: "Objet introuvable",
       });
     }
 
@@ -60,9 +60,9 @@ const createTopic = async (req, res) => {
     });
     if (existingTopic) {
       return res.status(400).json({
-        message: "Topic already exists",
+        message: "Le sujet existe déjà",
         response: null,
-        error: "Topic already exists",
+        error: "Le sujet existe déjà",
       });
     }
 
@@ -73,13 +73,13 @@ const createTopic = async (req, res) => {
     await newTopic.save();
 
     return res.status(201).json({
-      message: "Topic created successfully",
+      message: "Sujet créé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -94,17 +94,17 @@ const updateTopic = async (req, res) => {
     const existingTopic = await Topic.findById(topicId);
     if (!existingTopic) {
       return res.status(404).json({
-        message: "Topic not found",
+        message: "Sujet introuvable",
         response: null,
-        error: "Topic not found",
+        error: "Sujet introuvable",
       });
     }
     const subject = await Subject.findById(subjectId);
     if (!subject) {
       return res.status(404).json({
-        message: "Subject not found",
+        message: "Objet introuvable",
         response: null,
-        error: "Subject not found",
+        error: "Objet introuvable",
       });
     }
     const duplicateTopic = await Topic.findOne({
@@ -114,9 +114,9 @@ const updateTopic = async (req, res) => {
     });
     if (duplicateTopic) {
       return res.status(404).json({
-        message: "Duplicate topic not allowed for same subject",
+        message: "Sujet en double non autorisé pour le même sujet",
         response: null,
-        error: "Duplicate topic not allowed for same subject",
+        error: "Sujet en double non autorisé pour le même sujet",
       });
     }
 
@@ -125,13 +125,13 @@ const updateTopic = async (req, res) => {
     await existingTopic.save();
 
     return res.status(200).json({
-      message: "Topic updated successfully",
+      message: "Sujet mis à jour avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
@@ -144,22 +144,22 @@ const deleteTopic = async (req, res) => {
     const existingTopic = await Topic.findById(topicId);
     if (!existingTopic) {
       return res.status(404).json({
-        message: "Topic not found",
+        message: "Sujet introuvable",
         response: null,
-        error: "Topic not found",
+        error: "Sujet introuvable",
       });
     }
 
     await Question.deleteMany({ topicId });
     await Topic.findByIdAndDelete(topicId);
     return res.status(200).json({
-      message: "Topic deleted successfully",
+      message: "Sujet supprimé avec succès",
       response: null,
       error: null,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: "Erreur interne du serveur",
       response: null,
       error: error.message,
     });
