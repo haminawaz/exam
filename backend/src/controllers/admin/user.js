@@ -67,6 +67,7 @@ const getUsers = async (req, res) => {
           lastName: 1,
           email: 1,
           address: 1,
+          code: 1,
           level: "$levelInfo.level",
           ordersInfo: {
             paymentDate: 1,
@@ -108,7 +109,71 @@ const getUsers = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  const { firstName, lastName, address, code } = req.body;
+  const userId = req.params.userId;
+
+  try {
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      return res.status(400).json({
+        message: "Aucun utilisateur trouvé",
+        response: null,
+        error: "Aucun utilisateur trouvé",
+      });
+    }
+
+    existingUser.firstName = firstName || existingUser.firstName;
+    existingUser.lastName = lastName || existingUser.lastName;
+    existingUser.address = address || existingUser.address;
+    existingUser.code = code || existingUser.code;
+    await existingUser.save();
+
+    return res.status(201).json({
+      message: "Utilisateur mis jour avec succès",
+      response: null,
+      error: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erreur interne du serveur",
+      response: null,
+      error: error.message,
+    });
+  }
+};
+
+const deleteUsers = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "Aucun utilisateur trouvé",
+        response: null,
+        error: "Aucun utilisateur trouvé",
+      });
+    }
+
+    await User.findByIdAndDelete(userId);
+    return res.status(200).json({
+      message: "L'utilisateur a été supprimé avec succès",
+      response: null,
+      error: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erreur interne du serveur",
+      response: null,
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
+  updateUser,
+  deleteUsers,
 };

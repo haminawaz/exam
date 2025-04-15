@@ -147,7 +147,7 @@ export default function Welcome({ setActiveSection }) {
             {levels?.map((course, index) => (
               <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
                 <h2 className="text-[32px] font-bold mb-6 text-center">
-                  Level {course.level} ({course.difficulty})
+                  Niveau {course.level} ({course.difficulty})
                 </h2>
 
                 <div className="flex justify-between items-center p-4 bg-[#fff3e9] rounded-lg">
@@ -173,7 +173,7 @@ export default function Welcome({ setActiveSection }) {
                       onClick={() => selectCourse(course?._id)}
                       className="w-full bg-[#FE8840] text-white py-3 rounded-[25px] text-lg font-bold hover:bg-[#e67730] transition cursor-pointer"
                     >
-                      Checkout ${course.price}
+                      Paiement ${course.price}
                     </button>
                   </div>
                 ) : (
@@ -214,7 +214,8 @@ export default function Welcome({ setActiveSection }) {
             )}
 
             <h1 className="text-[16px] font-quicksand font-bold text-[#000000] text-center md:text-left mb-8">
-              Create an account as a parent into access sec
+              Créer un compte en tant que parent pour un besoin d'identification
+              lors de l'utilisation du simulateur
             </h1>
 
             <form onSubmit={createCheckout} className="space-y-3">
@@ -226,7 +227,7 @@ export default function Welcome({ setActiveSection }) {
                   onChange={handleChange}
                   className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
-                  placeholder="Enter first name"
+                  placeholder="Entrez votre prénom"
                 />
                 {errors?.firstName && (
                   <p className="joi-error-message">{errors?.firstName[0]}</p>
@@ -240,7 +241,7 @@ export default function Welcome({ setActiveSection }) {
                   onChange={handleChange}
                   className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
-                  placeholder="Enter last name"
+                  placeholder="Entrez votre nom de famille"
                 />
                 {errors?.lastName && (
                   <p className="joi-error-message">{errors?.lastName[0]}</p>
@@ -254,7 +255,7 @@ export default function Welcome({ setActiveSection }) {
                   onChange={handleChange}
                   className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
-                  placeholder="Please Enter Your Parent Email"
+                  placeholder="Veuillez entrer le courriel du parent"
                 />
                 {errors?.email && (
                   <p className="joi-error-message">{errors?.email[0]}</p>
@@ -268,7 +269,7 @@ export default function Welcome({ setActiveSection }) {
                   onChange={handleChange}
                   className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
-                  placeholder="Enter address"
+                  placeholder="Entrez votre code postal à 6 caractères"
                 />
                 {errors?.address && (
                   <p className="joi-error-message">{errors?.address[0]}</p>
@@ -311,9 +312,9 @@ export default function Welcome({ setActiveSection }) {
               alt="Farrukh"
               className="w-[48px] h-[48px]"
             />
-            <h1 className="text-[22px] font-bold text-[#000000]">Success!</h1>
+            <h1 className="text-[22px] font-bold text-[#000000]">Succès !</h1>
             <p className="text-[18px] font-medium text-[#B6B6B6] text-center">
-              Congratulations! Your payment has been successfully processed.
+              FélicitaƟons ! Votre paiement a été traité avec succès.
             </p>
             <div>
               <div className="flex justify-center">
@@ -324,10 +325,10 @@ export default function Welcome({ setActiveSection }) {
                 />
               </div>
               <h1 className="text-[15px] font-medium text-[#000000] text-center pt-2">
-                Please Check Your Email
+                Veuillez vérifier votre courriel
               </h1>
               <p className="text-[18px] font-medium text-[#B6B6B6] text-center">
-                An Access Code has been successfully sent to your email.
+                Un code d'accès vous a été envoyé avec succès.
               </p>
             </div>
           </div>

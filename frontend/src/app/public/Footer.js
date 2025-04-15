@@ -29,11 +29,8 @@ export const Footer = () => {
           <div className="max-w-[500px] md:max-w-[700px] px-5 text-white font-light text-[16px] md:text-[20px] font-quicksand text-center">
             Tous droits réservés- Acces-Sec{" "}
           </div>
-          <div className="flex flex-row gap-5">
-            <img src="/images/facebook.svg" alt="facebook" />
-            <img src="/images/twitter.svg" alt="twitter" />
-            <img src="/images/linkdin.svg" alt="linkdin" />
-            <img src="/images/instragram.svg" alt="instragram" />
+          <div className="max-w-[500px] md:max-w-[700px] px-5 text-white font-light font-quicksand text-center">
+            2025 ® Email : Info@acces-sec.ca
           </div>
         </div>
         <div className="flex justify-between">

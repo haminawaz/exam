@@ -48,7 +48,9 @@ export default function Level() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les niveaux ");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les niveaux "
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -99,11 +101,15 @@ export default function Level() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setFormAlertMessage(responseData.message || "Une erreur s'est produite");
+          setFormAlertMessage(
+            responseData.message || "Une erreur s'est produite"
+          );
           setTimeout(() => setFormAlertMessage(false), 3000);
         }
       } else {
-        setFormAlertMessage(responseData.message || "Impossible créer la niveaux");
+        setFormAlertMessage(
+          responseData.message || "Impossible créer la niveaux"
+        );
         setTimeout(() => setFormAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -149,11 +155,15 @@ export default function Level() {
         if (error === "object") {
           setErrors(responseData.error);
         } else {
-          setFormAlertMessage(responseData.message || "Une erreur s'est produite");
+          setFormAlertMessage(
+            responseData.message || "Une erreur s'est produite"
+          );
           setTimeout(() => setFormAlertMessage(false), 3000);
         }
       } else {
-        setFormAlertMessage(responseData.message || "Impossible de mettre à jour niveau");
+        setFormAlertMessage(
+          responseData.message || "Impossible de mettre à jour niveau"
+        );
         setTimeout(() => setFormAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -208,7 +218,9 @@ export default function Level() {
         setSuccessMessage("Niveau supprimé avec succès");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Impossible de supprimer le niveau");
+        setAlertMessage(
+          responseData.message || "Impossible de supprimer le niveau"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -325,7 +337,7 @@ export default function Level() {
                       <th className="text-left py-3 px-6 font-medium">
                         Diffculty
                       </th>
-                      <th className="text-left py-3 px-6 font-medium">Price</th>
+                      <th className="text-left py-3 px-6 font-medium">Prix</th>
                       <th className="text-left py-3 px-6 font-medium">
                         Actions
                       </th>
@@ -344,7 +356,7 @@ export default function Level() {
                             className="w-14 h-14"
                           />
                         </td>
-                        <td className="py-4 px-6">Level {level.level}</td>
+                        <td className="py-4 px-6">Niveau {level.level}</td>
                         <td className="py-4 px-6">{level.difficulty}</td>
                         <td className="py-4 px-6">{level.price}</td>
                         <td className="py-4 px-6">
@@ -470,7 +482,7 @@ export default function Level() {
               htmlFor="price"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Price
+              Prix
             </label>
             <input
               type="number"
@@ -517,7 +529,7 @@ export default function Level() {
               onClick={() => handleCancelCreate()}
               className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer"
             >
-              Cancel
+              Annuler
             </button>
             <button
               type="submit"
@@ -613,7 +625,7 @@ export default function Level() {
               htmlFor="price"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Price
+              Prix
             </label>
             <input
               type="number"
@@ -668,14 +680,14 @@ export default function Level() {
               onClick={() => handleCancelUpdate()}
               className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer"
             >
-              Cancel
+              Annuler
             </button>
             <button
               type="submit"
               disabled={disabled}
               className="px-6 py-2 bg-[#0772AA] text-white rounded-md focus:outline-none cursor-pointer"
             >
-              Update
+              Mise à jour
             </button>
           </div>
         </form>
@@ -691,7 +703,7 @@ export default function Level() {
             onClick={handleCancelDelete}
             className="px-4 py-2 mx-4 bg-gray-400 text-white rounded cursor-pointer"
           >
-            Cancel
+            Annuler
           </button>,
           <button
             key="delete"

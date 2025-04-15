@@ -26,8 +26,7 @@ module.exports = {
         "string.min": "Le prénom doit comporter au moins {#limit} caractères",
         "string.max": "Le prénom ne doit pas dépasser {#limit} caractères",
         "string.empty": "Le prénom ne doit pas être vide",
-        "string.trim":
-          "Le prénom ne doit contenir ni espaces ni espaces",
+        "string.trim": "Le prénom ne doit contenir ni espaces ni espaces",
       }),
     lastName: Joi.string()
       .min(2)
@@ -40,8 +39,10 @@ module.exports = {
         "string.pattern.base":
           "Le nom de famille doit commencer par une lettre et peut contenir des chiffres et des espaces, mais ne peut pas être entièrement composé de chiffres",
         "any.required": "Le nom de famille est obligatoire",
-        "string.min": "Le nom de famille doit comporter au moins {#limit} caractères",
-        "string.max": "Le nom de famille ne doit pas dépasser {#limit} caractères",
+        "string.min":
+          "Le nom de famille doit comporter au moins {#limit} caractères",
+        "string.max":
+          "Le nom de famille ne doit pas dépasser {#limit} caractères",
         "string.empty": "Le nom de famille ne doit pas être vide",
         "string.trim":
           "Le nom de famille ne doit contenir ni espaces ni espaces",
@@ -60,6 +61,68 @@ module.exports = {
         "string.trim":
           "L'e-mail ne doit pas contenir d'espace au début ou à la fin",
       }),
+    address: Joi.string()
+      .pattern(
+        /^(?!.*\s{2,})(?!.*([,#\-/().'])[\s]*[,#\-/().'])[A-Za-z0-9\s,#\-/().']+$/
+      )
+      .min(2)
+      .max(255)
+      .required()
+      .trim()
+      .messages({
+        "string.base": "L'adresse doit être une chaîne",
+        "any.required": "L'adresse est obligatoire",
+        "string.empty": "L'adresse ne peut pas être vide",
+        "string.min": "L'adresse doit comporter au moins {#limit} caractères",
+        "string.max": "L'adresse ne doit pas dépasser {#limit} caractères",
+        "string.pattern.base":
+          "Adresse non valide ! Veuillez saisir une adresse valide, sans espaces ni caractères spéciaux",
+      }),
+  }),
+
+  updateUserSchema: Joi.object({
+    firstName: Joi.string()
+      .min(2)
+      .max(70)
+      .pattern(/^[^\p{N}]/u)
+      .required()
+      .trim()
+      .messages({
+        "string.base": "Le prénom doit être une chaîne",
+        "string.pattern.base":
+          "Prénom doit commencer par une lettre et peut contenir des chiffres et des espaces, mais ne peut pas être entièrement composé de chiffres",
+        "any.required": "Le prénom est obligatoire",
+        "string.min": "Le prénom doit comporter au moins {#limit} caractères",
+        "string.max": "Le prénom ne doit pas dépasser {#limit} caractères",
+        "string.empty": "Le prénom ne doit pas être vide",
+        "string.trim": "Le prénom ne doit contenir ni espaces ni espaces",
+      }),
+    lastName: Joi.string()
+      .min(2)
+      .max(70)
+      .pattern(/^[^\p{N}]/u)
+      .required()
+      .trim()
+      .messages({
+        "string.base": "Le nom de famille doit être une chaîne",
+        "string.pattern.base":
+          "Le nom de famille doit commencer par une lettre et peut contenir des chiffres et des espaces, mais ne peut pas être entièrement composé de chiffres",
+        "any.required": "Le nom de famille est obligatoire",
+        "string.min":
+          "Le nom de famille doit comporter au moins {#limit} caractères",
+        "string.max":
+          "Le nom de famille ne doit pas dépasser {#limit} caractères",
+        "string.empty": "Le nom de famille ne doit pas être vide",
+        "string.trim":
+          "Le nom de famille ne doit contenir ni espaces ni espaces",
+      }),
+    code: Joi.string().length(6).required().uppercase().alphanum().messages({
+      "string.length": "Le code doit comporter exactement {#limit} caractères",
+      "string.empty": "Le code est obligatoire",
+      "any.required": "Le code est obligatoire",
+      "string.alphanum":
+        "Le code ne doit contenir que des lettres et des chiffres",
+    }),
     address: Joi.string()
       .pattern(
         /^(?!.*\s{2,})(?!.*([,#\-/().'])[\s]*[,#\-/().'])[A-Za-z0-9\s,#\-/().']+$/

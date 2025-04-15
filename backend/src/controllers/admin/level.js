@@ -106,7 +106,7 @@ const updateLevel = async (req, res) => {
     await existingLevel.save();
 
     return res.status(200).json({
-      message: "Niveau supprimé avec succès",
+      message: "Niveau mis jour avec succès",
       response: null,
       error: null,
     });

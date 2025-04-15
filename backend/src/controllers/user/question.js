@@ -60,11 +60,9 @@ const loginUser = async (req, res) => {
     const order = await Order.findOne({ userId: user._id }).lean();
     if (!order || order?.expiryDate < new Date()) {
       return res.status(404).json({
-        message:
-          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
+        message: "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
         response: null,
-        error:
-          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
+        error: "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
       });
     }
 
@@ -98,11 +96,9 @@ const getAccessQuestions = async (req, res) => {
     const order = await Order.findOne({ userId }).lean();
     if (!order || order?.expiryDate < new Date()) {
       return res.status(404).json({
-        message:
-          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
+        message: "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
         response: null,
-        error:
-          "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
+        error: "Vous n'avez pas acheté d'abonnement ou votre accès a expiré",
       });
     }
 
@@ -319,8 +315,8 @@ const createResults = async (req, res) => {
     const test = await Test.findById(testId).populate("user");
     const remarks =
       overallPercentage >= 70
-        ? "Congragulations you have passed the exam"
-        : "Better luck next time";
+        ? "Bravo, tu as réussi. Bonne chance pour l’examen d’admission au secondaire."
+        : "Tu peux améliorer ton score. Essaie encore.";
 
     const emailTemplate = await Email.findOne({ name: "result" });
     const emailHeader = emailTemplate.header || null;
@@ -408,23 +404,24 @@ const createResults = async (req, res) => {
               border-radius: 4px;
             }
             .header-footer {
-              font-size: 14px;
+              font-size: 17px;
               color: #6b7280;
               text-align: center;
               border-top: 1px solid #e5e7eb;
               padding-top: 10px;
+              margin: 3% 0px;
             }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="section">
-              <h2>Student Performance Report</h2>
+              <h2>Rapport de performance de l'élève</h2>
               <header class="header-footer">
                 <p>${emailHeader}</p>
               </header>
               <div class="grid">
-                <p><strong>Student Name:</strong> ${
+                <p><strong>Nom de l'élève :</strong> ${
                   test?.name
                     ? test.name.charAt(0).toUpperCase() + test.name.slice(1)
                     : ""
@@ -433,16 +430,16 @@ const createResults = async (req, res) => {
             </div>
             <div class="section grid">
               <div class="card">
-                <p>Total Score</p>
+                <p>Note totale</p>
                 <p>${totalScore} / ${totalQuestions}</p>
               </div>
               <div class="card">
-                <p>Overall Percentage</p>
+                <p>Pourcentage global</p>
                 <p>${overallPercentage.toFixed(2)}%</p>
               </div>
             </div>
             <div class="section">
-              <h2>Subject-wise Performance</h2>
+              <h2>Performance par maƟère:</h2>
               ${subjectTopicAggregation
                 .map((subject) => {
                   let color;
@@ -467,7 +464,7 @@ const createResults = async (req, res) => {
                 })
                 .join("")}
             <div class="section">
-              <h2>Remarks</h2>
+              <h2>Remarques:</h2>
               <p>${remarks}</p>
             </div>
             <footer class="header-footer">

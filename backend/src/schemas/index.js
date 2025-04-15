@@ -18,7 +18,7 @@ const {
   questionParamsSchema,
 } = require("./joi/admin/question");
 
-const { orderParamsSchema, registerSchema } = require("./joi/user/order");
+const { orderParamsSchema, registerSchema, updateUserSchema } = require("./joi/user/order");
 
 const { accessQuestionSchema, loginSchema } = require("./joi/user/question");
 
@@ -26,6 +26,7 @@ const { tokenParamsSchema, tokenQuerySchema } = require("./joi/admin/token");
 
 module.exports = {
   registerSchema,
+  updateUserSchema,
   loginSchema,
   orderParamsSchema,
   accessQuestionSchema,

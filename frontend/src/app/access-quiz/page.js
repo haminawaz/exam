@@ -220,7 +220,7 @@ export default function page() {
               />
               {!name && (
                 <p className="joi-error-message mt-0 mb-3 text-center">
-                  Please Enter your name
+                  Veuillez saisir votre nom
                 </p>
               )}
               {errors?.name && (
@@ -248,7 +248,7 @@ export default function page() {
               onClick={handleStartQuiz}
               className="bg-black text-white px-4 py-2 rounded-[10px] mt-4 mx-auto block cursor-pointer"
             >
-              Start Quiz
+              Démarrer le test
             </button>
           </div>
         </section>
@@ -265,25 +265,22 @@ export default function page() {
                     </p>
                     {(score / questions.length) * 100 >= 70 ? (
                       <>
-                        <video
-                          src="/images/quiz/good.mp4"
+                        <img
+                          src="/images/quiz/good.gif"
                           alt="Success"
                           className="m-auto mt-5 w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
-                          autoPlay
-                          loop
                         />
                         <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
-                          Congratulations, you did well!
+                          Félicitaoon, tu as bien réussi ton test. Tu es
+                          vraiment bien préparé(e)
                         </h1>
                       </>
                     ) : (
                       <>
-                        <video
-                          src="/images/quiz/bad.mp4"
+                        <img
+                          src="/images/quiz/bad.gif"
                           alt="Success"
                           className="m-auto mt-5 w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
-                          autoPlay
-                          loop
                         />
                         <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
                           Tu dois t'exercer encore. Tu es capable!
@@ -374,7 +371,9 @@ export default function page() {
                 )
               ) : (
                 <div className="my-5">
-                  <h1 className="text-2xl font-bold">Aucune question trouvée</h1>
+                  <h1 className="text-2xl font-bold">
+                    Aucune question trouvée
+                  </h1>
                   <p className="text-lg font-semibold">
                     Please try again later.
                   </p>

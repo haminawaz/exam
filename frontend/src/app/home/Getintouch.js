@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
+import Alert from "antd/es/alert/Alert";
+const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export const Getintouch = () => {
+  const [alertMessage, setAlertMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,9 +18,37 @@ export const Getintouch = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setDisabled(true);
+    const body = JSON.stringify({
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+    });
+    try {
+      const response = await fetch(`${serverBaseUrl}/user/contact-us`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setSuccessMessage("Message envoyé avec succès !");
+        setTimeout(() => setSuccessMessage(false), 3000);
+      } else {
+        setAlertMessage(responseData.message);
+        setTimeout(() => setAlertMessage(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setAlertMessage("Error sending message");
+      setTimeout(() => setAlertMessage(false), 3000);
+    } finally {
+      setDisabled(false);
+    }
   };
 
   return (
@@ -25,6 +58,26 @@ export const Getintouch = () => {
           className="border border-[#FE8840] m-[20px] sm:m-[70px] md:m-[100px] p-5 md:p-[50px]"
           style={{ borderWidth: "3px" }}
         >
+          {alertMessage && (
+            <div className="col-12 mb-4">
+              <Alert
+                closable
+                message={alertMessage}
+                type="error"
+                onClose={() => setAlertMessage(false)}
+              />
+            </div>
+          )}
+          {successMessage && (
+            <div className="col-12 mb-4">
+              <Alert
+                closable
+                message={successMessage}
+                type="success"
+                onClose={() => setSuccessMessage(false)}
+              />
+            </div>
+          )}
           <div className="flex flex-row justify-center items-center">
             <img
               className="hidden md:block mr-[70px] w-[86px] h-[92px]"
@@ -89,6 +142,7 @@ export const Getintouch = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
+                  disabled={disabled}
                   className="primary-btn font-roboto bg-[#FE8840] text-white p-3 rounded-[25px] cursor-pointer transition"
                 >
                   Envoyer

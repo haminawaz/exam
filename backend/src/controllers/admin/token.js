@@ -59,9 +59,13 @@ const createToken = async (req, res) => {
       const hasPreviousLevel = order.levelId.level === orderLevel - 1;
       if (!hasPreviousLevel) {
         return res.status(400).json({
-          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
+          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${
+            orderLevel - 1
+          }`,
           response: null,
-          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
+          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${
+            orderLevel - 1
+          }`,
         });
       }
 
@@ -72,9 +76,13 @@ const createToken = async (req, res) => {
       });
       if (!passedTest || passedTest.length < 1) {
         return res.status(400).json({
-          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
+          message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${
+            orderLevel - 1
+          }`,
           response: null,
-          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${orderLevel - 1}`,
+          error: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${
+            orderLevel - 1
+          }`,
         });
       }
 
@@ -124,212 +132,150 @@ const createToken = async (req, res) => {
       <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
         <head>
           <meta charset="UTF-8" />
-          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Gifted Access</title>
           <style>
-            body, table, td, div, p {
-              margin: 0;
-              padding: 0;
-              font-family: Arial, sans-serif;
-              color: #333333;
-            }
             body {
+              margin: 0;
+              font-family: Arial, sans-serif;
               background-color: #f3f4f6;
+              color: #333;
             }
-            .email-container {
-              width: 100%;
+            .container {
               max-width: 600px;
               margin: 0 auto;
               background-color: #ffffff;
-              border-radius: 8px;
+              border-radius: 6px;
               overflow: hidden;
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+              box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
             }
-            .email-header {
+            .header {
               background-color: #10b981;
-              padding: 20px;
-              text-align: center;
               color: #ffffff;
-            }
-            .email-header h1 {
-              margin: 0;
-              font-size: 24px;
-            }
-            .email-body {
-              padding: 20px 20px 30px 20px;
-            }
-            .section-title {
-              font-size: 18px;
+              text-align: center;
+              padding: 16px;
+              font-size: 20px;
               font-weight: bold;
-              color: #1f2937;
-              margin-bottom: 8px;
             }
-            .section-text {
-              font-size: 14px;
-              line-height: 1.6;
-              color: #4b5563;
+            .content {
+              padding: 20px;
+            }
+            .content p {
+              line-height: 1.5;
+              margin: 12px 0;
             }
             .highlight {
               color: #10b981;
               font-weight: bold;
             }
-            .box {
-              background-color: #d1fae5;
-              border-radius: 6px;
-              padding: 16px;
+            .steps {
+              background-color: #e0f7f0;
+              padding: 12px;
+              border-radius: 4px;
               margin-top: 16px;
-              margin-bottom: 16px;
             }
-            .box p {
-              margin-bottom: 8px;
+            .steps ol {
+              padding-left: 20px;
             }
-            .price-div {
-              display:flex;
-              justify-content:center;
-              align-items:center;
-              margin-top:8px;
+            .code-box {
+              background-color: #d1fae5;
+              padding: 14px;
               text-align: center;
+              margin: 20px 0;
+              border-radius: 6px;
             }
-            .price {
-              font-size: 18px;
-              font-weight: bold;
-              color: #000000;
-              margin-right: 10px;
-            }
-            .badge-paid {
-              display: inline-block;
-              padding: 3px 12px;
-              border-radius: 12px;
-              background-color: #10b981;
-              color: #ffffff;
-              font-size: 12px;
-              font-weight: 600;
-            }
-            .divider {
-              border-bottom: 1px solid #e5e7eb;
-              margin: 16px 0;
-            }
-            .summary-row {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 8px;
-            }
-            .summary-row .bold {
-              font-weight: bold;
-            }
-            .secret-code {
-              font-size: 16px;
+            .code {
+              font-size: 20px;
               font-weight: bold;
               color: #dc2626;
+            }
+            .section {
+              background-color: #ccfbf1;
+              padding: 16px;
+              margin: 16px 0;
+              border-radius: 6px;
+            }
+            .price-tag {
+              color: #6366f1;
+              font-weight: bold;
               margin-top: 8px;
             }
-            .email-footer {
+            .footer {
               text-align: center;
-              padding: 16px;
               font-size: 12px;
-              color: #6b7280;
+              color: #666;
+              padding: 16px;
             }
-            .email-footer a {
-              color: #6b7280;
-              text-decoration: underline;
-            }
-            .social-icons i {
-              margin: 0 6px;
-              color: #6b7280;
-              cursor: pointer;
-              font-size: 16px;
-            }
-            .social-icons i:hover {
+            .footer a {
               color: #10b981;
+              text-decoration: none;
             }
           </style>
         </head>
         <body>
-          <table
-            border="0"
-            cellpadding="0"
-            cellspacing="0"
-            width="100%"
-            style="padding: 20px 0"
-          >
-            <tr>
-              <td align="center" valign="top">
-                <div class="email-container">
-                  <div class="email-header">
-                    <h1>Premium Access Gifted</h1>
-                  </div>
-                  <div class="email-body">
-                    <p class="section-text">
-                      Hello
-                      <span class="highlight">
-                        <strong>
-                          ${
-                            buyer?.firstName.charAt(0).toUpperCase() +
-                            buyer.firstName.slice(1)
-                          }
-                          ${
-                            buyer?.lastName.charAt(0).toUpperCase() +
-                            buyer.lastName.slice(1)
-                          }
-                        </strong>
-                      </span>!
-                    </p>                            
-                    <p class="section-text">
-                      You have been <strong>gifted premium access</strong> by admin!
-                      You can now start your preparations using our premium features.
-                    </p>
-                    <div class="box" style="text-align:center;">
-                      <p class="section-text" style="margin-bottom: 12px;">
-                        <strong>Your Premium Access Code:</strong>
-                      </p>
-                      <p class="secret-code">
-                        ${buyer?.code}
-                      </p>
-                      <p class="section-text" style="margin-top: 12px;">
-                        <em>Please keep this code secret. It allows access to premium questions.</em>
-                      </p>
-                    </div>
-                    <div class="box">
-                      <h2 class="section-title" style="margin-top:0;">Plan Details</h2>
-                      <p class="section-text" style="margin: 0;">
-                        Premium Plan - Level ${orderLevel}
-                      </p>
-                      <p class="section-text" style="margin: 0;">
-                        Gifted Duration: 2 Months
-                      </p>
-                      <div class="price-div">
-                        <span class="badge-paid" style="background-color: #6366f1;">Gifted</span>
-                      </div>
-                    </div>
-                    <div class="box">
-                      <h2 class="section-title" style="margin-top:0;">Access Summary</h2>
-                      <div class="summary-row">
-                        <span class="bold">Gifted On:</span>
-                        <span>${paymentDate}</span>
-                      </div>
-                      <div class="summary-row">
-                        <span class="bold">Expiry Date:</span>
-                        <span>${emailExpiryDate}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="email-footer">
-                    <p>Need help? Contact our support team</p>
-                    <p>support@logo.com | +1 (555) 123-4567</p>
-                    <div class="social-icons">
-                      <i class="ri-twitter-line"></i>
-                      <i class="ri-facebook-line"></i>
-                      <i class="ri-instagram-line"></i>
-                    </div>
-                    <p style="margin-top: 8px;">
-                      © 2025 Logo. All rights reserved.
-                    </p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </table>
+          <div class="container">
+            <div class="header">Accès Premium offert</div>
+            <div class="content">
+              <p style="text-align: center;">
+                Bonjour
+                <span class="highlight">
+                  <strong>
+                    ${ buyer?.firstName.charAt(0).toUpperCase() +
+                    buyer.firstName.slice(1) } ${
+                    buyer?.lastName.charAt(0).toUpperCase() + buyer.lastName.slice(1)
+                    }
+                  </strong>
+                </span>
+                !
+              </p>
+              <p>
+                L’administrateur vous a attribué un <strong>accès premium</strong> !
+                Vous pouvez désormais commencer à vous préparer grâce à nos
+                fonctionnalités premium.
+              </p>
+                  
+              <div>
+                  <p style="text-align: center; margin-bottom: 0px;">Pour utiliser votre code, suivez les étapes ci-dessous :</p>
+                <ol style="margin-top: 0px;">
+                  <li>
+                    Rendez-vous sur le site web
+                    <a href="https://www.acces-sec.ca" target="_blank"
+                      >www.acces-sec.ca</a
+                    >
+                  </li>
+                  <li>Cliquez sur l’onglet « Commencer ma préparation »</li>
+                  <li>Utilisez votre courriel d’identification et le code fourni</li>
+                  <li>Commencez l’examen</li>
+                </ol>
+              </div>
+                  
+              <div class="code-box">
+                <div><strong>Votre code d'accès premium</strong></div>
+                <div class="code">${buyer?.code}</div>
+                <p>
+                  Veuillez garder ce code secret. Il vous donne accès aux questions
+                  premium.
+                </p>
+              </div>
+                  
+              <div class="code-box">
+                <strong>Détails de l'abonnement</strong><br />
+                Abonnement Premium - Niveau ${orderLevel}<br />
+                Durée de l'abonnement : 2 mois<br />
+                <div class="price-tag">Offert</div>
+              </div>
+                  
+              <div class="code-box">
+                <strong>Résumé de l’accès</strong><br />
+                Offert le : ${paymentDate}<br />
+                Date d'expiration : ${emailExpiryDate}
+              </div>
+            </div>
+                  
+            <div class="footer">
+              Besoin d'aide ? Contactez notre équipe d'assistance <br />
+              <a href="mailto:info@access-sec.ca">info@access-sec.ca</a><br /><br />
+              © 2025 Acces-Sec. Tous droits réservés.
+            </div>
+          </div>
         </body>
       </html>
     `;

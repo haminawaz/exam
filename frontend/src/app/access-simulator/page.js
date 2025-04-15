@@ -50,7 +50,7 @@ export default function page() {
     } catch (error) {
       console.error("Error logging in:", error);
     } finally {
-      setTimeout(false);
+      setDisabled(false);
     }
   };
 
@@ -69,7 +69,7 @@ export default function page() {
         )}
 
         <h1 className="text-[16px] font-quicksand font-bold text-[#000000] text-center md:text-left mb-8">
-          Login as a child into access sec
+          Veuillez introduire les informations suivantes:
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -79,7 +79,7 @@ export default function page() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
-              placeholder="Please Enter Your Parent Email"
+              placeholder="Veuillez saisir l’adresse courriel du parent"
               required
             />
             {errors?.email && (
@@ -92,7 +92,7 @@ export default function page() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
-              placeholder="please enter your code"
+              placeholder="Veuillez saisir votre code"
               maxLength={6}
               required
             />
@@ -106,7 +106,7 @@ export default function page() {
               disabled={disabled}
               className="primary-btn mt-5 font-quicksand bg-[#FE8840] text-white px-[60px] py-3 rounded-[25px] cursor-pointer transition"
             >
-              Login
+              Connexion
             </button>
           </div>
         </form>

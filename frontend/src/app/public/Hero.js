@@ -15,7 +15,7 @@ export const Hero = ({ activeSection }) => {
           <>
             <div className="md:w-[70%] flex items-center">
               <h1 className="font-bold text-[30px] md:text-[50px] font-quicksand items-center">
-                Payment Details
+                Détails de paiement
               </h1>
             </div>
             <div className="md:w-[30%]">
@@ -26,7 +26,7 @@ export const Hero = ({ activeSection }) => {
           <>
             <div className="md:w-[55%] flex items-center">
               <h1 className="font-bold text-[30px] md:text-[50px] font-quicksand items-center">
-              Choisis ton avatar préféré
+                Choisis ton avatar préféré
               </h1>
             </div>
             <div className="md:w-[30%]">
@@ -37,7 +37,7 @@ export const Hero = ({ activeSection }) => {
           <>
             <div className="md:w-[70%] flex items-center">
               <h1 className="font-bold text-[30px] md:text-[50px] font-quicksand items-center">
-                Child Access
+                Page d’accès au simulateur
               </h1>
             </div>
             <div className="md:w-[30%]">

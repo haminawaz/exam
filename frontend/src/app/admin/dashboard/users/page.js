@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, Modal } from "antd";
-import { EyeIcon, Plus } from "lucide-react";
+import { EyeIcon, Plus, Edit, Trash2 } from "lucide-react";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
 export default function Users() {
@@ -22,6 +22,8 @@ export default function Users() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showTokenModal, setShowTokenModal] = useState(false);
   const [showReadModal, setShowReadModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLevelId, setSelectedLevelId] = useState("");
   const [userId, setUserId] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,6 +31,7 @@ export default function Users() {
     lastName: "",
     email: "",
     address: "",
+    code: "",
   });
   const [user, setUser] = useState({
     name: "",
@@ -56,7 +59,9 @@ export default function Users() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Echec d'obtenir un utilisateur");
+        setAlertMessage(
+          responseData.message || "Echec d'obtenir un utilisateur"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -83,7 +88,9 @@ export default function Users() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les niveaux ");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les niveaux "
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -115,6 +122,7 @@ export default function Users() {
       email: selectedUser.email,
       address: selectedUser.address,
       level: selectedUser?.level || "—",
+      code: selectedUser?.code || "—",
       tokenCreated: order.paymentDate
         ? new Date(order.paymentDate).toLocaleDateString("en-US", {
             year: "numeric",
@@ -130,6 +138,23 @@ export default function Users() {
           })
         : "—",
     });
+  };
+
+  const handleUpdateClick = (selectedUser) => {
+    setShowUpdateModal(true);
+    setUserId(selectedUser._id);
+    setFormData({
+      firstName: selectedUser?.firstName || null,
+      lastName: selectedUser?.lastName || null,
+      email: selectedUser.email || null,
+      address: selectedUser.address || null,
+      code: selectedUser?.code || null,
+    });
+  };
+
+  const handleDeleteClick = (selectedUser) => {
+    setShowDeleteModal(true);
+    setUserId(selectedUser._id);
   };
 
   const handleCreateSubmit = async (e) => {
@@ -167,7 +192,91 @@ export default function Users() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Echec de la création des utilisateur");
+        setAlertMessage(
+          responseData.message || "Echec de la création des utilisateur"
+        );
+        setTimeout(() => setAlertMessage(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+    } finally {
+      setDisabled(false);
+    }
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    const body = JSON.stringify({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      address: formData.address,
+      code: formData.code,
+    });
+    try {
+      const response = await fetch(`${serverBaseUrl}/admin/user/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        fetchUsers();
+        handleCancelUpdate();
+        setSuccessMessage("Utilisateur mis jour avec succès");
+        setTimeout(() => {
+          setSuccessMessage(false);
+        }, 3000);
+      } else if (response.status === 403) {
+        const error = typeof responseData.error;
+        if (error === "object") {
+          setErrors(responseData.error);
+        } else {
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
+          setTimeout(() => setAlertMessage(false), 3000);
+        }
+      } else {
+        setAlertMessage(responseData.message || "Echec de jour utilisateur");
+        setTimeout(() => setAlertMessage(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+    } finally {
+      setDisabled(false);
+    }
+  };
+
+  const handleDeleteSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${serverBaseUrl}/admin/user/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        fetchUsers();
+        handleCancelDelete();
+        setSuccessMessage("Utilisateur mis jour avec succès");
+        setTimeout(() => {
+          setSuccessMessage(false);
+        }, 3000);
+      } else if (response.status === 403) {
+        const error = typeof responseData.error;
+        if (error === "object") {
+          setErrors(responseData.error);
+        } else {
+          setAlertMessage(responseData.message || "Une erreur s'est produite");
+          setTimeout(() => setAlertMessage(false), 3000);
+        }
+      } else {
+        setAlertMessage(responseData.message || "Echec de jour utilisateur");
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -210,7 +319,9 @@ export default function Users() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Echec de la création du jeton");
+        setAlertMessage(
+          responseData.message || "Echec de la création du jeton"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -231,6 +342,23 @@ export default function Users() {
   const handleCancelRead = () => {
     setShowReadModal(false);
     setUser({});
+  };
+
+  const handleCancelUpdate = () => {
+    setShowUpdateModal(false);
+    setFormSuccessMessage(false);
+    setAlertMessage(false);
+    setFormData({});
+    setUserId();
+    setErrors({});
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setFormSuccessMessage(false);
+    setAlertMessage(false);
+    setUserId();
+    setErrors({});
   };
 
   const handleCancelToken = () => {
@@ -303,6 +431,7 @@ export default function Users() {
                       <th className="text-left py-3 px-6 font-medium">
                         Address
                       </th>
+                      <th className="text-left py-3 px-6 font-medium">Code</th>
                       <th className="text-left py-3 px-6 font-medium">
                         Action
                       </th>
@@ -319,6 +448,7 @@ export default function Users() {
                         </td>
                         <td className="py-4 px-6">{user.email}</td>
                         <td className="py-4 px-6">{user.address}</td>
+                        <td className="py-4 px-6">{user.code}</td>
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-2">
                             <button
@@ -332,6 +462,18 @@ export default function Users() {
                               onClick={() => handleTokenClick(user)}
                             >
                               <Plus className="h-4 w-4" />
+                            </button>
+                            <button
+                              className="text-yellow-500 cursor-pointer"
+                              onClick={() => handleUpdateClick(user)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button
+                              className="text-gray-400 cursor-pointer"
+                              onClick={() => handleDeleteClick(user)}
+                            >
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         </td>
@@ -496,6 +638,121 @@ export default function Users() {
       </Modal>
 
       <Modal
+        title="Update User"
+        open={showUpdateModal}
+        onCancel={() => handleCancelUpdate()}
+        footer={null}
+      >
+        <form onSubmit={handleUpdateSubmit} className="p-3 space-y-3">
+          <div className="flex flex-col">
+            <label
+              htmlFor="firstName"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              First Name
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName || ""}
+              onChange={handleInputChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+            {errors?.firstName && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors?.firstName[0]}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="lastName"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName || ""}
+              onChange={handleInputChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+            {errors?.lastName && (
+              <p className="text-sm text-red-600 mt-1">{errors?.lastName[0]}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="email"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email || ""}
+              disabled
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="address"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Address
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address || ""}
+              onChange={handleInputChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+            {errors?.address && (
+              <p className="text-sm text-red-600 mt-1">{errors?.address[0]}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="code"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Code
+            </label>
+            <input
+              type="text"
+              name="code"
+              value={formData.code || ""}
+              onChange={handleInputChange}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+            {errors?.code && (
+              <p className="text-sm text-red-600 mt-1">{errors?.code[0]}</p>
+            )}
+          </div>
+          <div className="flex align-items-center justify-end space-x-4 mt-6">
+            <button
+              type="button"
+              onClick={() => handleCancelUpdate()}
+              className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={disabled}
+              className="px-6 py-2 bg-[#0772AA] text-white rounded-md focus:outline-none cursor-pointer"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
         title="User Modal"
         open={showReadModal}
         onCancel={() => handleCancelRead()}
@@ -543,6 +800,21 @@ export default function Users() {
               type="text"
               name="address"
               value={user.address || ""}
+              disabled
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="code"
+              className="text-sm font-semibold text-gray-700 mb-2"
+            >
+              Code
+            </label>
+            <input
+              type="text"
+              name="code"
+              value={user.code || ""}
               disabled
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
@@ -643,6 +915,32 @@ export default function Users() {
           )}
           <p>Are you sure you want to generate a token for this user?</p>
         </>
+      </Modal>
+
+      <Modal
+        title="Confirm Deletion"
+        open={showDeleteModal}
+        onCancel={handleCancelDelete}
+        footer={[
+          <button
+            key="cancel"
+            onClick={handleCancelDelete}
+            className="px-4 py-2 mx-4 bg-gray-400 text-white rounded cursor-pointer"
+          >
+            Cancel
+          </button>,
+          <button
+            key="delete"
+            onClick={handleDeleteSubmit}
+            className="px-4 py-2 bg-red-600 text-white rounded cursor-pointer"
+          >
+            Delete
+          </button>,
+        ]}
+      >
+        <p>
+          Are you sure you want to delete this user?
+        </p>
       </Modal>
     </main>
   );
