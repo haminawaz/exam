@@ -69,11 +69,30 @@ const createToken = async (req, res) => {
         });
       }
 
-      const passedTest = await Test.find({
-        user: userId,
-        "levelId.level": orderLevel - 1,
-        percentage: { $gte: 70 },
-      });
+      const passedTest = await Test.aggregate([
+        {
+          $match: {
+            user: existingUser._id,
+            percentage: { $gte: 70 },
+          },
+        },
+        {
+          $lookup: {
+            from: "levels",
+            localField: "levelId",
+            foreignField: "_id",
+            as: "levelInfo",
+          },
+        },
+        {
+          $unwind: "$levelInfo",
+        },
+        {
+          $match: {
+            "levelInfo.level": orderLevel - 1,
+          },
+        },
+      ]);
       if (!passedTest || passedTest.length < 1) {
         return res.status(400).json({
           message: `L'utilisateur ne peut pas avoir le niveau  ${orderLevel} sans réussir le test avec 70 % pour le niveau  ${
@@ -218,10 +237,12 @@ const createToken = async (req, res) => {
                 Bonjour
                 <span class="highlight">
                   <strong>
-                    ${ buyer?.firstName.charAt(0).toUpperCase() +
-                    buyer.firstName.slice(1) } ${
-                    buyer?.lastName.charAt(0).toUpperCase() + buyer.lastName.slice(1)
-                    }
+                    ${
+                      buyer?.firstName.charAt(0).toUpperCase() +
+                      buyer.firstName.slice(1)
+                    } ${
+      buyer?.lastName.charAt(0).toUpperCase() + buyer.lastName.slice(1)
+    }
                   </strong>
                 </span>
                 !

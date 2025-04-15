@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { Alert, Modal } from "antd";
 const serverBaseUrl = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL;
 
@@ -25,6 +25,10 @@ export default function Topics() {
     subjectId: "",
     topicName: "",
   });
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
 
   const fetchSubjects = async () => {
     try {
@@ -43,7 +47,9 @@ export default function Topics() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les sujets");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les sujets"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -68,7 +74,9 @@ export default function Topics() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les sujets");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les sujets"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -91,17 +99,14 @@ export default function Topics() {
       topicName: formData.topicName,
     });
     try {
-      const response = await fetch(
-        `${serverBaseUrl}/admin/topic`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body,
-        }
-      );
+      const response = await fetch(`${serverBaseUrl}/admin/topic`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
       const responseData = await response.json();
       if (response.ok) {
         fetchTopics();
@@ -119,7 +124,9 @@ export default function Topics() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Echec de la création du sujet");
+        setAlertMessage(
+          responseData.message || "Echec de la création du sujet"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -166,7 +173,9 @@ export default function Topics() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Echec de la mise à jour du sujet");
+        setAlertMessage(
+          responseData.message || "Echec de la mise à jour du sujet"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -215,7 +224,9 @@ export default function Topics() {
         setSuccessMessage("Sujet supprimé avec succès");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Echec de la suppression du sujet");
+        setAlertMessage(
+          responseData.message || "Echec de la suppression du sujet"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -253,6 +264,30 @@ export default function Topics() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedTopics = React.useMemo(() => {
+    let sortedData = [...topics];
+    if (sortConfig.key) {
+      sortedData.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortedData;
+  }, [topics, sortConfig]);
 
   if (loading) {
     return <h1>Loading...</h1>;
@@ -309,18 +344,36 @@ export default function Topics() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-200 text-gray-600 text-sm">
-                      <th className="text-left py-3 px-6 font-medium">Topic</th>
-                      <th className="text-left py-3 px-6 font-medium">Level</th>
-                      <th className="text-left py-3 px-6 font-medium">
-                        Subject
-                      </th>
+                      {[
+                        { key: "name", label: "Topic" },
+                        { key: "level", label: "Level" },
+                        { key: "subject", label: "Subject" },
+                      ].map(({ key, label }) => (
+                        <th
+                          key={key}
+                          className="text-left py-3 px-6 font-medium"
+                        >
+                          <div
+                            className="flex items-center gap-x-1 cursor-pointer hover:text-black transition"
+                            onClick={() => requestSort(key)}
+                          >
+                            {label}
+                            {sortConfig.key === key &&
+                              (sortConfig.direction === "ascending" ? (
+                                <ChevronUp className="h-4 w-4" />
+                              ) : (
+                                <ChevronDown className="h-4 w-4" />
+                              ))}
+                          </div>
+                        </th>
+                      ))}
                       <th className="text-left py-3 px-6 font-medium">
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {topics?.map((topic) => (
+                    {sortedTopics?.map((topic) => (
                       <tr
                         key={topic?._id}
                         className="border-b border-gray-200 hover:bg-gray-50"

@@ -78,22 +78,49 @@ const createCheckout = async (req, res) => {
       );
       if (!hasPreviousLevel) {
         return res.status(400).json({
-          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${orderLevel - 1} au préalable`,
+          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${
+            orderLevel - 1
+          } au préalable`,
           response: null,
-          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${orderLevel - 1} au préalable`,
+          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans acheter le niveau ${
+            orderLevel - 1
+          } au préalable`,
         });
       }
 
-      const passedTest = await Test.findOne({
-        user: user._id,
-        "levelId.level": orderLevel - 1,
-        percentage: { $gte: 70 },
-      });
-      if (!passedTest) {
+      const passedTest = await Test.aggregate([
+        {
+          $match: {
+            user: user._id,
+            percentage: { $gte: 70 },
+          },
+        },
+        {
+          $lookup: {
+            from: "levels",
+            localField: "levelId",
+            foreignField: "_id",
+            as: "levelInfo",
+          },
+        },
+        {
+          $unwind: "$levelInfo",
+        },
+        {
+          $match: {
+            "levelInfo.level": orderLevel - 1,
+          },
+        },
+      ]);
+      if (!passedTest || passedTest.length < 1) {
         return res.status(400).json({
-          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${orderLevel - 1}`,
+          message: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${
+            orderLevel - 1
+          }`,
           response: null,
-          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${orderLevel - 1}`,
+          error: `Vous ne pouvez pas acheter le niveau ${orderLevel} sans réussir le test avec 70 % pour le niveau ${
+            orderLevel - 1
+          }`,
         });
       }
     }

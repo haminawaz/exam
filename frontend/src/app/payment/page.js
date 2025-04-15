@@ -189,7 +189,7 @@ export default function Welcome({ setActiveSection }) {
         </section>
       )}
 
-      {!token && selectedLevel === 2 && (
+      {selectedLevel === 2 && (
         <section className="px-[50px] md:px-[100px] lg:px-[200px] bg-[#f9f9f9] py-5 flex justify-center mt-5">
           <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-[600px]">
             {successMessage && (
