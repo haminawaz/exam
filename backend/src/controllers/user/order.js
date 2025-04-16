@@ -9,7 +9,7 @@ const { sendMail } = require("../../utils/sendMail.js");
 const stripe = Stripe(configurations.stripeSecretKey);
 
 const createCheckout = async (req, res) => {
-  const { firstName, lastName, email, address } = req.body;
+  const { firstName, lastName, email, postalCode } = req.body;
   const { levelId } = req.params;
 
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -20,14 +20,14 @@ const createCheckout = async (req, res) => {
         firstName,
         lastName,
         email,
-        address,
+        postalCode,
         code,
       });
     } else {
       user.firstName = firstName;
       user.lastName = lastName;
       user.code = code;
-      user.address = address;
+      user.postalCode = postalCode;
       await user.save();
     }
 

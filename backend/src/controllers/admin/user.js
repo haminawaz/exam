@@ -1,7 +1,7 @@
 const User = require("../../models/user");
 
 const createUser = async (req, res) => {
-  const { firstName, lastName, email, address } = req.body;
+  const { firstName, lastName, email, postalCode } = req.body;
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
   try {
@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
       firstName,
       lastName,
       email,
-      address,
+      postalCode,
       code,
     });
 
@@ -66,7 +66,7 @@ const getUsers = async (req, res) => {
           firstName: 1,
           lastName: 1,
           email: 1,
-          address: 1,
+          postalCode: 1,
           code: 1,
           level: "$levelInfo.level",
           ordersInfo: {
@@ -110,7 +110,7 @@ const getUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { firstName, lastName, address, code } = req.body;
+  const { firstName, lastName, postalCode, code } = req.body;
   const userId = req.params.userId;
 
   try {
@@ -125,7 +125,7 @@ const updateUser = async (req, res) => {
 
     existingUser.firstName = firstName || existingUser.firstName;
     existingUser.lastName = lastName || existingUser.lastName;
-    existingUser.address = address || existingUser.address;
+    existingUser.postalCode = postalCode || existingUser.postalCode;
     existingUser.code = code || existingUser.code;
     await existingUser.save();
 

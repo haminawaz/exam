@@ -19,7 +19,7 @@ export default function Welcome({ setActiveSection }) {
     firstName: "",
     lastName: "",
     email: "",
-    address: "",
+    postalCode: "",
   });
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -80,7 +80,7 @@ export default function Welcome({ setActiveSection }) {
       firstName: "",
       lastName: "",
       email: "",
-      address: "",
+      postalCode: "",
     });
   };
 
@@ -103,7 +103,7 @@ export default function Welcome({ setActiveSection }) {
           firstName: "",
           lastName: "",
           email: "",
-          address: "",
+          postalCode: "",
         });
         const stripe = await loadStripe(stripePublicKey);
         const sessionId = responseData?.response?.data?.sessionId;
@@ -264,15 +264,15 @@ export default function Welcome({ setActiveSection }) {
               <div className="mb-2">
                 <input
                   type="text"
-                  name="address"
-                  value={formData.address}
+                  name="postalCode"
+                  value={formData.postalCode}
                   onChange={handleChange}
                   className="w-full h-12 px-6 py-2 my-2 border-2 border-[#FE8840] rounded-[25px] focus:outline-none"
                   required
                   placeholder="Entrez votre code postal à 6 caractères"
                 />
-                {errors?.address && (
-                  <p className="joi-error-message">{errors?.address[0]}</p>
+                {errors?.postalCode && (
+                  <p className="joi-error-message">{errors?.postalCode[0]}</p>
                 )}
               </div>
               <div className="flex justify-between items-center">
@@ -314,7 +314,7 @@ export default function Welcome({ setActiveSection }) {
             />
             <h1 className="text-[22px] font-bold text-[#000000]">Succès !</h1>
             <p className="text-[18px] font-medium text-[#B6B6B6] text-center">
-              FélicitaƟons ! Votre paiement a été traité avec succès.
+              Félicitations ! Votre paiement a été traité avec succès.
             </p>
             <div>
               <div className="flex justify-center">

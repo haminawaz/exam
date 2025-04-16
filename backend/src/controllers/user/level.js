@@ -37,7 +37,7 @@ const getAllLevels = async (req, res) => {
 
       levels = levels.map((level) => ({
         ...level,
-        buy: userOrders.some((order) => order.levelId.equals(level._id)),
+        buy: userOrders.some((order) => order.levelId >= level._id),
       }));
     }
 

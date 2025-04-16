@@ -61,22 +61,15 @@ module.exports = {
         "string.trim":
           "L'e-mail ne doit pas contenir d'espace au début ou à la fin",
       }),
-    address: Joi.string()
-      .pattern(
-        /^(?!.*\s{2,})(?!.*([,#\-/().'])[\s]*[,#\-/().'])[A-Za-z0-9\s,#\-/().']+$/
-      )
-      .min(2)
-      .max(255)
+    postalCode: Joi.string()
+      .pattern(/^\d{6}$/)
       .required()
-      .trim()
       .messages({
-        "string.base": "L'adresse doit être une chaîne",
-        "any.required": "L'adresse est obligatoire",
-        "string.empty": "L'adresse ne peut pas être vide",
-        "string.min": "L'adresse doit comporter au moins {#limit} caractères",
-        "string.max": "L'adresse ne doit pas dépasser {#limit} caractères",
+        "string.base": "Le code postal doit être une chaîne de chiffres",
+        "string.empty": "Le code postal ne peut pas être vide",
+        "any.required": "Le code postal est obligatoire",
         "string.pattern.base":
-          "Adresse non valide ! Veuillez saisir une adresse valide, sans espaces ni caractères spéciaux",
+          "Le code postal doit contenir exactement 6 chiffres",
       }),
   }),
 
@@ -123,22 +116,15 @@ module.exports = {
       "string.alphanum":
         "Le code ne doit contenir que des lettres et des chiffres",
     }),
-    address: Joi.string()
-      .pattern(
-        /^(?!.*\s{2,})(?!.*([,#\-/().'])[\s]*[,#\-/().'])[A-Za-z0-9\s,#\-/().']+$/
-      )
-      .min(2)
-      .max(255)
+    postalCode: Joi.string()
+      .pattern(/^\d{6}$/)
       .required()
-      .trim()
       .messages({
-        "string.base": "L'adresse doit être une chaîne",
-        "any.required": "L'adresse est obligatoire",
-        "string.empty": "L'adresse ne peut pas être vide",
-        "string.min": "L'adresse doit comporter au moins {#limit} caractères",
-        "string.max": "L'adresse ne doit pas dépasser {#limit} caractères",
+        "string.base": "Le code postal doit être une chaîne de chiffres",
+        "string.empty": "Le code postal ne peut pas être vide",
+        "any.required": "Le code postal est obligatoire",
         "string.pattern.base":
-          "Adresse non valide ! Veuillez saisir une adresse valide, sans espaces ni caractères spéciaux",
+          "Le code postal doit contenir exactement 6 chiffres",
       }),
   }),
 };

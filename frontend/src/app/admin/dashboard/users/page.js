@@ -30,13 +30,13 @@ export default function Users() {
     firstName: "",
     lastName: "",
     email: "",
-    address: "",
+    postalCode: "",
     code: "",
   });
   const [user, setUser] = useState({
     name: "",
     email: "",
-    address: "",
+    postalCode: "",
     level: "",
     tokenCreated: "",
     tokenExpiry: "",
@@ -120,7 +120,7 @@ export default function Users() {
     setUser({
       name: selectedUser?.firstName + " " + selectedUser?.lastName,
       email: selectedUser.email,
-      address: selectedUser.address,
+      postalCode: selectedUser.postalCode,
       level: selectedUser?.level || "—",
       code: selectedUser?.code || "—",
       tokenCreated: order.paymentDate
@@ -147,7 +147,7 @@ export default function Users() {
       firstName: selectedUser?.firstName || null,
       lastName: selectedUser?.lastName || null,
       email: selectedUser.email || null,
-      address: selectedUser.address || null,
+      postalCode: selectedUser.postalCode || null,
       code: selectedUser?.code || null,
     });
   };
@@ -164,7 +164,7 @@ export default function Users() {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
-      address: formData.address,
+      postalCode: formData.postalCode,
     });
     try {
       const response = await fetch(`${serverBaseUrl}/admin/user`, {
@@ -210,7 +210,7 @@ export default function Users() {
     const body = JSON.stringify({
       firstName: formData.firstName,
       lastName: formData.lastName,
-      address: formData.address,
+      postalCode: formData.postalCode,
       code: formData.code,
     });
     try {
@@ -429,7 +429,7 @@ export default function Users() {
                       <th className="text-left py-3 px-6 font-medium">Name</th>
                       <th className="text-left py-3 px-6 font-medium">Email</th>
                       <th className="text-left py-3 px-6 font-medium">
-                        Address
+                    Code Postal
                       </th>
                       <th className="text-left py-3 px-6 font-medium">Code</th>
                       <th className="text-left py-3 px-6 font-medium">
@@ -447,7 +447,7 @@ export default function Users() {
                           {user.firstName} {user.lastName}
                         </td>
                         <td className="py-4 px-6">{user.email}</td>
-                        <td className="py-4 px-6">{user.address}</td>
+                        <td className="py-4 px-6">{user.postalCode}</td>
                         <td className="py-4 px-6">{user.code}</td>
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-2">
@@ -600,22 +600,22 @@ export default function Users() {
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="address"
+              htmlFor="postalCode"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Address
+              Code postal
             </label>
             <input
               type="text"
-              name="address"
-              value={formData.address || ""}
+              name="postalCode"
+              value={formData.postalCode || ""}
               onChange={handleInputChange}
               required
-              placeholder="Enter address"
+              placeholder="Enter code postal"
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
-            {errors?.address && (
-              <p className="text-sm text-red-600 mt-1">{errors?.address[0]}</p>
+            {errors?.postalCode && (
+              <p className="text-sm text-red-600 mt-1">{errors?.postalCode[0]}</p>
             )}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">
@@ -699,20 +699,20 @@ export default function Users() {
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="address"
+              htmlFor="postalCode"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Address
+              Code Postal
             </label>
             <input
               type="text"
-              name="address"
-              value={formData.address || ""}
+              name="postalCode"
+              value={formData.postalCode || ""}
               onChange={handleInputChange}
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
-            {errors?.address && (
-              <p className="text-sm text-red-600 mt-1">{errors?.address[0]}</p>
+            {errors?.postalCode && (
+              <p className="text-sm text-red-600 mt-1">{errors?.postalCode[0]}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -791,15 +791,15 @@ export default function Users() {
           </div>
           <div className="flex flex-col">
             <label
-              htmlFor="address"
+              htmlFor="postalCode"
               className="text-sm font-semibold text-gray-700 mb-2"
             >
-              Address
+              Code Postal
             </label>
             <input
               type="text"
-              name="address"
-              value={user.address || ""}
+              name="postalCode"
+              value={user.postalCode || ""}
               disabled
               className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />

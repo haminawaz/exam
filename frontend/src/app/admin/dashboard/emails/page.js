@@ -39,7 +39,9 @@ export default function Subjects() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible de recevoir les e-mails");
+        setAlertMessage(
+          responseData.message || "Impossible de recevoir les e-mails"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -89,7 +91,9 @@ export default function Subjects() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Impossible de mettre à jour l'e-mail");
+        setAlertMessage(
+          responseData.message || "Impossible de mettre à jour l'e-mail"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -159,7 +163,7 @@ export default function Subjects() {
         {emails?.length > 0 ? (
           <>
             <h1 className="text-xl font-medium text-gray-800 mb-6">
-              Subjects Management
+              Email Management
             </h1>
             <div className="bg-white rounded-md shadow-sm">
               <div className="overflow-x-auto">
@@ -167,8 +171,12 @@ export default function Subjects() {
                   <thead>
                     <tr className="border-b border-gray-200 text-gray-600 text-sm">
                       <th className="text-left py-3 px-6 font-medium">Name</th>
-                      <th className="text-left py-3 px-6 font-medium">Header</th>
-                      <th className="text-left py-3 px-6 font-medium">Footer</th>
+                      <th className="text-left py-3 px-6 font-medium">
+                        Header
+                      </th>
+                      <th className="text-left py-3 px-6 font-medium">
+                        Footer
+                      </th>
                       <th className="text-left py-3 px-6 font-medium">
                         Actions
                       </th>
@@ -237,19 +245,17 @@ export default function Subjects() {
             >
               Header
             </label>
-            <input
-              type="text"
+            <textarea
               name="header"
               placeholder="Enter header"
               value={formData.header}
               onChange={handleInputChange}
               required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+              rows={4}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
             />
             {errors?.header && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors?.header[0]}
-              </p>
+              <p className="text-sm text-red-600 mt-1">{errors?.header[0]}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -259,19 +265,18 @@ export default function Subjects() {
             >
               footer
             </label>
-            <input
-              type="text"
+            <textarea
               name="footer"
               placeholder="Enter footer"
               value={formData.footer}
               onChange={handleInputChange}
               required
-              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+              rows={4}
+              className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
             />
+
             {errors?.footer && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors?.footer[0]}
-              </p>
+              <p className="text-sm text-red-600 mt-1">{errors?.footer[0]}</p>
             )}
           </div>
           <div className="flex align-items-center justify-end space-x-4 mt-6">

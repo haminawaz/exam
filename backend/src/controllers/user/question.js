@@ -321,6 +321,8 @@ const createResults = async (req, res) => {
     const emailTemplate = await Email.findOne({ name: "result" });
     const emailHeader = emailTemplate.header || null;
     const emailFooter = emailTemplate.footer || null;
+    const emailHeaderWithBreaks = emailHeader.replace(/\n/g, "<br />");
+    const emailFooterWithBreaks = emailFooter.replace(/\n/g, "<br />");
 
     const testResultTemplate = `
       <!DOCTYPE html>
@@ -406,7 +408,7 @@ const createResults = async (req, res) => {
             .header-footer {
               font-size: 17px;
               color: #6b7280;
-              text-align: center;
+              text-align: start;
               border-top: 1px solid #e5e7eb;
               padding-top: 10px;
               margin: 3% 0px;
@@ -418,7 +420,7 @@ const createResults = async (req, res) => {
             <div class="section">
               <h2>Rapport de performance de l'élève</h2>
               <header class="header-footer">
-                <p>${emailHeader}</p>
+                <p>${emailHeaderWithBreaks}</p>
               </header>
               <div class="grid">
                 <p><strong>Nom de l'élève :</strong> ${
@@ -439,7 +441,7 @@ const createResults = async (req, res) => {
               </div>
             </div>
             <div class="section">
-              <h2>Performance par maƟère:</h2>
+              <h2>Performance par matière:</h2>
               ${subjectTopicAggregation
                 .map((subject) => {
                   let color;
@@ -468,7 +470,7 @@ const createResults = async (req, res) => {
               <p>${remarks}</p>
             </div>
             <footer class="header-footer">
-              <p>${emailFooter}</p>
+              <p>${emailFooterWithBreaks}</p>
             </footer>
           </div>
         </body>

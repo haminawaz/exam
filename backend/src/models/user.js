@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    address: {
+    postalCode: {
       type: String,
       default: null,
     },
