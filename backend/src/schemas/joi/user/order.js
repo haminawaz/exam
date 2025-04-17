@@ -62,14 +62,14 @@ module.exports = {
           "L'e-mail ne doit pas contenir d'espace au début ou à la fin",
       }),
     postalCode: Joi.string()
-      .pattern(/^\d{6}$/)
+      .pattern(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/)
       .required()
       .messages({
-        "string.base": "Le code postal doit être une chaîne de chiffres",
+        "string.base": "Le code postal doit être une chaîne de caractères",
         "string.empty": "Le code postal ne peut pas être vide",
         "any.required": "Le code postal est obligatoire",
         "string.pattern.base":
-          "Le code postal doit contenir exactement 6 chiffres",
+          "Le code postal doit être au format canadien valide (ex: A1A 1A1)",
       }),
   }),
 
@@ -117,14 +117,14 @@ module.exports = {
         "Le code ne doit contenir que des lettres et des chiffres",
     }),
     postalCode: Joi.string()
-      .pattern(/^\d{6}$/)
+      .pattern(/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/)
       .required()
       .messages({
-        "string.base": "Le code postal doit être une chaîne de chiffres",
+        "string.base": "Le code postal doit être une chaîne de caractères",
         "string.empty": "Le code postal ne peut pas être vide",
         "any.required": "Le code postal est obligatoire",
         "string.pattern.base":
-          "Le code postal doit contenir exactement 6 chiffres",
+          "Le code postal doit être au format canadien valide (ex: A1A 1A1)",
       }),
   }),
 };
