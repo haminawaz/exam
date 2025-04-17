@@ -173,7 +173,7 @@ export default function Welcome({ setActiveSection }) {
                       onClick={() => selectCourse(course?._id)}
                       className="w-full bg-[#FE8840] text-white py-3 rounded-[25px] text-lg font-bold hover:bg-[#e67730] transition cursor-pointer"
                     >
-                      Paiement ${course.price}
+                      Paiement ${course.price} CA
                     </button>
                   </div>
                 ) : (

@@ -18,7 +18,7 @@ const getAllLevels = async (req, res) => {
       {
         $group: {
           _id: "$levelData._id",
-          price: { $first: "$levelData.price" },
+          price: { $first: "$levelData.price CA" },
           level: { $first: "$levelData.level" },
           image: { $first: "$levelData.image" },
           difficulty: { $first: "$levelData.difficulty" },

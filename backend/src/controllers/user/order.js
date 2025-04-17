@@ -388,7 +388,7 @@ const checkoutComplete = async (req, res) => {
                       </div>
                       <div class="email-body">
                         <p class="section-text">
-                          Thank you for your order, 
+                          Merci pour votre commande, 
                           <span class="highlight">
                             <strong>
                               ${
@@ -403,62 +403,68 @@ const checkoutComplete = async (req, res) => {
                           </span>!
                         </p>                            
                         <p class="section-text">
-                          Your payment has been <strong>successfully processed</strong>! 
-                          You can now start your preparations using our premium features.
+                          Votre paiement a bien été traité ! Vous pouvez désormais commencer la préparation de l’examen grâce à nos fonctionnalités premium.
                         </p>
+                        <div>
+                           <p style="text-align: center; margin-bottom: 0px;">Pour utiliser votre code, suivez les étapes ci-dessous :</p>
+                          <ol style="margin-top: 0px;">
+                            <li>
+                              Rendez-vous sur le site web
+                              <a href="https://www.acces-sec.ca" target="_blank"
+                                >www.acces-sec.ca</a
+                              >
+                            </li>
+                            <li>Cliquez sur l’onglet « Commencer ma préparation »</li>
+                            <li>Utilisez votre courriel d’identification et le code fourni</li>
+                            <li>Commencez l’examen</li>
+                          </ol>
+                        </div>
                         <div class="box" style="text-align:center;">
                           <p class="section-text" style="margin-bottom: 12px;">
-                            <strong>Your Premium Access Code:</strong>
+                            <strong>Votre code d'accès premium:</strong>
                           </p>
                           <p class="secret-code">
                             ${buyer?.code}
                           </p>
                           <p class="section-text" style="margin-top: 12px;">
-                            <em>Please keep this code secret. It allows access to premium questions.</em>
+                            <em>Veuillez garder ce code secret. Il vous donne accès aux questions premium.</em>
                           </p>
                         </div>
                         <div class="box">
-                          <h2 class="section-title" style="margin-top:0;">Plan Details</h2>
+                          <h2 class="section-title" style="margin-top:0;">Détails de l'abonnement</h2>
                           <p class="section-text" style="margin: 0;">
-                            Premium Plan - Level ${level.level}
+                            Abonnement Premium - Niveau ${level.level}
                           </p>
                           <p class="section-text" style="margin: 0;">
-                            2 Month Subscription
+                            Durée de l'abonnement - 2 mois
                           </p>
                           <div class="price-div">
                             <span class="price">
-                              $${order.price}
+                              $${order.price} CA
                             </span>
-                            <span class="badge-paid">Paid</span>
+                            <span class="badge-paid">Payé</span>
                           </div>
                         </div>
                         <div class="box">
-                          <h2 class="section-title" style="margin-top:0;">Order Summary</h2>
+                          <h2 class="section-title" style="margin-top:0;">Résumé de l’accès</h2>
                           <div class="summary-row">
-                            <span class="bold">Order ID:</span>
+                            <span class="bold">Identification de la commande:</span>
                             <span>${order._id.toString()}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Payment Date:</span>
+                            <span class="bold">Date de paiement :</span>
                             <span>${paymentDate}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Expiry Date:</span>
+                            <span class="bold">Date d'expiration :</span>
                             <span>${expiryDate}</span>
                           </div>
                         </div>
                       </div>
                       <div class="email-footer">
-                        <p>Need help? Contact our support team</p>
-                        <p>support@logo.com | +1 (555) 123-4567</p>
-                        <div class="social-icons">
-                          <i class="ri-twitter-line"></i>
-                          <i class="ri-facebook-line"></i>
-                          <i class="ri-instagram-line"></i>
-                        </div>
-                        <p style="margin-top: 8px;">
-                          © 2025 Logo. All rights reserved.
-                        </p>
+                        Besoin d'aide ? Contactez notre équipe d'assistance <br />
+                        <a href="mailto:info@access-sec.ca">info@access-sec.ca</a><br /><br />
+                        © 2025 Acces-Sec. Tous droits réservés.
                       </div>
                     </div>
                   </td>
