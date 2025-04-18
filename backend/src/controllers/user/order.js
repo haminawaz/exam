@@ -406,7 +406,7 @@ const checkoutComplete = async (req, res) => {
                           Votre paiement a bien été traité ! Vous pouvez désormais commencer la préparation de l’examen grâce à nos fonctionnalités premium.
                         </p>
                         <div>
-                           <p style="text-align: center; margin-bottom: 0px;">Pour utiliser votre code, suivez les étapes ci-dessous :</p>
+                           <p style="text-align: start; margin-bottom: 0px;">Pour utiliser votre code, suivez les étapes ci-dessous :</p>
                           <ol style="margin-top: 0px;">
                             <li>
                               Rendez-vous sur le site web
@@ -448,15 +448,15 @@ const checkoutComplete = async (req, res) => {
                         <div class="box">
                           <h2 class="section-title" style="margin-top:0;">Résumé de l’accès</h2>
                           <div class="summary-row">
-                            <span class="bold">Identification de la commande:</span>
+                            <span class="bold">Identification de la commande : </span>
                             <span>${order._id.toString()}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Date de paiement :</span>
+                            <span class="bold">Date de paiement : </span>
                             <span>${paymentDate}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Date d'expiration :</span>
+                            <span class="bold">Date d'expiration : </span>
                             <span>${expiryDate}</span>
                           </div>
                         </div>
