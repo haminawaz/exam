@@ -448,16 +448,16 @@ const checkoutComplete = async (req, res) => {
                         <div class="box">
                           <h2 class="section-title" style="margin-top:0;">Résumé de l’accès</h2>
                           <div class="summary-row">
-                            <span class="bold">Identification de la commande : </span>
-                            <span>${order._id.toString()}</span>
+                            <span class="bold">Identification de la commande :</span>
+                            <span> ${order._id.toString()}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Date de paiement : </span>
-                            <span>${paymentDate}</span>
+                            <span class="bold">Date de paiement :</span>
+                            <span> ${paymentDate}</span>
                           </div>
                           <div class="summary-row">
-                            <span class="bold">Date d'expiration : </span>
-                            <span>${expiryDate}</span>
+                            <span class="bold">Date d'expiration :</span>
+                            <span> ${expiryDate}</span>
                           </div>
                         </div>
                       </div>
