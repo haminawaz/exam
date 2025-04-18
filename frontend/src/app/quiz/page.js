@@ -239,7 +239,7 @@ export default function page() {
                           className="bg-black text-white px-4 py-1 rounded-[10px] cursor-pointer"
                         >
                           {currentQuestion === questions.length - 1
-                            ? "Finish"
+                            ? "Fin"
                             : "suivant"}
                         </button>
                       </div>

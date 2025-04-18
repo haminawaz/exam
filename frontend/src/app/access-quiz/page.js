@@ -356,7 +356,7 @@ export default function page() {
                           disabled={!selected}
                         >
                           {currentQuestion === questions.length - 1
-                            ? "Finish"
+                            ? "Fin"
                             : "suivant"}
                         </button>
                       </div>

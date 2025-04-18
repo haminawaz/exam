@@ -281,7 +281,7 @@ export default function Welcome({ setActiveSection }) {
                   onClick={backToCourses}
                   className="flex items-center text-[#FE8840] hover:text-[#e67730] transition-all cursor-pointer"
                 >
-                  Back
+                  Retour
                 </button>
                 <button
                   type="submit"
