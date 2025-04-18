@@ -408,15 +408,15 @@ const checkoutComplete = async (req, res) => {
                         <div>
                            <p style="text-align: start; margin-bottom: 0px;">Pour utiliser votre code, suivez les étapes ci-dessous :</p>
                           <ol style="margin-top: 0px;">
-                            <li>
+                            <li style="text-align:start;">
                               Rendez-vous sur le site web
                               <a href="https://www.acces-sec.ca" target="_blank"
                                 >www.acces-sec.ca</a
                               >
                             </li>
-                            <li>Cliquez sur l’onglet « Commencer ma préparation »</li>
-                            <li>Utilisez votre courriel d’identification et le code fourni</li>
-                            <li>Commencez l’examen</li>
+                            <li style="text-align:start;">Cliquez sur l’onglet « Commencer ma préparation »</li>
+                            <li style="text-align:start;">Utilisez votre courriel d’identification et le code fourni</li>
+                            <li style="text-align:start;">Commencez l’examen</li>
                           </ol>
                         </div>
                         <div class="box" style="text-align:center;">
