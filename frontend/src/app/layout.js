@@ -3,7 +3,6 @@ import "./globals.css";
 import { Suspense, useState } from "react";
 
 import { AuthContextProvider } from "./contexts/auth-context";
-import { DictionaryContextProvider } from "./contexts/dictionary-context";
 import { Spinner } from "./components/ui/spinner";
 import QueryProvider from "./libs/query-provider";
 import { Header } from "./public/Header";
@@ -38,23 +37,21 @@ export default function RootLayout({ children }) {
         >
           <QueryProvider>
             <AuthContextProvider>
-              <DictionaryContextProvider>
-                <main>
-                  <Suspense
-                    fallback={
-                      <div className="w-full h-screen flex items-center justify-center">
-                        <Spinner />
-                      </div>
-                    }
-                  >
-                    <Header />
-                    <TopMenue setActiveSection={setActiveSection} />
-                    <Hero activeSection={activeSection} />
-                    {children}
-                  </Suspense>
-                </main>
-                <Footer />
-              </DictionaryContextProvider>
+              <main>
+                <Suspense
+                  fallback={
+                    <div className="w-full h-screen flex items-center justify-center">
+                      <Spinner />
+                    </div>
+                  }
+                >
+                  <Header />
+                  <TopMenue setActiveSection={setActiveSection} />
+                  <Hero activeSection={activeSection} />
+                  {children}
+                </Suspense>
+              </main>
+              <Footer />
             </AuthContextProvider>
           </QueryProvider>
         </Suspense>
