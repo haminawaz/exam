@@ -164,8 +164,7 @@ export default function page() {
                           className="m-auto mt-5 w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-contain"
                         />
                         <h1 className="text-[18px] md:text-[22px] font-poppins font-bold text-center mt-3">
-                          Félicitaoon, tu as bien réussi ton test. Tu es
-                          vraiment bien préparé(e)
+                          Félicitation, tu as bien réussi ton test.
                         </h1>
                       </>
                     ) : (

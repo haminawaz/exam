@@ -156,6 +156,12 @@ const getAccessQuestions = async (req, res) => {
           level: "$levelDetails.level",
         },
       },
+      {
+        $sort: {
+          topicName: 1,
+          subjectName: 1,
+        },
+      },
     ]);
     if (questions?.lenght < 1) {
       return res.status(404).json({
@@ -444,12 +450,15 @@ const createResults = async (req, res) => {
               <h2>Performance par matière:</h2>
               ${subjectTopicAggregation
                 .map((subject) => {
+                  const roundedPercentage = parseFloat(
+                    subject.percentage.toFixed(1)
+                  );
                   let color;
-                  if (subject.percentage >= 90) {
+                  if (roundedPercentage >= 90) {
                     color = "#10b981";
-                  } else if (subject.percentage >= 80) {
+                  } else if (roundedPercentage >= 80) {
                     color = "#3b82f6";
-                  } else if (subject.percentage >= 70) {
+                  } else if (roundedPercentage >= 70) {
                     color = "#facc15";
                   } else {
                     color = "#ef4444";
@@ -457,9 +466,9 @@ const createResults = async (req, res) => {
                   return `
                   <div class="subject">
                     <h4>${subject.topicName}</h4>
-                    <p>${subject.score}/${subject.totalQuestions} (${subject.percentage}%)</p>
+                    <p>${subject.score}/${subject.totalQuestions} (${roundedPercentage}%)</p>
                     <div class="progress-bar">
-                      <div style="width: ${subject.percentage}%; background: ${color};"></div>
+                      <div style="width: ${roundedPercentage}%; background: ${color};"></div>
                     </div>
                   </div>
                 `;

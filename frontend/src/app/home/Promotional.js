@@ -21,9 +21,10 @@ export const Promotional = () => {
           ref={videoRef}
           className="w-full border-[7px] border-[#FE8840] rounded-[20px] z-[1]"
           controls
+          onPlay={() => setIsPlaying(true)}
         >
           <source
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            src="/videos/promotional-video.mp4"
             type="video/mp4"
           />
           Your browser does not support the video tag.
