@@ -34,6 +34,43 @@ export default function Topics() {
     topicId: "",
   });
   const currentQuestions = activeTab === "paid" ? questions : freeQuestions;
+  const [activeOptionQuestionId, setActiveOptionQuestionId] = useState(null);
+  const optionPopupRef = useRef(null);
+  const [popupPosition, setPopupPosition] = useState("bottom");
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        optionPopupRef.current &&
+        !optionPopupRef.current.contains(event.target)
+      ) {
+        setActiveOptionQuestionId(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleOptionsClick = (questionId, e) => {
+    const buttonRect = e.currentTarget.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    const spaceBelow = windowHeight - buttonRect.bottom;
+    const spaceAbove = buttonRect.top;
+
+    if (spaceBelow < 200 && spaceAbove > 200) {
+      setPopupPosition("top");
+    } else {
+      setPopupPosition("bottom");
+    }
+
+    setActiveOptionQuestionId(
+      activeOptionQuestionId === questionId ? null : questionId
+    );
+  };
 
   const fetchQuestions = async () => {
     try {
@@ -54,7 +91,9 @@ export default function Topics() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les questions");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les questions"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -81,7 +120,9 @@ export default function Topics() {
         localStorage.clear();
         router.push("/admin/login");
       } else {
-        setAlertMessage(responseData.message || "Impossible d'obtenir les sujets");
+        setAlertMessage(
+          responseData.message || "Impossible d'obtenir les sujets"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -108,7 +149,7 @@ export default function Topics() {
     if (activeTab === "paid") {
       newFormData.append("simulatorType", "paid");
       newFormData.append("topicId", formData.topicId);
-    }else {
+    } else {
       newFormData.append("simulatorType", "free");
     }
     if (formData.image && formData.image instanceof File) {
@@ -138,7 +179,9 @@ export default function Topics() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Impossible de créer la question");
+        setAlertMessage(
+          responseData.message || "Impossible de créer la question"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -163,7 +206,7 @@ export default function Topics() {
     if (activeTab === "paid") {
       newFormData.append("simulatorType", "paid");
       newFormData.append("topicId", formData.topicId);
-    }else {
+    } else {
       newFormData.append("simulatorType", "free");
     }
 
@@ -197,7 +240,9 @@ export default function Topics() {
           setTimeout(() => setAlertMessage(false), 3000);
         }
       } else {
-        setAlertMessage(responseData.message || "Impossible de mettre à jour la question");
+        setAlertMessage(
+          responseData.message || "Impossible de mettre à jour la question"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -253,7 +298,9 @@ export default function Topics() {
         setSuccessMessage("Question supprimée successfully");
         setTimeout(() => setSuccessMessage(false), 3000);
       } else {
-        setAlertMessage(responseData.message || "Impossible de supprimer la question");
+        setAlertMessage(
+          responseData.message || "Impossible de supprimer la question"
+        );
         setTimeout(() => setAlertMessage(false), 3000);
       }
     } catch (error) {
@@ -484,24 +531,54 @@ export default function Topics() {
                             </td>
                           </>
                         )}
-                        <td className="py-4 px-6">
-                          <div className="group relative inline-block cursor-pointer">
+                        <td className="py-4 px-6 relative">
+                          <button
+                            onClick={(e) => handleOptionsClick(question._id, e)}
+                            className="cursor-pointer"
+                          >
                             View Options
-                            <div className="absolute left-1/2 w-max rounded-md border border-gray-300 bg-[#555] p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                          </button>
+
+                          {activeOptionQuestionId === question._id && (
+                            <div
+                              ref={optionPopupRef}
+                              className={`absolute z-50 bg-white border border-gray-300 rounded shadow-md min-w-[250px] max-w-[600px]  ${
+                                popupPosition === "top"
+                                  ? "bottom-full mb-2"
+                                  : "top-full mt-2"
+                              } right-0`}
+                              style={{
+                                maxHeight: "250px",
+                                overflowY: "auto",
+                              }}
+                            >
+                              <div className="mb-3">
+                                <div className="absolute top-2 right-2">
+                                  <button
+                                    onClick={() =>
+                                      setActiveOptionQuestionId(null)
+                                    }
+                                    className=" text-black text-lg font-bold transform transition-transform duration-200 hover:rotate-90 cursor-pointer"
+                                    aria-label="Close"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              </div>
                               {question.options.map((option, index) => (
                                 <div
                                   key={index}
-                                  className={`p-1 ${
+                                  className={`py-1 px-2 pt-3 rounded ${
                                     option === question.correctOptions
-                                      ? "text-green-500"
-                                      : "text-white"
+                                      ? "text-green-600 font-semibold"
+                                      : "text-gray-700"
                                   }`}
                                 >
-                                  {String.fromCharCode(65 + index)}. {option}
+                                  <span className="font-bold">{String.fromCharCode(65 + index)}</span>. {option}
                                 </div>
                               ))}
                             </div>
-                          </div>
+                          )}
                         </td>
                         <td className="py-4 px-6"> {question.simulatorType}</td>
                         <td className="py-4 px-6">
@@ -821,7 +898,9 @@ export default function Topics() {
                 ))}
               </select>
               {errors?.topicId && (
-                <p className="text-sm text-red-600 mt-1">{errors?.topicId[0]}</p>
+                <p className="text-sm text-red-600 mt-1">
+                  {errors?.topicId[0]}
+                </p>
               )}
             </div>
           )}
