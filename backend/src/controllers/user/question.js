@@ -158,8 +158,8 @@ const getAccessQuestions = async (req, res) => {
       },
       {
         $sort: {
-          topicName: 1,
           subjectName: 1,
+          topicName: 1,
         },
       },
     ]);

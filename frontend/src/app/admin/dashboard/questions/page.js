@@ -482,15 +482,29 @@ export default function Topics() {
                       </th>
                       {activeTab === "paid" && (
                         <>
-                          <th className="text-left py-3 px-6 font-medium">
-                            Topic
-                          </th>
-                          <th className="text-left py-3 px-6 font-medium">
-                            Subject
-                          </th>
-                          <th className="text-left py-3 px-6 font-medium">
-                            Level
-                          </th>
+                          {[
+                            { key: "topicName", label: "Topic" },
+                            { key: "subjectName", label: "Subject" },
+                            { key: "level", label: "Level" },
+                          ].map(({ key, label }) => (
+                            <th
+                              key={key}
+                              className="text-left py-3 px-6 font-medium"
+                            >
+                              <div
+                                className="flex items-center gap-x-1 cursor-pointer hover:text-black transition"
+                                onClick={() => requestSort(key)}
+                              >
+                                {label}
+                                {sortConfig?.key === key &&
+                                  (sortConfig.direction === "ascending" ? (
+                                    <ChevronUp className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronDown className="h-4 w-4" />
+                                  ))}
+                              </div>
+                            </th>
+                          ))}
                         </>
                       )}
                       <th className="text-left py-3 px-6 font-medium">
@@ -574,7 +588,10 @@ export default function Topics() {
                                       : "text-gray-700"
                                   }`}
                                 >
-                                  <span className="font-bold">{String.fromCharCode(65 + index)}</span>. {option}
+                                  <span className="font-bold">
+                                    {String.fromCharCode(65 + index)}
+                                  </span>
+                                  . {option}
                                 </div>
                               ))}
                             </div>
