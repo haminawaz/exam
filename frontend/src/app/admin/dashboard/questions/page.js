@@ -422,7 +422,7 @@ export default function Topics() {
       });
     }
     return sortedData;
-  }, [topics, sortConfig]);
+  }, [currentQuestions, sortConfig]);
 
   if (loading) {
     return <h1>Loading...</h1>;
