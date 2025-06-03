@@ -37,6 +37,10 @@ export default function Topics() {
   const [activeOptionQuestionId, setActiveOptionQuestionId] = useState(null);
   const optionPopupRef = useRef(null);
   const [popupPosition, setPopupPosition] = useState("bottom");
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -396,6 +400,30 @@ export default function Topics() {
     }
   };
 
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedQuestions = React.useMemo(() => {
+    let sortedData = [...currentQuestions];
+    if (sortConfig.key) {
+      sortedData.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortedData;
+  }, [topics, sortConfig]);
+
   if (loading) {
     return <h1>Loading...</h1>;
   }
@@ -517,7 +545,7 @@ export default function Topics() {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentQuestions?.map((question) => (
+                    {sortedQuestions?.map((question) => (
                       <tr
                         key={question?._id}
                         className="border-b border-gray-200 hover:bg-gray-50"
