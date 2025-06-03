@@ -427,7 +427,6 @@ export default function Topics() {
   if (loading) {
     return <h1>Loading...</h1>;
   }
-
   return (
     <main className="flex-1 overflow-auto">
       {successMessage && (
