@@ -151,6 +151,7 @@ const getAccessQuestions = async (req, res) => {
           options: 1,
           correct: 1,
           topicId: 1,
+          image: 1,
           topicName: "$topicDetails.topicName",
           subjectName: "$subjectsDetails.name",
           level: "$levelDetails.level",
