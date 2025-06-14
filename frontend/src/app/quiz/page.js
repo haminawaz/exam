@@ -15,7 +15,7 @@ export default function page() {
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0]);
 
   useEffect(() => {
-    if (quizStarted) {
+    if (quizStarted && !quizCompleted) {
       if (timer > 0) {
         const countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
         return () => clearInterval(countdown);
